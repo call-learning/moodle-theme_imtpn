@@ -1,0 +1,118 @@
+// ImtPN
+// Bootswatch
+
+//
+// Color system
+//
+
+$white: #fff !default;
+$gray-100: #f8f9fa !default;
+$gray-200: #eee !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #aaa !default;
+$gray-600: #777 !default;
+$gray-700: #495057 !default;
+$gray-800: #333 !default;
+$gray-900: #222 !default;
+$black: #000 !default;
+
+$blue: #002182 !default;
+$indigo: #6610f2 !default;
+$purple: #9400de !default;
+$pink: #e83e8c !default;
+$red: #e0001e !default;
+$orange: #fd7e14 !default;
+$yellow: #F5E625 !default;
+$green: #4ade00 !default;
+$teal: #20c997 !default;
+$cyan: #369 !default;
+
+$imt-lightblue: #00B8DE;
+$imt-darkblue: #0C2340;
+$imt-darkgrey: #3C3C3C;
+$imt-lightgreen: #AFCB37;
+$imt-orange: #F2A900;
+$imt-orange2: #EF7D00;
+$imt-red: #f23000;
+$imt-darkred: #9c1f00;
+$imt-purple: #D40F7D;
+$imt-purple2: #61259E;
+$imt-darkblue2: #000773;
+
+$light-red: #de2500;
+$dark-red: #330800;
+
+
+$info-outline:    #1f7e9a;
+$warning-outline: #a6670e;
+
+$imt-standard-primary: $imt-lightblue;
+$imt-standard-secondary: $imt-darkblue;
+
+$imt-atlantique-primary: $imt-lightblue;
+$imt-atlantique-secondary: $imt-lightgreen;
+
+$imt-lille-primary: $imt-lightblue;
+$imt-lille-secondary: $imt-orange;
+
+$imt-albi-primary: $imt-lightblue;
+$imt-albi-secondary: $imt-orange2;
+
+$imt-ales-primary: $imt-lightblue;
+$imt-ales-secondary: $imt-purple;
+
+$primary: $imt-standard-primary !default;
+$secondary: $imt-standard-secondary !default;
+$success: $imt-lightgreen !default;
+$info: $imt-darkgrey !default;
+$warning: $imt-orange !default;
+$danger: $imt-darkred !default;
+$light: $white !default;
+$dark: $black !default;
+
+
+// Body
+$body-color:    $imt-darkgrey !default;
+
+// Flat design
+$border-radius:               initial !default;
+$border-radius-lg:            initial !default;
+$border-radius-sm:            initial !default;
+
+$btn-border-radius:           initial !default;
+$btn-border-radius-lg:        initial !default;
+$btn-border-radius-sm:        initial !default;
+
+// Fonts
+
+$font-family-sans-serif: "Helvetica Regular", sans-serif !default;
+$font-weight-base: initial !default;
+
+$headings-font-family: "Helvetica Bold", sans-serif !default;
+$headings-font-weight: 700 !default;
+$headings-line-height: 1.1 !default;
+
+// Buttons
+
+$input-btn-padding-x: 1rem !default;
+
+// Navbar
+
+$navbar-light-color: rgba($black, .8) !default;
+$navbar-light-hover-color: $black !default;
+$navbar-light-active-color: $black !default;
+
+$navbar-dark-color:                 rgba($white, .8) !default;
+$navbar-dark-hover-color:           $white !default;
+$navbar-dark-active-color:          $white !default;
+
+// Navdrawer
+$drawer-width: 285px !default;
+$drawer-width-semi-expanded: 106px !default;
+
+// Pagination
+
+$pagination-hover-color: $white !default;
+$pagination-hover-bg: $primary !default;
+$pagination-hover-border-color: $primary !default;
