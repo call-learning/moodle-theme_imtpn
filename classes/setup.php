@@ -52,12 +52,24 @@ class setup {
         global $PAGE, $CFG, $DB;
 
         static::setup_config_values();
-
+        if ($DB->record_exists('block_rss_client', ['url' => 'https://www.imt.fr/feed/'])) {
+            $DB->insert_record(
+                'block_rss_client',
+                array('userid' => get_admin()->id,
+                    'title' => 'IMT',
+                    'preferredtitle' => '',
+                    'description' =>
+                        'Premier groupe de grandes écoles d\'ingénieurs et managers en France',
+                    'shared' => '0',
+                    'url' => 'https://www.imt.fr/feed/',
+                    'skiptime' => '0',
+                    'skipuntil' => '0')
+            );
+        }
         require_once($CFG->dirroot . '/my/lib.php');
         // Get the default Dashboard block.
         $defaultmy = my_get_page(null, MY_PAGE_PRIVATE);
 
-        $regionname = 'content';
         $page = new moodle_page();
         $page->set_pagetype('my-index');
         $page->set_subpage($defaultmy->id);
@@ -161,8 +173,8 @@ class setup {
                 'contextid' => $context->id,
                 'component' => 'block_' . $blockinstance->blockname,
                 'filearea' => empty($filespec['filearea']) ? "files" : $filespec['filearea'],
-                'itemid' => $blockinstance->id,
-                'filepath' =>dirname($filename) == '.'? '/': dirname($filename),
+                'itemid' => isset($filespec['itemid']) ? $filespec['itemid']: $blockinstance->id,
+                'filepath' => dirname($filename) == '.' ? '/' : dirname($filename),
                 'filename' => basename($filename),
             );
             // Create an area to upload the file.
@@ -217,38 +229,73 @@ class setup {
             'defaultweight' => '0',
             'configdata' =>
                 [
-                    "title" => "",
+                    "title" => "Bienvenue !",
                     "format" => "1",
-                    "classes" => "",
+                    "classes" => "db-welcome",
                     "backgroundcolor" => "",
-                    "text" => "<h4>Bienvenue !</h4>
-<p>Que voulez-vous faire aujourd’hui ?</p>
+                    "text" => '<p>Que voulez-vous faire aujourd’hui ?</p>
 <p><br>
 </p>
-<table class='db-action-block'>
+<table class="db-action-block">
     <tbody>
         <tr>
-            <td scope='col'>
-                <div><i class='fa fa-book'></i></div>
+            <td scope="col">
+                <div><i class="fa fa-book"></i></div>
                 <div>Créer un nouveau cours</div>
             </td>
-            <td scope='col'>
-                <div><i class='fa fa-search'></i></div>
+            <td scope="col">
+                <div><i class="fa fa-search"></i></div>
                 <div>Partager une ressource</div>
             </td>
-            <td scope='col'>
-                <div><i class='fa fa-'></i></div>
+            <td scope="col">
+                <div><i class="fa fa-"></i></div>
                 <div>Explorer le catalogue</div>
             </td>
-            <td scope='col'>
-                <div><i class='fa fa-wechat'></i></div>
+            <td scope="col">
+                <div><i class="fa fa-wechat"></i></div>
                 <div>Echanger avec mes collègues</div>
             </td>
         </tr>
     </tbody>
 </table>
 <br><br>
-<p></p>"],
+<p></p>'],
+            'capabilities' => array()
+        ),
+        array(
+            'blockname' => 'calendar_upcoming',
+            'showinsubcontexts' => '0',
+            'defaultregion' => 'content',
+            'defaultweight' => '1',
+            'configdata' => array(),
+            'capabilities' => array()
+        ),
+        array(
+            'blockname' => 'myoverview',
+            'showinsubcontexts' => '0',
+            'defaultregion' => 'content',
+            'defaultweight' => '2',
+            'configdata' => array(),
+            'capabilities' => array()
+        ),
+        array(
+            'blockname' => 'html',
+            'showinsubcontexts' => '0',
+            'defaultregion' => 'content',
+            'defaultweight' => '3',
+            'configdata' =>
+                [
+                    "title" => "",
+                    "format" => "1",
+                    "classes" => "",
+                    "backgroundcolor" => "",
+                    "text" => '<p dir="ltr" style="text-align: left;"></p>
+<pre></pre>Besoin d’inspiration ? Envie d’apprendre ? Découvrez plus de cours en explorant le catalogue de cours<br>
+<p></p>
+<p dir="ltr" ><br></p>
+<p dir="ltr" ><a href="/local/resourcelibrary">Explorer le catalogue de cours</a></p>
+<p dir="ltr" ><br></p>
+<p dir="ltr" ><br></p>'],
             'capabilities' => array()
         ),
     );
@@ -260,12 +307,12 @@ class setup {
             'blockname' => 'html',
             'showinsubcontexts' => '1',
             'defaultregion' => 'content',
-            'defaultweight' => '0',
+            'defaultweight' => '1',
             'configdata' =>
                 [
                     "title" => "Qu’est-ce que la Pédagothèque Numérique ?",
                     "format" => "1",
-                    "classes" => "",
+                    "classes" => "block-what-is-imtpn",
                     "text" => "<p>La Pédagothèque Numérique est une plateforme permettant de regrouper tout le contenu pédagogique 
             des écoles du groupe Institut Mines-Télécom. 
             Elle a pour vocation de favoriser les échanges entre écoles et d’harmoniser les enseignements. Elle met à disposition des cours en accès libre afin que tout les membres de l’IMT, étudiants comme enseignants ou membres de l’équipe adminstrative puisse bénéficier du savoir détenu dans toutes les écoles..</p>"],
@@ -274,48 +321,84 @@ class setup {
         array('blockname' => 'mcms',
             'showinsubcontexts' => '1',
             'defaultregion' => 'content',
-            'defaultweight' => '1',
+            'defaultweight' => '2',
             'configdata' => [
                 "title" => "Pour les enseignants",
                 "format" => "1",
-                "classes" => "",
+                "classes" => "block-for-teachers",
                 "backgroundcolor" => "",
                 "text" => "<p>Parcourez les ressources mises à disposition par vos homologues des autres écoles du groupe, construisez vos cours grâce à ce contenu partagé et mettez en ligne vos prochains cours.</p>
             <p>Échangez sur votre spécialité ou vos thèmes d’affections avec vos collègues grâce au mur pédagogique.</p>
             <p>Vous pouvez également prendre le temps de suivre des cours dédiés au personnel de l’IMT ou des cours dispensés par vos collègues pour élargir vos connaissances.</p>
             <strong>Qu’est-ce que vous voulez faire ?</strong>
             <ul>
-            <li><a href='#'>Transformer mes enseignements à distance <i></i></a></li>
-            <li><a href='#'>Échanger entre enseignants </a></li>
-            <li><a href='#'>Créer un dispositif de formation en ligne </a></li>
-            <li><a href='#'>M’inspirer et partager des pratiques innovantes </a></li>
-            <li><a href='#'>M’inspirer et partager des pratiques innovantes </a></li>
-            <li><a href='#'>Valoriser et faire reconnaitre mon parcours d’enseignement </a></li>
+            <li><a href='#'>Transformer mes enseignements à distance <i class='fa fa-external-link'></i></a></li>
+            <li><a href='#'>Échanger entre enseignants <i class='fa fa-external-link'></i></a></li>
+            <li><a href='#'>Créer un dispositif de formation en ligne <i class='fa fa-external-link'></i></a></li>
+            <li><a href='#'>M’inspirer et partager des pratiques innovantes <i class='fa fa-external-link'></i></a></li>
+            <li><a href='#'>M’inspirer et partager des pratiques innovantes <i class='fa fa-external-link'></i></a></li>
+            <li><a href='#'>Valoriser et faire reconnaitre mon parcours d’enseignement <i class='fa fa-external-link'></i></a></li>
             </ul>
             ",
-                "layout" => "layout_two"
+                "layout" => "layout_three"
             ],
-            'capabilities' => array(
-                'moodle/block:view' => ['jury' => CAP_PROHIBIT]
-            ),
+            'capabilities' => [],
             'files' => [
                 'side-image.png' => [
                     'filepath' => '/theme/imtpn/data/files/fp/teacher.png',
-                    'filearea' => 'images'
+                    'filearea' => 'images',
+                    'itemid' => 0
                 ]
             ],
         ),
-
+        array('blockname' => 'mcms',
+            'showinsubcontexts' => '1',
+            'defaultregion' => 'content',
+            'defaultweight' => '3',
+            'configdata' => [
+                "title" => "Pour les étudiants",
+                "format" => "1",
+                "classes" => "block-for-students",
+                "backgroundcolor" => "",
+                "text" => '<p dir="ltr">Suivez les cours dispensés par vos professeurs par le biais de cette plateforme, ou explorez les cours disponibles en accès libre par thèmes afin de vous autoformer et compléter votre cursus<br></p>
+<p dir="ltr"><br></p>
+<p dir="ltr"><a href="/">Parcourir le catalogue de cours &gt;&gt;</a><br></p>',
+                "layout" => "layout_four"
+            ],
+            'capabilities' => [],
+            'files' => [
+                'side-image.png' => [
+                    'filepath' => '/theme/imtpn/data/files/fp/student.png',
+                    'filearea' => 'images',
+                    'itemid' => 0
+                ]
+            ],
+        ),
         array('blockname' => 'featured_courses',
             'showinsubcontexts' => '1',
             'defaultregion' => 'content',
-            'defaultweight' => '2',
+            'defaultweight' => '4',
             'configdata' => [
                 "title" => "Cours à la une",
-                "selectedcourses" => []
+                "selectedcourses" => [2, 3, 4, 5]
             ],
             'capabilities' => array()
         ),
+        array('blockname' => 'rss_thumbnails',
+            'showinsubcontexts' => '1',
+            'defaultregion' => 'content',
+            'defaultweight' => '5',
+            'configdata' => [
+                "display_description" => "0",
+                "title" => "Quoi de neuf?",
+                "carousselspeed" => "4000",
+                "show_channel_link" => "0",
+                "remove_image_size_suffix" => "1",
+                "rssid" => "1"
+            ],
+            'capabilities' => [],
+        )
+
     );
 
     // phpcs:enable
@@ -346,9 +429,8 @@ class setup {
         'moodle' => [
             'country' => 'FR',
             'timezone' => 'Europe/Paris',
-        ],
-        'block_html' => [
-            'allowcssclasses' => true
-        ],
+            'block_html_allowcssclasses' => true,
+            'defaulthomepage' => HOMEPAGE_MY,
+        ]
     ];
 }
