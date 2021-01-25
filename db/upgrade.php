@@ -15,16 +15,30 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Language file
+ * Local plugin envf - Upgrade plugin tasks
  *
  * @package   theme_imtpn
- * @copyright 2020 - CALL Learning - Laurent David <laurent@call-learning.fr>
+ * @copyright 2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 
-
-$string['pluginname'] = 'Theme IMT Pédagothèque Numérique';
-$string['region-content'] = 'Content';
-$string['region-side-pre'] = 'Right';
+/**
+ * Upgrade steps for this plugin
+ *
+ * @param int $oldversion the version we are upgrading from
+ * @return bool
+ * @throws ddl_exception
+ * @throws ddl_table_missing_exception
+ * @throws downgrade_exception
+ * @throws upgrade_exception
+ */
+function xmldb_theme_imtpn_upgrade($oldversion) {
+    global $DB;
+    $dbman = $DB->get_manager();
+    if ($oldversion < 2021011900) {
+        theme_imtpn\setup::install_update();
+        upgrade_plugin_savepoint(true, 2021011900, 'theme', 'imtpn');
+    }
+    return true;
+}
