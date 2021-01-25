@@ -52,8 +52,8 @@ class setup {
         global $PAGE, $CFG, $DB;
 
         static::setup_config_values();
-        if ($DB->record_exists('block_rss_client', ['url' => 'https://www.imt.fr/feed/'])) {
-            $DB->insert_record(
+        if (!$DB->record_exists('block_rss_client', ['url' => 'https://www.imt.fr/feed/'])) {
+            $id = $DB->insert_record(
                 'block_rss_client',
                 array('userid' => get_admin()->id,
                     'title' => 'IMT',
