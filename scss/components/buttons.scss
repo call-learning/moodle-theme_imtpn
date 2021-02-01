@@ -1,0 +1,13 @@
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 36px;
+  padding: 0 100px;
+}
+
+.btn-blue {
+  background: $app-blue-2;
+  color: $white;
+}

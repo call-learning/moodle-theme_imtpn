@@ -1,5 +1,9 @@
 // General layout settings
 
+@import 'theme/base';
+@import 'components/buttons';
+@import 'components/blocks';
+@import 'components/header';
 
 #page-my-index .db-action-block {
     width: 100%;
