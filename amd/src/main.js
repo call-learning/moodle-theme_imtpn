@@ -1,4 +1,3 @@
-<?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,18 +14,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Language file
+ * A javascript module
  *
- * @package   theme_imtpn
- * @copyright 2020 - CALL Learning - Laurent David <laurent@call-learning.fr>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+import $ from 'jquery';
 
+export const init = () => {
+  $(document).ready(function () {
+    $('#language-trigger-selection').click(function () {
+      $('#language-list').toggleClass('-active');
+    });
+    $('#mask-language-choice').click(function () {
+      $('#language-list').removeClass('-active');
+    });
 
-$string['pluginname'] = 'Theme IMT Pédagothèque Numérique';
-$string['configtitle'] = 'Theme IMT Pédagothèque Numérique';
-$string['region-content'] = 'Content';
-$string['region-side-pre'] = 'Right';
-$string['defaultfpslogan'] = 'Bienvenue sur la<br>Pédagothèque Numérique de l\'IMT';
+    $('.language-list .language-choice').click(function () {
+      $('#language-list').removeClass('-active');
+    });
+  });
+};

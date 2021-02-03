@@ -44,7 +44,11 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      * @return bool|false|\moodle_url
      */
     public function get_logo_url($maxwidth = null, $maxheight = 200) {
-        $logourl = new \moodle_url("/theme/imtpn/pix/logo-imt.png");
+        $logourl = new \moodle_url("/theme/imtpn/pix/logos/logo-imt-dark.png");
+        if (!isloggedin() || isguestuser()) {
+            // If we are not logged in, the logo should be white instead.
+            $logourl = new \moodle_url("/theme/imtpn/pix/logos/logo-imt-white.png");
+        }
         return $logourl;
     }
 
@@ -61,7 +65,12 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      * @return bool|false|\moodle_url
      */
     public function get_compact_logo_url($maxwidth = 100, $maxheight = 100) {
-        $compactlogourl = new \moodle_url("/theme/imtpn/pix/logo-imt.png");
+        $compactlogourl = new \moodle_url("/theme/imtpn/pix/logos/logo-imt-dark.png");
+        if (!isloggedin() || isguestuser()) {
+            // If we are not logged in, the logo should be white instead.
+            $compactlogourl = new \moodle_url("/theme/imtpn/pix/logos/logo-imt-white.png");
+        }
+
         return $compactlogourl;
     }
 

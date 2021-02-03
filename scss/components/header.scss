@@ -20,7 +20,7 @@ header.header {
 
     width: 62%;
     height: 100%;
-    
+
 
     &:after {
       content: "";
@@ -59,17 +59,6 @@ header.header {
     border-style: solid;
     border-width: 0 0 200px 200px;
     border-color: transparent transparent $app-blue-2 transparent;
-  }
-
-  .header__top { 
-    padding: 10px 0;
-    position: relative;
-
-    .container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
   }
 
   .header__top-right {
@@ -165,6 +154,8 @@ header.header {
     border-top: 1px solid rgba(255, 255, 255, 0.25);
     padding: 50px 0 40px 0;
 
+    height: 312px;
+
     .container {
       display: flex;
       flex-direction: column;
@@ -180,5 +171,16 @@ header.header {
 
   .header__button {
     margin-top: 20px;
+  }
+}
+
+body.notloggedin {
+  [data-region='drawer-toggle'] {
+    display: none;
+  }
+  .usermenu.nav-link {
+    a {
+      font-weight: bold;
+    }
   }
 }

@@ -1,6 +1,8 @@
 // General layout settings
+@import "../../clboost/scss/commons";
+@import "../../clboost/scss/drawer";
 
-@import 'theme/base';
+@import 'components/theme/base';
 @import 'components/buttons';
 @import 'components/blocks';
 @import 'components/header';
