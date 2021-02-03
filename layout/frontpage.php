@@ -36,7 +36,9 @@ $templatecontext['sitename'] = format_string(
 $sitesummarytxt = empty($SITE->summary) ?
     get_string('defaultfpslogan', 'theme_imtpn'):
     $SITE->summary;
-
+if(!isloggedin() || isguestuser()) {
+    $templatecontext['loginurl'] = get_login_url();
+}
 $templatecontext['fppageheader'] = format_text($sitesummarytxt, FORMAT_HTML);
 // Bit of a hack here: we prevent the index page from displaying anything else than we decided to in the template.
 // It would usually display the course list, news, and so on (see @core_renderer::frontpage).

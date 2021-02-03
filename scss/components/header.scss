@@ -174,13 +174,13 @@ header.header {
   }
 }
 
-body.notloggedin {
-  [data-region='drawer-toggle'] {
-    display: none;
-  }
-  .usermenu.nav-link {
-    a {
+.navbar-dark {
+  .nav-link {
+    a,
+    a:visited
+    {
       font-weight: bold;
+      color: $navbar-dark-color;
     }
   }
 }

@@ -24,6 +24,10 @@
 
 namespace theme_imtpn\output;
 
+use custom_menu;
+use moodle_url;
+use single_select;
+
 defined('MOODLE_INTERNAL') || die;
 
 /**
@@ -83,4 +87,5 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         $logo = $this->get_compact_logo_url();
         return !empty($logo);
     }
+
 }

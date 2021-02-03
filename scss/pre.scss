@@ -101,15 +101,16 @@ $headings-line-height: 1.1 !default;
 
 $input-btn-padding-x: 1rem !default;
 
-// Navbar
+// Navbar Dark
+$navbar-dark-hover-color:           rgba($white, 1) !default;
+$navbar-dark-color:                 rgba($white, 1) !default;
+$navbar-dark-brand-color:           rgba($white, 1) !default;
+$navbar-dark-brand-hover-color:     rgba($white, 1) !default;
 
+// Navbar Light
 $navbar-light-color: rgba($black, .8) !default;
 $navbar-light-hover-color: $black !default;
 $navbar-light-active-color: $black !default;
-
-$navbar-dark-color:                 $white !default;
-$navbar-dark-hover-color:           $white !default;
-$navbar-dark-active-color:          $white !default;
 
 // Navdrawer
 $drawer-width: 285px !default;
