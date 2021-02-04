@@ -7,6 +7,13 @@ body.notloggedin {
     padding: 0;
     max-height: none;
 
+    .imtpn-container {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
     &.navbar-dark {
       .nav-link {
         a, a:hover, a:visited {
@@ -87,7 +94,7 @@ body.notloggedin {
       padding-top: 80px;
       height: 312px;
 
-      .container {
+      .imtpn-container {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
