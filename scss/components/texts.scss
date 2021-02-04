@@ -1,0 +1,40 @@
+.title-underlined {
+  font-size: 24px;
+  margin-bottom: 40px;
+  font-weight: normal;
+
+  &:after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 2px;
+    background-color: $body-color;
+    margin-top: 20px;
+    margin-bottom: 40px;
+  }
+}
+
+.title-blue {
+  color: $app-blue-1;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.text-card {
+  p {
+    font-size: 17px;
+  }
+
+  ul {
+    list-style-type: none;
+    line-height: 150%;
+  }
+
+  a {
+    color: inherit;
+
+    &:hover {
+      color: $app-blue-1;
+    }
+  }
+}

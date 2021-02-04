@@ -1,10 +1,66 @@
-body {
-  font-family: Helvetica;
-}
-
-.container {
+.imtpn-container {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
   position: relative;
+}
+
+.grey-background {
+  background-color: $app-gray-3;
+}
+
+.card-course {
+  box-shadow: 0 2px 14px -4px rgba(0, 0, 0, 0.25);
+  background: $white;
+  position: relative;
+
+  .course-image {
+    width: 100%;
+    height: auto;
+
+    &:after {
+      content: "";
+      display: block;
+      padding-top: 60%;
+    }
+  }
+
+  .title {
+    white-space: normal;
+    font-size: 20px;
+    line-height: 150%;
+    font-weight: bold;
+    color: $body-color;
+    padding: 24px 8px;
+    max-height: 60px;
+    overflow: hidden;
+  }
+
+  .otherinfo {
+    display: none;
+  }
+
+  .link {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    a {
+      position: relative;
+      background: transparent;
+      border: 0;
+    }
+
+    &:before {
+      content: "";
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 0 60px 60px;
+      border-color: transparent transparent $app-blue-2 transparent;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+  }
 }

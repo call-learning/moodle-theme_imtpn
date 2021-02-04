@@ -1,0 +1,45 @@
+body.notloggedin {
+
+  .card {
+    border: 0;
+    @extend .imtpn-container;
+    
+    .card-body {
+      padding: 0 !important;
+    }
+  }
+
+  .block-what-is-imtpn {
+
+    .card-title {
+      @extend .title-underlined;
+    }
+
+    .card-text {
+      @extend .text-card;
+    }
+  }
+
+  .block_mcms {
+    h3 {
+      @extend .title-blue;
+    }
+
+    .card-text {
+      @extend .text-card;
+    }
+  }
+
+  .block_featured_courses {
+    @extend .grey-background;
+    padding: 40px 0 80px 0;
+
+    .card-title {
+      @extend .title-underlined;
+    }
+
+    .thumbnail {
+      @extend .card-course;
+    }
+  }
+}

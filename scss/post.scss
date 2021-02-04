@@ -6,8 +6,11 @@
 
 @import 'components/buttons';
 @import 'components/blocks';
+@import 'components/texts';
 @import 'components/header';
 @import 'components/footer';
+
+@import 'pages/homepage';
 
 #page-my-index .db-action-block {
     width: 100%;
