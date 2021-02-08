@@ -19,6 +19,7 @@ body.notloggedin {
   }
 
   header.header {
+    flex: 0 0 auto;
 
     background-image: url([[pix:theme|backgrounds/header]]);
     background-size: cover;

@@ -2,10 +2,12 @@
 @import "../../clboost/scss/commons";
 @import "../../clboost/scss/drawer";
 
-@import 'components/theme/base';
+@import 'theme/base';
+
 @import 'components/buttons';
 @import 'components/blocks';
 @import 'components/header';
+@import 'components/footer';
 
 #page-my-index .db-action-block {
     width: 100%;
