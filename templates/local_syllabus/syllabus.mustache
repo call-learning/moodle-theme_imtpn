@@ -1,0 +1,99 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+  }}
+{{!
+  @template local_syllabus/syllabus
+
+  Syllabus display page
+
+  The purpose of this template is to render a list.
+
+  Classes required for JS:
+  * none
+
+  Data attributes required for JS:
+  * data-component
+  * data-area
+  * data-itemid
+
+  Context variables required for this template:
+  * attributes Array of name / value pairs.
+
+  Example context (json):
+  {
+      "courserawfields": {
+        <exported course raw fields> (see course_syllabus_exporter)
+      },
+      "head": [
+            "fields": [
+                { "label" :"label", "iconhtml": iconhtml, "html": "contenthtml"},
+            ]
+          }],
+      "side": [
+            "fields": [
+                { "label" :"label", "icon": iconhtml, "html": "contenthtml"},
+            ]
+          }],
+      ]
+  }
+}}
+<section class="syllabus-pres" id="course-{{#courseraw}}{{id}}{{/courseraw}}">
+    <div class="row">
+        <section class="col syllabus-title">
+            {{#title}}
+                {{#fields}}
+                    <div class="field">
+                        <h3 class="content">{{{html}}}</h3>
+                    </div>
+                {{/fields}}
+            {{/title}}
+        </section>
+    </div>
+    <div class="container-fluid">
+        <div class="float-lg-right">
+            <aside class="syllabus-side p-3">
+                <ul class="list-group">
+                    {{#side}}
+                        {{#fields}}
+                            {{#display}}
+                                {{> local_syllabus/syllabus_field_side }}
+                            {{/display}}
+                        {{/fields}}
+                    {{/side}}
+                </ul>
+            </aside>
+        </div>
+        <section class="syllabus-head d-flex">
+            {{#header}}
+                {{#fields}}
+                    {{#display}}
+                        {{> local_syllabus/syllabus_field_head }}
+                    {{/display}}
+                {{/fields}}
+            {{/header}}
+        </section>
+
+        <section class="syllabus-content">
+            {{#content}}
+                {{#fields}}
+                    {{#display}}
+                        {{> local_syllabus/syllabus_field_content }}
+                    {{/display}}
+                {{/fields}}
+            {{/content}}
+        </section>
+    </div>
+</section>

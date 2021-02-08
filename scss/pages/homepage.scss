@@ -1,9 +1,9 @@
-body.notloggedin {
+#page-site-index {
 
   .card {
     border: 0;
     @extend .imtpn-container;
-    
+
     .card-body {
       padding: 0 !important;
     }

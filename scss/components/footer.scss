@@ -1,5 +1,4 @@
-body.notloggedin {
-  footer.footer {
+footer.footer {
     flex: 0 0 auto;
 
     height: 343px;
@@ -9,90 +8,89 @@ body.notloggedin {
     color: $app-gray-2;
 
     .footer__triangle-1 {
-      position: absolute;
-      top: 0;
-      left: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
 
-      width: 0;
-      height: 0;
-      border-style: solid;
-      border-width: 300px 300px 0 0;
-      border-color: $app-blue-1 transparent transparent transparent;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 300px 300px 0 0;
+        border-color: $app-blue-1 transparent transparent transparent;
     }
 
     .footer__triangle-2 {
-      position: absolute;
-      bottom: 0;
-      left: 0;
+        position: absolute;
+        bottom: 0;
+        left: 0;
 
-      width: 0;
-      height: 0;
-      border-style: solid;
-      border-width: 390px 0 0 390px;
-      border-color: transparent transparent transparent $app-gray-1;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 390px 0 0 390px;
+        border-color: transparent transparent transparent $app-gray-1;
     }
 
     .footer__triangle-3 {
-      position: absolute;
-      bottom: 0;
-      right: 0;
+        position: absolute;
+        bottom: 0;
+        right: 0;
 
-      width: 0;
-      height: 0;
-      border-style: solid;
-      border-width: 0 0 292px 292px;
-      border-color: transparent transparent $app-blue-2 transparent;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 0 292px 292px;
+        border-color: transparent transparent $app-blue-2 transparent;
     }
-    
-    .imtpn-container {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
 
-      padding: 50px 0 25px 0;
+    .imtpn-container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 50px 0 25px 0;
     }
 
     .footer__text {
-      font-size: 17px;
-      line-height: 200%;
-      max-width: 460px;
-      text-align: center;
+        font-size: 17px;
+        line-height: 200%;
+        max-width: 460px;
+        text-align: center;
     }
 
     .footer__stores {
-      margin-bottom: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-      a {
-        margin: 0 10px;
-      }
+        a {
+            margin: 0 10px;
+        }
     }
 
     .footer__links {
-      justify-content: center;
-      font-size: 12px;
+        justify-content: center;
+        font-size: 12px;
 
-      ul {        
-        display: flex;
-        align-items: center;
-        list-style-type: none;
-      }
+        ul {
+            display: flex;
+            align-items: center;
+            list-style-type: none;
+        }
 
-      li {
-        margin: 0 10px;
-      }
+        li {
+            margin: 0 10px;
+        }
 
-      a, a:visited, a:hover {
-        color: inherit;
-      }
+        a, a:visited, a:hover {
+            color: inherit;
+        }
     }
 
     .footer__mention {
-      font-size: 12px;
+        font-size: 12px;
     }
-  }
 }
