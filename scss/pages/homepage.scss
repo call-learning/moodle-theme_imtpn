@@ -2,6 +2,7 @@
 
   .card {
     border: 0;
+    background: transparent;
     @extend .imtpn-container;
 
     .card-body {
@@ -31,15 +32,18 @@
   }
 
   .block_featured_courses {
-    @extend .grey-background;
     padding: 40px 0 80px 0;
+    @extend .grey-background;
 
     .card-title {
       @extend .title-underlined;
     }
+  }
 
-    .thumbnail {
-      @extend .card-course;
+  .block_rss_thumbnails {
+    padding: 40px 0 0 0;
+    .card-title {
+      @extend .title-underlined;
     }
   }
 }

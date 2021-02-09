@@ -90,32 +90,29 @@
 }}
 <div id="block-rss-thumbnails-{{uniqid}}">
 {{#feeds}}
-        <div class="container-fluid">
-            <div class="glide d-none">
-                <div class="glide__track" data-glide-el="track">
-                    <ul class="glide__slides">
-                        {{#items}}
-                            <li class="glide__slide">
-                                <a href="{{ link }}" class="d-block position-relative thumbnail">
-                                    {{#imageurl}}
-                                        <img src="{{imageurl}}" class="img-thumbnail"/>
-                                    {{/imageurl}}
-                                    <div class="slide-title d-block">
-                                        <div class="font-weight-bolder  d-none d-md-block">{{ title }}</div>
-                                        <div class="text-truncate d-none d-md-block">{{#userdate}} {{timestamp}}, {{#str}} strftimedate {{/str}} {{/userdate}}</div>
-                                    </div>
-                                    <div class="categories font-italic text-warning d-none d-md-inline-block m-2">
-                                        {{#categories}}
-                                            <span class="text-uppercase">{{ . }}</span>
-                                        {{/categories}}
-                                    </div>
-                                </a>
-                            </li>
-                        {{/items}}
-                    </ul>
-                </div>
-            </div>
+    <div class="glide d-none">
+        <div class="glide__track" data-glide-el="track">
+            <ul class="glide__slides">
+                {{#items}}
+                    <li class="glide__slide">
+                        <a href="{{ link }}" class="d-block position-relative thumbnail card-news">
+                            {{#imageurl}}
+                                <img src="{{imageurl}}" class="img-thumbnail"/>
+                            {{/imageurl}}
+                            <div class="slide-title d-block">
+                                <div class="font-weight-bolder  d-none d-md-block">{{ title }}</div>
+                            </div>
+                            <div class="categories font-italic d-none d-md-inline-block m-2">
+                                {{#categories}}
+                                    <span class="text-uppercase">{{ . }}</span>
+                                {{/categories}}
+                            </div>
+                        </a>
+                    </li>
+                {{/items}}
+            </ul>
         </div>
+    </div>
 {{/feeds}}
 {{#js}}
     require(['block_rss_thumbnails/glide'], function(glide) {

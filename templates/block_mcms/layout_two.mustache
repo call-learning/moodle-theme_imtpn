@@ -1,0 +1,38 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_mcms/layout_one
+
+    This template renders the main content area for the mcms block.
+
+    Example context (json):
+    {}
+}}
+
+<div id="block-mcms-{{uniqid}}" class="block-mcms block-cards container-fluid pt-5 pb-5"
+    {{#backgroundurl}} style="background-image: url({{.}});" {{/backgroundurl}}
+    {{#backgroundcolor}} style="background: {{.}};" {{/backgroundcolor}}>
+    <div class="d-flex flex-column inner-block align-content-center position-relative">
+        {{#decorations}}
+            <div class="{{.}}" style="position:absolute;"></div>
+        {{/decorations}}
+        <h3 class="text-center">{{title}}</h3>
+        <div class="pb-5">
+            {{{descriptionhtml}}}
+        </div>
+    </div>
+</div>
