@@ -22,3 +22,26 @@
     right: 0;
   }
 }
+
+.breadcrumb {
+  background: transparent;
+
+  .breadcrumb-item {
+    font-style: italic;
+    font-size: 14px;
+
+    &:before {
+      content: "•";
+    }
+
+    &:first-child {
+      &::before {
+        display: none;
+      }
+    }
+
+    a {
+      color: $app-gray-2;
+    }
+  }
+}
