@@ -52,23 +52,7 @@
   }
 }
 
-.db-inspiration {
-  .card {
-    @extend .card-dashboard;
-
-    h5 {
-      @extend .title-dashboard;
-    }
-  }
-}
-
-.block_calendar_upcoming {
-  .card {
-    @extend .card-dashboard;
-  }
-}
-
-.block_calendar_upcoming {
+.block_calendar_upcoming, .block_myoverview, .db-inspiration {
   .card {
     @extend .card-dashboard;
 
