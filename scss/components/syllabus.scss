@@ -27,3 +27,45 @@
     font-style: italic;
   }
 }
+
+.syllabus-content {
+  flex-grow: 1;
+
+  h4 {
+    color: $app-blue-1;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 30px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  p {
+    padding-left: 25px;
+    font-size: 17px;
+  }
+}
+
+.syllabus-side {
+  width: 33%;
+  min-width: 300px;
+  max-width: 440px;
+  margin-left: 30px;
+  flex-shrink: 0;
+
+  @media (max-width: $screen-lg-max) {
+    width: 300px;
+  }
+
+  @media (max-width: $screen-md-max) {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .list-group-item {
+    border: 0;
+    padding: 0;
+  }
+}
