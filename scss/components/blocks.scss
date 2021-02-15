@@ -106,3 +106,40 @@
     margin: 0;
   }
 }
+
+.card-dashboard {
+  background: transparent;
+  border: 0;
+}
+
+.db-welcome {
+  .card {
+    @extend .card-dashboard;
+    text-align: center;
+
+    h5 {
+      @extend .title-dashboard;
+    }
+
+    .card-text {
+      p {
+        font-size: 17px;
+      }
+  
+      a {
+        padding: 15px;
+        color: $app-blue-1;
+        border: 1px solid $app-blue-1;
+        width: 210px;
+        font-size: 17px;
+        text-align: center;
+        margin: 0 10px;
+  
+        >i {
+          font-size: 37px;
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+}
