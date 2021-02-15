@@ -147,3 +147,9 @@
     }
   }
 }
+
+.db-inspiration {
+  .card {
+    @extend .card-dashboard;
+  }
+}
