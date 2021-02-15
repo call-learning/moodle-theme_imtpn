@@ -18,7 +18,6 @@
 
 .db-welcome {
   .card {
-    @extend .card-dashboard;
     text-align: center;
 
     h5 {
@@ -26,6 +25,7 @@
     }
 
     .card-text {
+
       p {
         font-size: 17px;
       }
@@ -52,7 +52,13 @@
   }
 }
 
-.block_calendar_upcoming, .block_myoverview, .db-inspiration {
+.db-inspiration {
+  .fa {
+    color: $app-blue-1;
+  }
+}
+
+.block_calendar_upcoming, .block_myoverview, .db-welcome, .db-inspiration {
   .card {
     @extend .card-dashboard;
 
