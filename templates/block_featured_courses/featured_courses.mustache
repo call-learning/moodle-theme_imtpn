@@ -24,19 +24,17 @@
 }}
 
 <div id="block-featured-courses-{{uniqid}}" class="block-featured-courses block-cards">
-    <div class="row">
-        {{#courses}}
-            <div class="thumbnail my-1 d-flex flex-column justify-content-start p-0 card-course">
-                <div class="course-image"
-                        style='background-image: url("{{{ courseimage}}}");'>
-                </div>
-                <div class="title font-weight-bolder">{{ fullname }}</div>
-
-                <div class="link">
-                    <a class="btn btn-primary rounded-circle p-1" href="{{viewurl}}">{{#pix}}t/right, core, {{#str}}viewcourse, block_featured_courses {{/str}}{{/pix}}</a>
-                </div>
-
+    {{#courses}}
+        <div class="thumbnail my-1 d-flex flex-column justify-content-start p-0 card-course">
+            <div class="course-image"
+                    style='background-image: url("{{{ courseimage}}}");'>
             </div>
-        {{/courses}}
-    </div>
+            <div class="title font-weight-bolder">{{ fullname }}</div>
+
+            <div class="link">
+                <a class="btn btn-primary rounded-circle p-1" href="{{viewurl}}">{{#pix}}t/right, core, {{#str}}viewcourse, block_featured_courses {{/str}}{{/pix}}</a>
+            </div>
+
+        </div>
+    {{/courses}}
 </div>

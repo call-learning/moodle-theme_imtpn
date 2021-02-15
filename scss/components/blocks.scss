@@ -1,5 +1,6 @@
 .imtpn-container {
-  max-width: 940px;
+  width: 940px;
+  max-width: calc(100% - 40px);
   margin-left: auto;
   margin-right: auto;
   position: relative;
@@ -9,14 +10,22 @@
   background-color: $app-gray-3;
 }
 
+.block-featured-courses {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
 .card-course {
   box-shadow: 0 2px 14px -4px rgba(0, 0, 0, 0.25);
   background: $white;
   position: relative;
-  margin-left: 10px;
-  margin-right: 10px;
-  flex-grow: 1;
   height: 288px !important;
+
+  @media (max-width: $screen-sm-max) {
+    width: 100%;
+    margin: 0;
+  }
 
   &:after {
     content: "";

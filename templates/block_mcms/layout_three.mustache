@@ -26,11 +26,11 @@
 <div id="block-mcms-{{uniqid}}" class="block-mcms block-cards container-fluid pt-5 pb-5"
     {{#backgroundurl}} style="background-image: url({{.}});" {{/backgroundurl}}
     {{#backgroundcolor}} style="background: {{.}};" {{/backgroundcolor}}>
-    <div class="d-flex flex-row inner-block justify-content-center align-items-center position-relative">
+    <div class="d-flex flex-column flex-md-row inner-block justify-content-center align-items-center position-relative">
         {{#decorations}}
             <div class="{{.}}" style="position:absolute;"></div>
         {{/decorations}}
-        <img src="{{sideimageurl}}" class="side-image m-3 img-fluid d-none d-sm-flex"/>
+        <img src="{{sideimageurl}}" class="side-image m-3 img-fluid d-flex"/>
         <div class="flex-grow-1 p-3 text-left side-text">
             {{#title}}<h3>{{.}}</h3>{{/title}}
             {{{descriptionhtml}}}
