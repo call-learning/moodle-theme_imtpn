@@ -234,32 +234,24 @@ class setup {
                     "classes" => "db-welcome",
                     "backgroundcolor" => "",
                     "text" => '<p>Que voulez-vous faire aujourd’hui ?</p>
-<p><br>
-</p>
-<table class="db-action-block">
-    <tbody>
-        <tr>
-            <td scope="col">
-                <img src="/theme/imtpn/pix/icons/book.svg" alt="">
-                <div>Créer un nouveau cours</div>
-            </td>
-            <td scope="col">
-                <img src="/theme/imtpn/pix/icons/hand-leaf.svg" alt="">
-                <div>Partager une ressource</div>
-            </td>
-            <td scope="col">
-                <img src="/theme/imtpn/pix/icons/globe-glass.svg" alt="">
-                <div>Explorer le catalogue</div>
-            </td>
-            <td scope="col">
-                <img src="/theme/imtpn/pix/icons/bubbles.svg" alt="">
-                <div>Echanger avec mes collègues</div>
-            </td>
-        </tr>
-    </tbody>
-</table>
-<br><br>
-<p></p>'],
+<div class="d-flex flex-row flex-wrap flex-md-nowrap justify-content-center align-items-stretch my-4">
+    <a>
+	<img src="/theme/imtpn/pix/icons/book.svg" alt="">
+        <div>Créer un nouveau cours</div>
+    </a>
+    <a>
+        <img src="/theme/imtpn/pix/icons/hand-leaf.svg" alt="">
+        <div>Partager une ressource</div>
+    </a>
+    <a>
+        <img src="/theme/imtpn/pix/icons/globe-glass.svg" alt="">
+        <div>Explorer le catalogue</div>
+    </a>
+    <a>
+        <img src="/theme/imtpn/pix/icons/bubbles.svg" alt="">
+        <div>Echanger avec mes collègues</div>
+    </a>
+</div>'],
             'capabilities' => array()
         ),
         array(
