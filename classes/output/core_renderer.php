@@ -27,6 +27,7 @@ namespace theme_imtpn\output;
 use custom_menu;
 use moodle_url;
 use single_select;
+use theme_imtpn\local\custom_menu_with_icon;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -88,4 +89,71 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         return !empty($logo);
     }
 
+    /**
+     * Renders a custom menu object (located in outputcomponents.php)
+     *
+     * The custom menu this method produces makes use of the YUI3 menunav widget
+     * and requires very specific html elements and classes.
+     *
+     * @staticvar int $menucount
+     * @param custom_menu $menu
+     * @return string
+     */
+    protected function render_custom_menu(custom_menu $menu) {
+        global $CFG;
+
+        $langs = get_string_manager()->get_list_of_translations();
+        $haslangmenu = $this->lang_menu() != '';
+
+        if (!$menu->has_children() && !$haslangmenu) {
+            return '';
+        }
+
+        if ($haslangmenu) {
+            $strlang = get_string('language');
+            $shortlangcode = current_language();
+            if (isset($langs[$shortlangcode])) {
+                $currentlang = $langs[$shortlangcode];
+            } else {
+                $currentlang = $strlang;
+            }
+            $this->language = $menu->add($currentlang, new moodle_url('#'), $strlang, 10000,
+                "flag-icon flag-icon-{$shortlangcode}");
+            foreach ($langs as $langtype => $langname) {
+                $this->language->add($langname, new moodle_url($this->page->url, array('lang' => $langtype)), null,
+                    null,"flag-icon flag-icon-{$langtype}");
+            }
+        }
+
+        $content = '';
+        foreach ($menu->get_children() as $item) {
+            $context = $item->export_for_template($this);
+            $content .= $this->render_from_template('core/custom_menu_item', $context);
+        }
+
+        return $content;
+    }
+
+    /**
+     * Returns the custom menu if one has been set
+     *
+     * A custom menu can be configured by browsing to
+     *    Settings: Administration > Appearance > Themes > Theme settings
+     * and then configuring the custommenu config setting as described.
+     *
+     * Theme developers: DO NOT OVERRIDE! Please override function
+     * {@link core_renderer::render_custom_menu()} instead.
+     *
+     * @param string $custommenuitems - custom menuitems set by theme instead of global theme settings
+     * @return string
+     */
+    public function custom_menu($custommenuitems = '') {
+        global $CFG;
+
+        if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
+            $custommenuitems = $CFG->custommenuitems;
+        }
+        $custommenu = new custom_menu_with_icon($custommenuitems, current_language());
+        return $this->render_custom_menu($custommenu);
+    }
 }
