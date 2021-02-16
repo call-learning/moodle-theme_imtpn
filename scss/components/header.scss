@@ -69,11 +69,11 @@ body.notloggedin {
       width: 62%;
       height: 100%;
 
-      @media (max-width: $screen-md-max) {
+      @include media-breakpoint-down(md) {
         width: 52%;
       }
 
-      @media (max-width: $screen-sm-max) {
+      @include media-breakpoint-down(sm) {
         width: 100%;
         &::after {
           display: none;
@@ -118,7 +118,7 @@ body.notloggedin {
       border-width: 0 0 200px 200px;
       border-color: transparent transparent $app-blue-2 transparent;
 
-      @media (max-width: $screen-sm-max) {
+      @include media-breakpoint-down(sm) {
         display: none;
       }
     }
@@ -129,7 +129,7 @@ body.notloggedin {
       padding-top: 80px;
       height: 312px;
 
-      @media (max-width: $screen-sm-max) {
+      @include media-breakpoint-down(sm) {
         height: 262px;
       }
 
@@ -147,7 +147,7 @@ body.notloggedin {
       font-weight: bold;
       line-height: 42px;
 
-      @media (max-width: $screen-sm-max) {
+      @include media-breakpoint-down(sm) {
         font-size: 20px;
         text-align: center;
         line-height: 30px;
@@ -157,14 +157,14 @@ body.notloggedin {
     .header__button {
       margin-top: 20px;
 
-      @media (max-width: $screen-sm-max) {
+      @include media-breakpoint-down(sm) {
         width: 100%;
       }
 
       a {
         min-width: 278px;
 
-        @media (max-width: $screen-sm-max) {
+        @include media-breakpoint-down(sm) {
           min-width: 0;
           width: 100%;
         }

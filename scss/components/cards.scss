@@ -4,7 +4,7 @@
   position: relative;
   height: 288px !important;
 
-  @media (max-width: $screen-sm-max) {
+  @include media-breakpoint-down(sm) {
     width: 100%;
     margin: 0;
   }
@@ -42,7 +42,7 @@
 }
 
 .card-news {
-  
+
   color: inherit;
 
   &:hover {
