@@ -1,5 +1,10 @@
 body.notloggedin {
 
+  #page {
+    @include media-breakpoint-up(sm) {
+      margin-top: (312px + 90px);
+    }
+  }
   .navbar {
     box-shadow: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.25);
@@ -7,6 +12,10 @@ body.notloggedin {
     padding: 0;
     max-height: none;
 
+    @include media-breakpoint-down(sm) {
+      background-color: $dark;
+      opacity: 0.8;
+    }
     .imtpn-container {
       flex-grow: 1;
       display: flex;
@@ -26,14 +35,20 @@ body.notloggedin {
   }
 
   header.header {
+    position: relative;
+    @include media-breakpoint-up(sm) {
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: $zindex-fixed - 1
+    }
+
     flex: 0 0 auto;
 
     background-image: url([[pix:theme|backgrounds/header]]);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-
-    position: relative;
 
     color: $white;
 
