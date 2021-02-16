@@ -31,5 +31,7 @@ $plugin->maturity  = MATURITY_ALPHA;
 $plugin->component = 'theme_imtpn';
 $plugin->dependencies = [
     'theme_boost' => ANY_VERSION,
-    'theme_clboost' => '2020092300'
+    'theme_clboost' => '2020092300',
+    'block_rss_thumbnails' => ANY_VERSION,
+    'block_forum_feed' => ANY_VERSION
 ];

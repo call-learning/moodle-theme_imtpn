@@ -255,26 +255,42 @@ class setup {
             'capabilities' => array()
         ),
         array(
-            'blockname' => 'calendar_upcoming',
-            'showinsubcontexts' => '0',
+            'blockname' => 'forum_feed',
+            'showinsubcontexts' => '1',
             'defaultregion' => 'content',
             'defaultweight' => '1',
-            'configdata' => array(),
+            'configdata' => array('title'=>'Les news du mur pédagogique'),
             'capabilities' => array()
         ),
         array(
-            'blockname' => 'myoverview',
-            'showinsubcontexts' => '0',
+            'blockname' => 'calendar_upcoming',
+            'showinsubcontexts' => '1',
             'defaultregion' => 'content',
             'defaultweight' => '2',
             'configdata' => array(),
             'capabilities' => array()
         ),
         array(
-            'blockname' => 'html',
-            'showinsubcontexts' => '0',
+            'blockname' => 'enhanced_myoverview',
+            'showinsubcontexts' => '1',
             'defaultregion' => 'content',
             'defaultweight' => '3',
+            'configdata' => array('title' => 'Les cours que j\'enseigne', 'filter'=>'iteach'),
+            'capabilities' => array()
+        ),
+        array(
+            'blockname' => 'myoverview',
+            'showinsubcontexts' => '1',
+            'defaultregion' => 'content',
+            'defaultweight' => '4',
+            'configdata' => array(),
+            'capabilities' => array()
+        ),
+        array(
+            'blockname' => 'html',
+            'showinsubcontexts' => '1',
+            'defaultregion' => 'content',
+            'defaultweight' => '5',
             'configdata' =>
                 [
                     "title" => "",

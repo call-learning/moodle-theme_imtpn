@@ -57,13 +57,12 @@
     color: $app-blue-1;
   }
 }
+// Remove card border for all blocks.
 
-.block_calendar_upcoming, .block_myoverview, .db-welcome, .db-inspiration {
-  .card {
+#page-my-index .block > .card {
     @extend .card-dashboard;
 
     h5 {
       @extend .title-dashboard;
     }
-  }
 }
