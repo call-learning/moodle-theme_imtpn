@@ -240,19 +240,19 @@ class setup {
     <tbody>
         <tr>
             <td scope="col">
-                <div><i class="fa fa-book"></i></div>
+                <img src="/theme/imtpn/pix/icons/book.svg" alt="">
                 <div>Créer un nouveau cours</div>
             </td>
             <td scope="col">
-                <div><i class="fa fa-search"></i></div>
+                <img src="/theme/imtpn/pix/icons/hand-leaf.svg" alt="">
                 <div>Partager une ressource</div>
             </td>
             <td scope="col">
-                <div><i class="fa fa-"></i></div>
+                <img src="/theme/imtpn/pix/icons/globe-glass.svg" alt="">
                 <div>Explorer le catalogue</div>
             </td>
             <td scope="col">
-                <div><i class="fa fa-wechat"></i></div>
+                <img src="/theme/imtpn/pix/icons/bubbles.svg" alt="">
                 <div>Echanger avec mes collègues</div>
             </td>
         </tr>
@@ -287,15 +287,16 @@ class setup {
                 [
                     "title" => "",
                     "format" => "1",
-                    "classes" => "",
+                    "classes" => "db-inspiration",
                     "backgroundcolor" => "",
-                    "text" => '<p dir="ltr" style="text-align: left;"></p>
-<pre></pre>Besoin d’inspiration ? Envie d’apprendre ? Découvrez plus de cours en explorant le catalogue de cours<br>
-<p></p>
-<p dir="ltr" ><br></p>
-<p dir="ltr" ><a href="/local/resourcelibrary">Explorer le catalogue de cours</a></p>
-<p dir="ltr" ><br></p>
-<p dir="ltr" ><br></p>'],
+                    "text" => '<div class="text-center"><p>
+                                <i class="fa fa-star-o"></i> 
+                                   Besoin d’inspiration ? Envie d’apprendre ? 
+                                <i class="fa fa-star-o"></i>
+                            </p>
+    <p>Découvrez plus de cours en explorant le catalogue de cours</p>
+    <a href="/local/resourcelibrary" class="btn btn-primary">Explorer le catalogue de cours</a>
+</div>'],
             'capabilities' => array()
         ),
     );
