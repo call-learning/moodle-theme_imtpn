@@ -121,7 +121,18 @@
                 startAt: 0,
                 perView: 4,
                 gap: 20,
-                autoplay: {{ carousselspeed }}
+                autoplay: {{ carousselspeed }},
+                breakpoints: {
+                    575: {
+                        perView: 1
+                    },
+                    767: {
+                        perView: 2
+                    },
+                    991: {
+                        perView: 3
+                    }
+                }
             }
           );
     });

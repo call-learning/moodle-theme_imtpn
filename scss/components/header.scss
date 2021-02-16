@@ -48,6 +48,16 @@ body.notloggedin {
       width: 62%;
       height: 100%;
 
+      @media (max-width: $screen-md-max) {
+        width: 52%;
+      }
+
+      @media (max-width: $screen-sm-max) {
+        width: 100%;
+        &::after {
+          display: none;
+        }
+      }
 
       &:after {
         content: "";
@@ -86,6 +96,10 @@ body.notloggedin {
       border-style: solid;
       border-width: 0 0 200px 200px;
       border-color: transparent transparent $app-blue-2 transparent;
+
+      @media (max-width: $screen-sm-max) {
+        display: none;
+      }
     }
 
     .header__bottom {
@@ -93,6 +107,10 @@ body.notloggedin {
 
       padding-top: 80px;
       height: 312px;
+
+      @media (max-width: $screen-sm-max) {
+        height: 262px;
+      }
 
       .imtpn-container {
         display: flex;
@@ -107,13 +125,28 @@ body.notloggedin {
       font-size: 32px;
       font-weight: bold;
       line-height: 42px;
+
+      @media (max-width: $screen-sm-max) {
+        font-size: 20px;
+        text-align: center;
+        line-height: 30px;
+      }
     }
 
     .header__button {
       margin-top: 20px;
 
+      @media (max-width: $screen-sm-max) {
+        width: 100%;
+      }
+
       a {
         min-width: 278px;
+
+        @media (max-width: $screen-sm-max) {
+          min-width: 0;
+          width: 100%;
+        }
       }
     }
   }

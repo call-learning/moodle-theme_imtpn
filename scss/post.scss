@@ -2,13 +2,18 @@
 @import "../../clboost/scss/commons";
 @import "../../clboost/scss/drawer";
 
+@import 'abstracts/mixins';
+
 @import 'theme/base';
 
+@import 'components/components';
 @import 'components/buttons';
+@import 'components/cards';
 @import 'components/blocks';
 @import 'components/texts';
 @import 'components/header';
 @import 'components/footer';
+@import 'components/syllabus';
 
 @import 'pages/homepage';
 
