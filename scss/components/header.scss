@@ -4,12 +4,6 @@ body {
   }
 }
 body.notloggedin {
-
-  #page {
-    @include media-breakpoint-up(sm) {
-      margin-top: (312px + 90px);
-    }
-  }
   .navbar {
     background-color: initial;
     box-shadow: none;
@@ -19,7 +13,7 @@ body.notloggedin {
     max-height: none;
 
     @include media-breakpoint-down(sm) {
-      background-color: $dark;
+      background-color: $imt-darkblue;
       opacity: 0.8;
     }
     .imtpn-container {
@@ -42,6 +36,7 @@ body.notloggedin {
 
   header.header {
     position: relative;
+    min-height: $navbar-height;
     @include media-breakpoint-up(sm) {
       position: fixed;
       width: 100%;
@@ -85,11 +80,10 @@ body.notloggedin {
         width: 0;
         height: 0;
         border-style: solid;
-        border-width: 312px 312px 0 0;
         border-color: $app-blue-1 transparent transparent transparent;
-
+        border-width: $navbar-height $navbar-height 0 0;
+        right: -($navbar-height);
         position: absolute;
-        right: -312px;
         top: 0;
       }
 
@@ -171,6 +165,18 @@ body.notloggedin {
       }
     }
   }
-
 }
 
+#page-site-index.notloggedin {
+  #page {
+    @include media-breakpoint-up(sm) {
+      margin-top: (312px + $navbar-height);
+    }
+  }
+  header.header {
+    .header__triangle-1:after {
+        border-width: 312px 312px 0 0;
+        right: -312px;
+      }
+    }
+}

@@ -39,3 +39,9 @@ $string['footer_message'] = 'Accédez à la Plateforme Numérique de l’IMT n�
     <a href="#">
           <img src="/theme/imtpn/pix/logos/logo-moodle.png" alt="moodle">
     </a>';
+$string['loginext_title'] = 'Vous êtes externe ?';
+$string['loginext_desc'] = 'Sélectionnez votre école pour vous connecter avec votre compte.
+Si vous n’avez pas de compte, vous pouvez en <a href="/login/signup.php">créer un ici.</a>';
+
+$string['loginidp_title'] = 'Vous êtes membres d’une école de l’IMT ?';
+$string['logidp_desc'] = 'Voici la liste des écoles auxquelles vous pouvez vous connecter.';
