@@ -24,9 +24,13 @@
 
 namespace theme_imtpn\output;
 
+use context_system;
+use core_userfeedback;
 use custom_menu;
+use html_writer;
 use moodle_url;
 use single_select;
+use stdClass;
 use theme_imtpn\local\custom_menu_with_icon;
 
 defined('MOODLE_INTERNAL') || die;
@@ -39,6 +43,19 @@ defined('MOODLE_INTERNAL') || die;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class core_renderer extends \theme_clboost\output\core_renderer {
+
+    /**
+     * Add more info that can then be used in the mustache template.
+     *
+     * For example {{# additionalinfo.isloggedin }} {{/ additionalinfo.isloggedin }}
+     * @return stdClass
+     */
+    public function get_template_additional_information() {
+        $additionalinfo = parent::get_template_additional_information();
+        $additionalinfo->footercontent = get_config('theme_imtpn', 'footercontent');
+        return $additionalinfo;
+    }
+
 
     /**
      * Get Logo URL
@@ -155,5 +172,81 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         }
         $custommenu = new custom_menu_with_icon($custommenuitems, current_language());
         return $this->render_custom_menu($custommenu);
+    }
+
+
+    /**
+     * The standard tags (typically performance information and validation links,
+     * if we are in developer debug mode) that should be output in the footer area
+     * of the page. Designed to be called in theme layout.php files.
+     *
+     * @return string HTML fragment.
+     */
+    public function standard_footer_html() {
+        global $CFG, $SCRIPT;
+
+        $list = [];
+        $output = '';
+        if (during_initial_install()) {
+            // Debugging info can not work before install is finished,
+            // in any case we do not want any links during installation!
+            return '';
+        }
+
+        // Give plugins an opportunity to add any footer elements.
+        // The callback must always return a string containing valid html footer content.
+        $pluginswithfunction = get_plugins_with_function('standard_footer_html', 'lib.php');
+        foreach ($pluginswithfunction as $plugins) {
+            foreach ($plugins as $function) {
+                $list[] = $function();
+            }
+        }
+
+        if (core_userfeedback::can_give_feedback()) {
+            $list[]= html_writer::div(
+                $this->render_from_template('core/userfeedback_footer_link', ['url' => core_userfeedback::make_link()->out(false)])
+            );
+        }
+
+        // This function is normally called from a layout.php file in {@link core_renderer::header()}
+        // but some of the content won't be known until later, so we return a placeholder
+        // for now. This will be replaced with the real content in {@link core_renderer::footer()}.
+        $output .= $this->unique_performance_info_token;
+        if ($this->page->devicetypeinuse == 'legacy') {
+            // The legacy theme is in use print the notification
+            $list[] = html_writer::tag('div', get_string('legacythemeinuse'), array('class'=>'legacythemeinuse'));
+        }
+
+        // Get links to switch device types (only shown for users not on a default device)
+        $list[] = $this->theme_switch_links();
+
+        if (!empty($CFG->debugpageinfo)) {
+            $list[] = '<div class="performanceinfo pageinfo">' . get_string('pageinfodebugsummary', 'core_admin',
+                    $this->page->debug_summary()) . '</div>';
+        }
+        if (debugging(null, DEBUG_DEVELOPER) and has_capability('moodle/site:config', context_system::instance())) {  // Only in developer mode
+            // Add link to profiling report if necessary
+            if (function_exists('profiling_is_running') && profiling_is_running()) {
+                $txt = get_string('profiledscript', 'admin');
+                $title = get_string('profiledscriptview', 'admin');
+                $url = $CFG->wwwroot . '/admin/tool/profiling/index.php?script=' . urlencode($SCRIPT);
+                $link= '<a title="' . $title . '" href="' . $url . '">' . $txt . '</a>';
+                $list[]  = '<div class="profilingfooter">' . $link . '</div>';
+            }
+            $purgeurl = new moodle_url('/admin/purgecaches.php', array('confirm' => 1,
+                'sesskey' => sesskey(), 'returnurl' => $this->page->url->out_as_local_url(false)));
+            $list[] = '<div class="purgecaches">' .
+                html_writer::link($purgeurl, get_string('purgecaches', 'admin')) . '</div>';
+        }
+        if (!empty($CFG->debugvalidators)) {
+            // NOTE: this is not a nice hack, $this->page->url is not always accurate and
+            // $FULLME neither, it is not a bug if it fails. --skodak.
+            $list[] = '<div class="validators"><ul class="list-unstyled ml-1">
+              <li><a href="http://validator.w3.org/check?verbose=1&amp;ss=1&amp;uri=' . urlencode(qualified_me()) . '">Validate HTML</a></li>
+              <li><a href="http://www.contentquality.com/mynewtester/cynthia.exe?rptmode=-1&amp;url1=' . urlencode(qualified_me()) . '">Section 508 Check</a></li>
+              <li><a href="http://www.contentquality.com/mynewtester/cynthia.exe?rptmode=0&amp;warnp2n3e=1&amp;url1=' . urlencode(qualified_me()) . '">WCAG 1 (2,3) Check</a></li>
+            </ul></div>';
+        }
+        return \html_writer::alist($list). $output;
     }
 }

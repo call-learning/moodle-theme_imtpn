@@ -30,3 +30,12 @@ $string['configtitle'] = 'Theme IMT Pédagothèque Numérique';
 $string['region-content'] = 'Content';
 $string['region-side-pre'] = 'Right';
 $string['defaultfpslogan'] = 'Bienvenue sur la<br>Pédagothèque Numérique de l\'IMT';
+$string['footer'] = 'Footer';
+$string['footercontent'] = 'Footer content';
+$string['footercontent_desc'] = 'Footer content description';
+$string['legal_mention'] = 'Les illustrations de ce site sont intégralement ou en partie issues
+ des banques Freepik et Unsplash, proposant des contenus libres et gratuits.';
+$string['footer_message'] = 'Accédez à la Plateforme Numérique de l’IMT n’importe où grâce à l’application Moodle
+    <a href="#">
+          <img src="/theme/imtpn/pix/logos/logo-moodle.png" alt="moodle">
+    </a>';

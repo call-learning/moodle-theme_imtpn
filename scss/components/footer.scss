@@ -1,4 +1,9 @@
 footer.footer {
+    &.footer-dark {
+        background-color: $imt-darkblue;
+        height: auto;
+    }
+
     flex: 0 0 auto;
 
     height: 343px;
@@ -104,5 +109,31 @@ footer.footer {
 
     .footer__mention {
         font-size: 12px;
+    }
+}
+
+#page-footer a {
+    color: $gray-700;
+    text-decoration: none;
+
+    .icon {
+        color: $gray-700;
+    }
+
+    &:focus .icon {
+        color: $body-color;
+    }
+}
+
+#page-footer.footer-dark a {
+    color: $white;
+    text-decoration: none;
+
+    .icon {
+        color: $white;
+    }
+
+    &:focus .icon {
+        color: $white;
     }
 }

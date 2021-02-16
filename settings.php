@@ -25,5 +25,5 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($ADMIN->fulltree) {
-    $settings = \theme_clboost\local\settings::create_settings('imtpn'); // Create relevant settings.
+    $settings = \theme_imtpn\local\settings::create_settings('imtpn'); // Create relevant settings.
 }
