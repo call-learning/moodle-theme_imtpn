@@ -13,19 +13,17 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
  * Theme plugin version definition.
  *
- * @package   theme_imtpn
- * @copyright 2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
+ * Same as theme boost
+ *
+ * @package   theme_clboost
+ * @copyright 2020 - CALL Learning - Laurent David <laurent@call-learning.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use theme_imtpn\local\config;
-
 defined('MOODLE_INTERNAL') || die();
+$templatecontext = \theme_clboost\local\utils::prepare_standard_page($OUTPUT, $PAGE, 'side-pre');
+echo $OUTPUT->render_from_template('theme_imtpn/myprofile', $templatecontext);
 
-require_once(__DIR__ . '/lib.php');
-
-config::setup_config($THEME, 'imtpn');

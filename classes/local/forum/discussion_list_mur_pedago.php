@@ -15,17 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Theme plugin version definition.
+ * Discussion list renderer.
  *
- * @package   theme_imtpn
- * @copyright 2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod_forum
+ * @copyright  2019 Andrew Nicols <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-use theme_imtpn\local\config;
+namespace theme_imtpn\local\forum;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__ . '/lib.php');
+/**
+ * The discussion list renderer.
+ *
+ * @package    mod_forum
+ * @copyright  2019 Andrew Nicols <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class discussion_list_mur_pedago extends \mod_forum\local\renderers\discussion_list {
 
-config::setup_config($THEME, 'imtpn');
+}

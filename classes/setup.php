@@ -256,7 +256,7 @@ class setup {
         ),
         array(
             'blockname' => 'forum_feed',
-            'showinsubcontexts' => '1',
+            'showinsubcontexts' => '0',
             'defaultregion' => 'content',
             'defaultweight' => '1',
             'configdata' => array('title'=>'Les news du mur pédagogique'),
@@ -264,7 +264,7 @@ class setup {
         ),
         array(
             'blockname' => 'calendar_upcoming',
-            'showinsubcontexts' => '1',
+            'showinsubcontexts' => '0',
             'defaultregion' => 'content',
             'defaultweight' => '2',
             'configdata' => array(),
@@ -272,7 +272,7 @@ class setup {
         ),
         array(
             'blockname' => 'enhanced_myoverview',
-            'showinsubcontexts' => '1',
+            'showinsubcontexts' => '0',
             'defaultregion' => 'content',
             'defaultweight' => '3',
             'configdata' => array('title' => 'Les cours que j\'enseigne', 'filter'=>'iteach'),
@@ -280,7 +280,7 @@ class setup {
         ),
         array(
             'blockname' => 'myoverview',
-            'showinsubcontexts' => '1',
+            'showinsubcontexts' => '0',
             'defaultregion' => 'content',
             'defaultweight' => '4',
             'configdata' => array(),
@@ -288,7 +288,7 @@ class setup {
         ),
         array(
             'blockname' => 'html',
-            'showinsubcontexts' => '1',
+            'showinsubcontexts' => '0',
             'defaultregion' => 'content',
             'defaultweight' => '5',
             'configdata' =>
@@ -314,7 +314,7 @@ class setup {
     const HOMEPAGE_BLOCK_DEFINITION = array(
         array(
             'blockname' => 'html',
-            'showinsubcontexts' => '1',
+            'showinsubcontexts' => '0',
             'defaultregion' => 'content',
             'defaultweight' => '1',
             'configdata' =>
@@ -328,7 +328,7 @@ class setup {
             'capabilities' => array()
         ),
         array('blockname' => 'mcms',
-            'showinsubcontexts' => '1',
+            'showinsubcontexts' => '0',
             'defaultregion' => 'content',
             'defaultweight' => '2',
             'configdata' => [
@@ -361,7 +361,7 @@ class setup {
             ],
         ),
         array('blockname' => 'mcms',
-            'showinsubcontexts' => '1',
+            'showinsubcontexts' => '0',
             'defaultregion' => 'content',
             'defaultweight' => '3',
             'configdata' => [
@@ -384,7 +384,7 @@ class setup {
             ],
         ),
         array('blockname' => 'featured_courses',
-            'showinsubcontexts' => '1',
+            'showinsubcontexts' => '0',
             'defaultregion' => 'content',
             'defaultweight' => '4',
             'configdata' => [
@@ -394,7 +394,7 @@ class setup {
             'capabilities' => array()
         ),
         array('blockname' => 'rss_thumbnails',
-            'showinsubcontexts' => '1',
+            'showinsubcontexts' => '0',
             'defaultregion' => 'content',
             'defaultweight' => '5',
             'configdata' => [

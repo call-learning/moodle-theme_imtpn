@@ -41,3 +41,13 @@ function theme_imtpn_pluginfile($course, $cm, $context, $filearea, $args, $force
     return theme_clboost\local\utils::generic_pluginfile('imtpn', $course, $cm, $context, $filearea, $args, $forcedownload,
         $options);
 }
+
+/**
+ * @param \core_user\output\myprofile\tree $tree
+ * @param $user
+ * @param $iscurrentuser
+ * @param $course
+ */
+function theme_imtpn_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course) {
+   $node  = $tree->nodes;
+}

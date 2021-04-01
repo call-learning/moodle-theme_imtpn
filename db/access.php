@@ -15,17 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Theme plugin version definition.
+ * Resource Library access
  *
- * @package   theme_imtpn
- * @copyright 2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @package     theme_imtpn
+ * @category    access
+ * @copyright   2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-use theme_imtpn\local\config;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__ . '/lib.php');
-
-config::setup_config($THEME, 'imtpn');
+$capabilities = array(
+    'theme/imtpn:editcataloguethemes' => array(
+        'riskbitmask' => RISK_SPAM | RISK_XSS,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW,
+        )
+    ),
+);

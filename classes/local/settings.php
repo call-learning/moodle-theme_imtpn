@@ -56,6 +56,20 @@ class settings extends \theme_clboost\local\settings {
         $page->add($setting);
 
         $settings->add($page);
+
+        // Advanced settings.
+        $page = new admin_settingpage('murpedago',
+            static::get_string('murpedagogique', 'theme_imtpn'));
+
+        $setting = new \admin_setting_configtext('theme_imtpn/murpedagoidnumber',
+            static::get_string('murpedagoidnumber', 'theme_imtpn'),
+            static::get_string('murpedagoidnumber_desc', 'theme_imtpn'),
+            'MUR_PEDAGOGIQUE',
+            PARAM_ALPHANUMEXT);
+        $page->add($setting);
+
+        $settings->add($page);
+
     }
 
     const DEFAULT_FOOTER_CONTENT='

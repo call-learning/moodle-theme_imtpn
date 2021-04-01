@@ -45,3 +45,11 @@ Si vous n’avez pas de compte, vous pouvez en <a href="/login/signup.php">crée
 
 $string['loginidp_title'] = 'Vous êtes membres d’une école de l’IMT ?';
 $string['logidp_desc'] = 'Voici la liste des écoles auxquelles vous pouvez vous connecter.';
+$string['murpedagogique'] = 'Mur pédagogique';
+$string['murpedagoidnumber'] = 'Mur pédagogique (idnumber)';
+$string['murpedagoidnumber_desc'] = 'Mur pédagogique (idnumber) : identifiant unique pour l\'activité forum contenant
+le mur pédagogique';
+
+$string['themescat:title'] = 'Catalogue par thème';
+$string['createcourse'] = 'Créer un cours';
+$string['viewcatalog'] = 'Voir le catalogue';
