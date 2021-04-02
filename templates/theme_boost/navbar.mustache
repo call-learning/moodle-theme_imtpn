@@ -38,10 +38,12 @@
         {{/ output.should_display_navbar_logo }}
     </a>
 
-    <ul class="navbar-nav d-none d-md-flex ml-auto">
+    <ul class="navbar-nav d-none d-md-flex flex-grow-1">
         <!-- custom_menu -->
         {{{ output.custom_menu }}}
         <!-- page_heading_menu -->
+    </ul>
+    <ul class="navbar-nav d-none d-md-flex ml-auto">
         {{{ output.page_heading_menu }}}
     </ul>
     <ul class="nav navbar-nav">

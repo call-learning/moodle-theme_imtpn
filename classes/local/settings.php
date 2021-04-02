@@ -68,6 +68,13 @@ class settings extends \theme_clboost\local\settings {
             PARAM_ALPHANUMEXT);
         $page->add($setting);
 
+        $setting = new \admin_setting_confightmleditor('theme_imtpn/murpedagogrouprules',
+            static::get_string('murpedagogrouprules', 'theme_imtpn'),
+            static::get_string('murpedagogrouprules_desc', 'theme_imtpn'),
+            self::DEFAULT_RULES,
+            PARAM_RAW);
+        $page->add($setting);
+
         $settings->add($page);
 
     }
@@ -82,4 +89,22 @@ class settings extends \theme_clboost\local\settings {
         </a>
     </div>
     ';
+    const DEFAULT_RULES = "
+        <h3>Règles de participation</h3>
+        <p><strong>Respect</strong> : les utilisateurs doivent s’adresser aux autres utilisateurs, à la modération et à 
+        l'administration du Mur pédagogique avec respect, en évitant les commentaires irritants, irrespectueux, faux ou pouvant 
+        porter préjudice à un utilisateur ou une entité.</p>
+        <p><strong>Spams</strong> : tout message doit rester en lien avec la thématique du groupe et sans intention 
+        promotionnelle ou commerciale.
+        <p><strong>Responsabilité des auteurs</strong>: les auteurs de messages sont seuls responsables de leur propos 
+        et des contenus qu’ils y joignent. Ceux-ci ne sont, par ailleurs, pas nécessairement approuvés par 
+        l’administration de la Pédagothèque numérique ou la Direction de l’IMT.</p>
+        <p><strong>Visibilité des messages</strong> : les messages ne sont visibles que par les utilisateurs 
+        authentifiés sur la Pédagothèque numérique, membres du groupe concerné.L’équipe de modération se réserve le 
+        droit de supprimer, avec ou sans avertissement, à sa discrétion, tout message qui ne respectent pas ces 
+        règles. Si, en tant qu'utilisateur, vous jugez qu'une contribution ne respecte pas ces règles, merci de le signaler 
+        à l’adresse pedagotheque@imt.fr.</p>
+        <p>Il est néanmoins possible que nous commettions des erreurs d’interprétation : si vous pensez qu’une contribution 
+        a été supprimée par erreur, merci de le signaler à l’adresse pedagotheque@imt.fr.</p>
+    ";
 }

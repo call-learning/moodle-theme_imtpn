@@ -35,4 +35,13 @@ $capabilities = array(
             'manager' => CAP_ALLOW,
         )
     ),
+    'theme/imtpn:canselfjoingroup' => array(
+        'riskbitmask' => RISK_SPAM | RISK_XSS,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'manager' => CAP_ALLOW,
+            'student' => CAP_ALLOW
+        )
+    ),
 );

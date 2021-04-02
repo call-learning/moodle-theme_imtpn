@@ -24,59 +24,37 @@
  */
 
 require_once('../../../config.php');
+global $DB, $USER, $PAGE, $OUTPUT, $CFG;
 
-$groupid   = optional_param('groupid', 0, PARAM_INT);
-
-global $DB, $USER;
+require_once($CFG->dirroot. '/group/lib.php');
+$groupid   = required_param('groupid', PARAM_INT);
 $group = groups_get_group($groupid);
 if (empty($group)) {
     print_error('invalid');
 }
 
+
 $course = $DB->get_record('course', array('id' => $group->courseid), '*', MUST_EXIST);
 $context = context_course::instance($course->id, MUST_EXIST);
-
-require_login($course);
-global $PAGE, $OUTPUT;
-
-$PAGE->set_url(new moodle_url('/theme/imtpn/pages/grouppage.php', array('groupid'=> $groupid)));
+require_login($course->id);
+if (!has_capability('theme/imtpn:canselfjoingroup', $context)) {
+    print_error('selfjoinerror');
+}
+$PAGE->set_url(new moodle_url('/theme/imtpn/pages/joingroup.php', array('groupid'=> $groupid)));
 $PAGE->set_title("$course->shortname: ".get_string('groups'));
-$PAGE->set_heading($course->fullname);
-$PAGE->set_pagetype('course-view-' . $course->format);
-$PAGE->set_docs_path('enrol/users');
-$PAGE->add_body_class('path-user');                     // So we can style it independently.
 $PAGE->navbar->ignore_active();
 $PAGE->navbar->add(get_string('murpedagogique', 'theme_imtpn'),
     new moodle_url('/theme/imtpn/pages/murpedagogique.php'));
 $PAGE->navbar->add(get_string('groups'), new moodle_url('/theme/imtpn/pages/groupoverview.php', array('id'=>$course->id)));
 
-
-$PAGE->set_other_editing_capability('moodle/course:manageactivities');
-$mygroups = groups_get_user_groups($course->id);
-$isingroup = false;
-foreach($mygroups as $mygroup) {
-    if ($mygroup[0] == $groupid) {
-        $isingroup = true;
-    }
-}
-
-if (!$isingroup && has_capability('theme/imtpn:canselfjoingroup', $context)) {
-    $joingroup = $OUTPUT->single_button(
-        new moodle_url('/theme/imtpn/pages/joingroup.php', array('groupid'=>$groupid)),
-        get_string('joingroup', 'theme_imtpn'));
-    $PAGE->set_button($joingroup);
-}
-
 echo $OUTPUT->header();
-echo $OUTPUT->heading($group->name);
-
-
-// Display single group information if requested in the URL.
-if ($groupid) {
-    $grouprenderer = $PAGE->get_renderer('core_group');
-    $groupdetailpage = new \core_group\output\group_details($groupid);
-    echo $grouprenderer->group_details($groupdetailpage);
-    $rulesgroups = get_config('theme_imtpn', 'murpedagogrouprules');
-    echo $OUTPUT->box($rulesgroups);
+if (groups_add_member($groupid, $USER->id, 'theme_imtpn'))  {
+    echo $OUTPUT->notification(get_string('groupjoined', 'theme_imtpn', $group->name), 'notifysuccess');
+} else {
+    echo $OUTPUT->notification(get_string('cannotjoin', 'theme_imtpn', $group->name), 'notifyfailure');
 }
+// Display single group information if requested in the URL.
+echo $OUTPUT->single_button(
+    new moodle_url('/theme/imtpn/pages/grouppage.php', array('groupid'=> $group->id)),
+    get_string('continue'));
 echo $OUTPUT->footer();

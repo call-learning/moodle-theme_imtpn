@@ -49,5 +49,5 @@ function theme_imtpn_pluginfile($course, $cm, $context, $filearea, $args, $force
  * @param $course
  */
 function theme_imtpn_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course) {
-   $node  = $tree->nodes;
+   $node  = $tree->nodes->course;
 }

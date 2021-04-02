@@ -30,7 +30,15 @@ define('OVERVIEW_NO_GROUP', -1); // The fake group for users not in a group.
 define('OVERVIEW_GROUPING_GROUP_NO_GROUPING', -1); // The fake grouping for groups that have no grouping.
 define('OVERVIEW_GROUPING_NO_GROUP', -2); // The fake grouping for users with no group.
 
-$courseid   = required_param('id', PARAM_INT);
+$courseid   = optional_param('id', 0,PARAM_INT);
+
+if (empty($courseid)) {
+    global $DB;
+    $murpedagoidnumber = get_config('theme_imtpn', 'murpedagoidnumber');
+
+    $cm = $DB->get_record('course_modules', array('idnumber' => $murpedagoidnumber));
+    $courseid = $cm->course;
+}
 
 if (!$course = $DB->get_record('course', array('id'=>$courseid))) {
     print_error('invalidcourse');
@@ -115,6 +123,10 @@ $PAGE->navbar->add(get_string('overview', 'group'));
 $PAGE->set_title($strgroups);
 $PAGE->set_heading($course->fullname);
 $PAGE->set_pagelayout('standard');
+$PAGE->navbar->ignore_active();
+$PAGE->navbar->add(get_string('murpedagogique', 'theme_imtpn'),
+    new moodle_url('/theme/imtpn/pages/murpedagogique.php'));
+
 echo $OUTPUT->header();
 
 /// Print overview

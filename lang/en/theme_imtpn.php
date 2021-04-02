@@ -25,6 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 
+$string['allgroups'] = 'Parcourir les groupes existants';
 $string['pluginname'] = 'Theme IMT Pédagothèque Numérique';
 $string['configtitle'] = 'Theme IMT Pédagothèque Numérique';
 $string['region-content'] = 'Content';
@@ -33,6 +34,9 @@ $string['defaultfpslogan'] = 'Bienvenue sur la<br>Pédagothèque Numérique de l
 $string['footer'] = 'Footer';
 $string['footercontent'] = 'Footer content';
 $string['footercontent_desc'] = 'Footer content description';
+$string['joingroup'] = 'Rejoindre le groupe';
+$string['groupjoined'] = 'Félicitations ! Vous avez rejoint le groupe {$a}.';
+$string['cannotjoin'] = 'Vous n\'avez pas pu joindre le groupe {$a}, êtes vous inscrit dans le cours ?';
 $string['legal_mention'] = 'Les illustrations de ce site sont intégralement ou en partie issues
  des banques Freepik et Unsplash, proposant des contenus libres et gratuits.';
 $string['footer_message'] = 'Accédez à la Plateforme Numérique de l’IMT n’importe où grâce à l’application Moodle

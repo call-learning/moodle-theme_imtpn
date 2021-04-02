@@ -27,6 +27,7 @@ namespace theme_imtpn;
 use mod_forum\grades\forum_gradeitem;
 use mod_forum\local\container;
 use mod_forum\local\renderers\discussion_list as discussion_list_renderer;
+use moodle_url;
 use theme_imtpn\local\forum\discussion_list_mur_pedago;
 
 defined('MOODLE_INTERNAL') || die();
@@ -102,7 +103,10 @@ class mur_pedagogique {
         $PAGE->add_body_class('forumtype-' . $forum->get_type());
         $PAGE->set_heading($course->fullname);
         $PAGE->set_button(forum_search_form($course, $search));
-
+        $viewallgroups = $OUTPUT->single_button(
+            new moodle_url('/theme/imtpn/pages/groupoverview.php'),
+            get_string('allgroups', 'theme_imtpn'));
+        $PAGE->set_button($viewallgroups. forum_search_form($course, $search));
         if ($istypesingle && $displaymode == FORUM_MODE_NESTED_V2) {
             $PAGE->add_body_class('nested-v2-display-mode reset-style');
             $settingstrigger = $OUTPUT->render_from_template('mod_forum/settings_drawer_trigger', null);
@@ -179,7 +183,8 @@ class mur_pedagogique {
             forum_gradeitem::load_from_forum_entity($forum),
             'mod_forum/blog_discussion_list',
             $notifications,
-            function($discussions, $user, $forum) use ($capabilitymanager, $builderfactory, $vaultfactory, $legacydatamapperfactory) {
+            function($discussions, $user, $forum) use ($capabilitymanager, $builderfactory, $vaultfactory, $legacydatamapperfactory
+            ) {
                 $exportedpostsbuilder = $builderfactory->get_exported_posts_builder();
                 $discussionentries = [];
                 $postentries = [];
