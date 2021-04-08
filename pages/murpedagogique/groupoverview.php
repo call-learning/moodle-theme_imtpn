@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * Print an overview of groupings & group membership
  *
@@ -23,51 +22,50 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once('../../../config.php');
+require_once('../../../../config.php');
+global $CFG, $PAGE, $DB, $OUTPUT;
 require_once($CFG->libdir . '/filelib.php');
 
 define('OVERVIEW_NO_GROUP', -1); // The fake group for users not in a group.
 define('OVERVIEW_GROUPING_GROUP_NO_GROUPING', -1); // The fake grouping for groups that have no grouping.
 define('OVERVIEW_GROUPING_NO_GROUP', -2); // The fake grouping for users with no group.
 
-$courseid   = optional_param('id', 0,PARAM_INT);
+$courseid = optional_param('id', 0, PARAM_INT);
 
+$cm = \theme_imtpn\mur_pedagogique::get_mur_cm();
+$PAGE->set_cm($cm);
 if (empty($courseid)) {
-    global $DB;
-    $murpedagoidnumber = get_config('theme_imtpn', 'murpedagoidnumber');
-
-    $cm = $DB->get_record('course_modules', array('idnumber' => $murpedagoidnumber));
     $courseid = $cm->course;
 }
 
-if (!$course = $DB->get_record('course', array('id'=>$courseid))) {
+if (!$course = $DB->get_record('course', array('id' => $courseid))) {
     print_error('invalidcourse');
 }
 
-$url = new moodle_url('/theme/imtpn/pages/overview.php', array('id'=>$courseid));
-$PAGE->set_url($url);
+$currenturl = new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php', array('id' => $courseid));
+$PAGE->set_url($currenturl);
 
 // Make sure that the user has permissions to manage groups.
-require_login($course);
+require_course_login($course, true, $cm);
 
 $context = context_course::instance($courseid);
-require_capability('moodle/course:managegroups', $context);
+require_capability('moodle/site:accessallgroups', $context);
 
-$strgroups           = get_string('groups');
-$strparticipants     = get_string('participants');
-$stroverview         = get_string('overview', 'group');
-$strgrouping         = get_string('grouping', 'group');
-$strgroup            = get_string('group', 'group');
-$strnotingrouping    = get_string('notingrouping', 'group');
-$strnogroups         = get_string('nogroups', 'group');
-$strdescription      = get_string('description');
+$strgroups = get_string('allgroups', 'theme_imtpn');
+$strparticipants = get_string('participants');
+$stroverview = get_string('overview', 'group');
+$strgrouping = get_string('grouping', 'group');
+$strgroup = get_string('group', 'group');
+$strnotingrouping = get_string('notingrouping', 'group');
+$strnogroups = get_string('nogroups', 'group');
+$strdescription = get_string('description');
 
 // This can show all users and all groups in a course.
 // This is lots of data so allow this script more resources.
 raise_memory_limit(MEMORY_EXTRA);
 
 // Get all groupings and sort them by formatted name.
-$groupings = $DB->get_records('groupings', array('courseid'=>$courseid), 'name');
+$groupings = $DB->get_records('groupings', array('courseid' => $courseid), 'name');
 foreach ($groupings as $gid => $grouping) {
     $groupings[$gid]->formattedname = format_string($grouping->name, true, array('context' => $context));
 }
@@ -80,9 +78,9 @@ foreach ($groupings as $grouping) {
 $members[OVERVIEW_GROUPING_GROUP_NO_GROUPING] = array();
 
 // Get all groups
-$groups = $DB->get_records('groups', array('courseid'=>$courseid), 'name');
+$groups = $DB->get_records('groups', array('courseid' => $courseid), 'name');
 
-$params = array('courseid'=>$courseid);
+$params = array('courseid' => $courseid);
 
 list($sort, $sortparams) = users_order_by_sql('u');
 
@@ -116,41 +114,46 @@ foreach ($rs as $row) {
 }
 $rs->close();
 
-navigation_node::override_active_url(new moodle_url('/theme/imptpn/pages/groupoverview.php', array('id'=>$courseid)));
+navigation_node::override_active_url($currenturl);
 $PAGE->navbar->add(get_string('overview', 'group'));
 
 /// Print header
 $PAGE->set_title($strgroups);
 $PAGE->set_heading($course->fullname);
 $PAGE->set_pagelayout('standard');
+$PAGE->set_pagetype('group-overview');
 $PAGE->navbar->ignore_active();
 $PAGE->navbar->add(get_string('murpedagogique', 'theme_imtpn'),
-    new moodle_url('/theme/imtpn/pages/murpedagogique.php'));
-
+    new moodle_url('/theme/imtpn/pages/murpedagogique/index.php'));
+$PAGE->navbar->add(get_string('allgroups', 'theme_imtpn'),
+    $currenturl);
 echo $OUTPUT->header();
 
 /// Print overview
-echo $OUTPUT->heading(format_string($course->shortname, true, array('context' => $context)) .' '.$stroverview, 3);
+echo $OUTPUT->heading(format_string($course->shortname, true, array('context' => $context)) . ' ' . $stroverview, 3);
 
 /// Print table
 $printed = false;
 $hoverevents = array();
-foreach ($members as $gpgid=>$groupdata) {
+foreach ($members as $gpgid => $groupdata) {
     $table = new html_table();
-    $table->head  = array(get_string('groupscount', 'group', count($groupdata)), get_string('groupmembers', 'group'), get_string('usercount', 'group'));
-    $table->size  = array('20%', '70%', '10%');
+    $table->head = array(get_string('groupscount', 'group', count($groupdata)), get_string('groupmembers', 'group'),
+        get_string('usercount', 'group'));
+    $table->size = array('20%', '70%', '10%');
     $table->align = array('left', 'left', 'center');
     $table->width = '90%';
-    $table->data  = array();
-    foreach ($groupdata as $gpid=>$users) {
+    $table->data = array();
+    foreach ($groupdata as $gpid => $users) {
         $line = array();
         $pictureurl = get_group_picture_url($groups[$gpid], $courseid, false, false);
         $groupname = s($groups[$gpid]->name);
         $name = html_writer::link(
-            new moodle_url('/theme/imtpn/pages/grouppage.php', array('groupid'=> $gpid)),
+            new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $gpid)),
             html_writer::img($pictureurl, $groupname, ['title' => $groupname])
         );
-        $description = file_rewrite_pluginfile_urls($groups[$gpid]->description, 'pluginfile.php', $context->id, 'group', 'description', $gpid);
+        $description =
+            file_rewrite_pluginfile_urls($groups[$gpid]->description, 'pluginfile.php', $context->id, 'group', 'description',
+                $gpid);
         $options = new stdClass;
         $options->noclean = true;
         $options->overflowdiv = true;
@@ -165,7 +168,7 @@ foreach ($members as $gpgid=>$groupdata) {
         $fullnames = array();
         foreach ($users as $user) {
             /* @var $OUTPUT core_renderer */
-            $fullnames[] =  $OUTPUT->user_picture($user, ['includefullname'=> true]);
+            $fullnames[] = $OUTPUT->user_picture($user, ['includefullname' => true]);
         }
         $line[] = implode(', ', $fullnames);
         $line[] = count($users);
@@ -173,10 +176,13 @@ foreach ($members as $gpgid=>$groupdata) {
     }
     if ($gpgid > 0) {
         echo $OUTPUT->heading($groupings[$gpgid]->formattedname, 3);
-        $description = file_rewrite_pluginfile_urls($groupings[$gpgid]->description, 'pluginfile.php', $context->id, 'grouping', 'description', $gpgid);
+        $description =
+            file_rewrite_pluginfile_urls($groupings[$gpgid]->description, 'pluginfile.php', $context->id, 'grouping', 'description',
+                $gpgid);
         $options = new stdClass;
         $options->overflowdiv = true;
-        echo $OUTPUT->box(format_text($description, $groupings[$gpgid]->descriptionformat, $options), 'generalbox boxwidthnarrow boxaligncenter');
+        echo $OUTPUT->box(format_text($description, $groupings[$gpgid]->descriptionformat, $options),
+            'generalbox boxwidthnarrow boxaligncenter');
     }
     echo html_writer::table($table);
     $printed = true;

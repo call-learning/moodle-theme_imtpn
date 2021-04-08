@@ -21,7 +21,7 @@
  * @copyright 2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once('../../../config.php');
+require_once('../../../../config.php');
 $managerfactory = mod_forum\local\container::get_manager_factory();
 $legacydatamapperfactory = mod_forum\local\container::get_legacy_data_mapper_factory();
 $vaultfactory = mod_forum\local\container::get_vault_factory();
@@ -42,10 +42,8 @@ $sortorder = optional_param('o', null, PARAM_INT);
 if (empty($forum)) {
 
     if (empty($forumid)) {
-        global $DB;
-        $murpedagoidnumber = get_config('theme_imtpn', 'murpedagoidnumber');
+        $cm = \theme_imtpn\mur_pedagogique::get_mur_cm();
 
-        $cm = $DB->get_record('course_modules', array('idnumber' => $murpedagoidnumber));
         $forum = $forumvault->get_from_course_module_id($cm->id);
         if (empty($forum)) {
             throw new \moodle_exception('Unable to find forum with cmid ' . $cm->id);
@@ -58,7 +56,7 @@ if (empty($forum)) {
     }
 }
 
-\theme_imtpn\mur_pedagogique::display_page($forum,
+\theme_imtpn\mur_pedagogique::display_wall($forum,
     $managerfactory,
     $legacydatamapperfactory,
     $discussionlistvault,

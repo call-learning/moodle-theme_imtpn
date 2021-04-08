@@ -15,33 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Theme imptpn cache
+ * Theme imptpn
  *
  *
  * @package     theme_imtpn
- * @category    access
+ * @category    cache
  * @copyright   2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
-    'theme/imtpn:editcataloguethemes' => array(
-        'riskbitmask' => RISK_SPAM | RISK_XSS,
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW,
-        )
-    ),
-    'theme/imtpn:canselfjoingroup' => array(
-        'riskbitmask' => RISK_SPAM | RISK_XSS,
-        'captype' => 'write',
-        'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW,
-            'student' => CAP_ALLOW
-        )
-    ),
-);
+$definitions = [
+    'idpinformation' => [
+        'mode' => cache_store::MODE_APPLICATION,
+    ]
+];

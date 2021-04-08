@@ -34,6 +34,7 @@ $discussionlistvault = $vaultfactory->get_discussions_in_forum_vault();
 
 $cmid = optional_param('id', 0, PARAM_INT);
 $forumid = optional_param('f', 0, PARAM_INT);
+$groupid = optional_param('group', 0, PARAM_INT);
 $mode = optional_param('mode', 0, PARAM_INT);
 $showall = optional_param('showall', '', PARAM_INT);
 $pageno = optional_param('page', 0, PARAM_INT);
@@ -57,14 +58,18 @@ if ($cmid) {
         throw new \moodle_exception('Unable to find forum with id ' . $forumid);
     }
 }
-global $DB;
-$murpedagoidnumber = get_config('theme_imtpn', 'murpedagoidnumber');
-
-$murpedagogiquecm = $DB->get_record('course_modules', array('idnumber' => $murpedagoidnumber));
-
-if (!empty($murpedagogiquecm) && ($murpedagogiquecm->id === $forum->get_course_module_record()->id)) {
+$cm = \theme_imtpn\mur_pedagogique::get_mur_cm();
+global $PAGE;
+// Go to the mur pedagogique page if it is the right forum and user is not editing (if not
+// it will go to the normal forum page)
+if (!empty($cm) && ($cm->id === $forum->get_course_module_record()->id) &&
+    !$PAGE->user_is_editing()) {
     global $CFG;
-    \theme_imtpn\mur_pedagogique::display_page($forum, $managerfactory, $legacydatamapperfactory, $discussionlistvault, $postvault, $mode,
+    if (!empty($groupid)) {
+        redirect(new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid'=>$groupid)));
+    }
+    \theme_imtpn\mur_pedagogique::display_wall($forum, $managerfactory, $legacydatamapperfactory, $discussionlistvault, $postvault, $mode,
         $search, $sortorder, $pageno, $pagesize);
     die();
 }
+

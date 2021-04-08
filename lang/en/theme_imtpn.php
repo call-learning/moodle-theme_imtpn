@@ -25,7 +25,10 @@
 defined('MOODLE_INTERNAL') || die();
 
 
-$string['allgroups'] = 'Parcourir les groupes existants';
+$string['viewallgroups'] = 'Parcourir les groupes existants';
+$string['allgroups'] = 'Tous les groupes';
+$string['murpedagogrouprules'] = 'Rules displayed on each group for participants.';
+$string['murpedagogrouprules_desc'] = 'Rules displayed on each group for participants.';
 $string['pluginname'] = 'Theme IMT Pédagothèque Numérique';
 $string['configtitle'] = 'Theme IMT Pédagothèque Numérique';
 $string['region-content'] = 'Content';
@@ -36,6 +39,7 @@ $string['footercontent'] = 'Footer content';
 $string['footercontent_desc'] = 'Footer content description';
 $string['joingroup'] = 'Rejoindre le groupe';
 $string['groupjoined'] = 'Félicitations ! Vous avez rejoint le groupe {$a}.';
+$string['groupmessagescount'] = '{$a} messages';
 $string['cannotjoin'] = 'Vous n\'avez pas pu joindre le groupe {$a}, êtes vous inscrit dans le cours ?';
 $string['legal_mention'] = 'Les illustrations de ce site sont intégralement ou en partie issues
  des banques Freepik et Unsplash, proposant des contenus libres et gratuits.';
@@ -57,3 +61,4 @@ le mur pédagogique';
 $string['themescat:title'] = 'Catalogue par thème';
 $string['createcourse'] = 'Créer un cours';
 $string['viewcatalog'] = 'Voir le catalogue';
+$string['populargroups'] = 'Groupes populaires';

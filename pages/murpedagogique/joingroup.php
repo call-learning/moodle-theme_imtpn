@@ -23,7 +23,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once('../../../config.php');
+require_once('../../../../config.php');
 global $DB, $USER, $PAGE, $OUTPUT, $CFG;
 
 require_once($CFG->dirroot. '/group/lib.php');
@@ -40,12 +40,12 @@ require_login($course->id);
 if (!has_capability('theme/imtpn:canselfjoingroup', $context)) {
     print_error('selfjoinerror');
 }
-$PAGE->set_url(new moodle_url('/theme/imtpn/pages/joingroup.php', array('groupid'=> $groupid)));
+$PAGE->set_url(new moodle_url('/theme/imtpn/pages/murpedagogique/joingroup.php', array('groupid'=> $groupid)));
 $PAGE->set_title("$course->shortname: ".get_string('groups'));
 $PAGE->navbar->ignore_active();
 $PAGE->navbar->add(get_string('murpedagogique', 'theme_imtpn'),
-    new moodle_url('/theme/imtpn/pages/murpedagogique.php'));
-$PAGE->navbar->add(get_string('groups'), new moodle_url('/theme/imtpn/pages/groupoverview.php', array('id'=>$course->id)));
+    new moodle_url('/theme/imtpn/murpedagogique/index.php'));
+$PAGE->navbar->add(get_string('groups'), new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php', array('id'=>$course->id)));
 
 echo $OUTPUT->header();
 if (groups_add_member($groupid, $USER->id, 'theme_imtpn'))  {
@@ -55,6 +55,6 @@ if (groups_add_member($groupid, $USER->id, 'theme_imtpn'))  {
 }
 // Display single group information if requested in the URL.
 echo $OUTPUT->single_button(
-    new moodle_url('/theme/imtpn/pages/grouppage.php', array('groupid'=> $group->id)),
+    new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid'=> $group->id)),
     get_string('continue'));
 echo $OUTPUT->footer();

@@ -28,6 +28,7 @@ use block_base;
 use context_block;
 use context_course;
 use context_system;
+use core_analytics\stats;
 use file_exception;
 use moodle_page;
 use moodle_url;
@@ -93,6 +94,65 @@ class setup {
         $PAGE = $oldpage;
     }
 
+    public static function setup_murpedago_blocks() {
+        $cm = mur_pedagogique::get_mur_cm();
+        $pageforum = new moodle_page();
+        $pageforum->set_cm($cm);
+        $pageforum->set_pagelayout('incourse');
+        $pageforum->set_pagetype('mod-forum-view');
+        self::setup_page_blocks($pageforum, self::MUR_PEDAGO_BLOCK_DEFINITION, $regionname = 'side-pre');
+        $pagemurpedago = new moodle_page();
+        $pageforum->set_cm($cm);
+        $pageforum->set_pagelayout('incourse');
+        $pagemurpedago->set_pagetype('theme-imtpn-pages-murpedagogique-index');
+        $pagegroupoverview = new moodle_page();
+        $pagegroupoverview->set_pagelayout('standard');
+        $pagegroupoverview->set_pagetype('group-overview');
+        self::setup_page_blocks($pagegroupoverview, self::MUR_PEDAGO_BLOCK_DEFINITION, $regionname = 'side-pre');
+        $pagegroups = new moodle_page();
+        $pagegroups->set_pagelayout('incourse');
+        $pagegroups->set_pagetype('group-page');
+        $pagegroups->set_context(\context_module::instance($cm->id));
+        self::setup_page_blocks($pagegroups, self::MUR_PEDAGO_GROUP_BLOCK_DEFINITION, $regionname = 'side-pre');
+    }
+
+    // @codingStandardsIgnoreStart
+    // phpcs:disable
+    /**
+     * Dashboard block definition
+     */
+    const MUR_PEDAGO_BLOCK_DEFINITION = array(
+        array(
+            'blockname' => 'forum_groups',
+            'showinsubcontexts' => '1',
+            'defaultregion' => 'side-pre',
+            'defaultweight' => '0',
+            'configdata' =>
+                [
+                    "title" => 'populargroups|theme_imtpn',
+                ],
+            'capabilities' => array(),
+        )
+    );
+
+    // @codingStandardsIgnoreStart
+    // phpcs:disable
+    /**
+     * Dashboard block definition
+     */
+    const MUR_PEDAGO_GROUP_BLOCK_DEFINITION = array(
+        array(
+            'blockname' => 'group_members',
+            'showinsubcontexts' => '1',
+            'defaultregion' => 'side-pre',
+            'defaultweight' => '0',
+            'configdata' =>
+                [
+                    "title" => '',
+                ],
+            'capabilities' => array(),
+        )
+    );
     /**
      * Setup dashboard  - to be completed
      *
@@ -118,7 +178,9 @@ class setup {
             $blockinstance = (object) $blockdef;
             $blockinstance->parentcontextid = $page->context->id;
             $blockinstance->pagetypepattern = $page->pagetype;
-            $blockinstance->subpagepattern = $page->subpage;
+            if (!empty($page->subpage)) {
+                $blockinstance->subpagepattern = $page->subpage;
+            }
             if (!empty($blockinstance->configdata)) {
                 $blockinstance->configdata = base64_encode(serialize((object) $blockinstance->configdata));
 
