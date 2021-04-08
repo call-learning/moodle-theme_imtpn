@@ -23,6 +23,7 @@
  */
 namespace theme_imtpn\local;
 
+use admin_setting_configstoredfile;
 use admin_settingpage;
 
 defined('MOODLE_INTERNAL') || die;
@@ -76,6 +77,13 @@ class settings extends \theme_clboost\local\settings {
         $page->add($setting);
 
         $settings->add($page);
+
+        $setting = new admin_setting_configstoredfile('theme_imtpn/profilebgimage',
+            static::get_string('profilebgimage', 'theme_imtpn'),
+            static::get_string('profilebgimage_desc', 'theme_imtpn'),
+            utils::PROFILE_IMAGE_FILE_AREA);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $page->add($setting);
 
     }
 

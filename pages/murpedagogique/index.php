@@ -42,7 +42,7 @@ $sortorder = optional_param('o', null, PARAM_INT);
 if (empty($forum)) {
 
     if (empty($forumid)) {
-        $cm = \theme_imtpn\mur_pedagogique::get_mur_cm();
+        $cm = \theme_imtpn\mur_pedagogique::get_cm();
 
         $forum = $forumvault->get_from_course_module_id($cm->id);
         if (empty($forum)) {

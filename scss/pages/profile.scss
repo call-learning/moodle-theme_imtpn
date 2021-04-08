@@ -1,0 +1,60 @@
+
+#page-user-profile {
+    .profile_tree {
+        background-color: $white;
+    }
+    .card {
+        border: initial;
+        background-color: transparent;
+    }
+    .profile-contact {
+        .contentnode dl {
+            display: flex;
+        }
+    }
+    h3.lead {
+        color: $primary;
+        font-weight: bolder;
+        padding-bottom: 1em;
+        font-size: larger;
+    }
+    #page-header {
+        &:before{
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 200px 200px 0 0;
+            border-color: transparentize($primary,.2)  transparent transparent transparent;
+        }
+        &:after{
+            content: "";
+            position: absolute;
+            top:238px;
+            right:240px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 200px 200px 0 0;
+            border-color: transparent transparentize($secondary,.2)  transparent transparent;
+        }
+        > div {
+            margin-top: 300px;
+            padding: 0 !important;
+        }
+        .card {
+            background: $white;
+        }
+        .page-header-image {
+            position: absolute;
+            margin-top: -75px;
+            img {
+                border: solid white;
+            }
+        }
+        .page-header-headings {
+            margin-top: 50px;
+        }
+    }
+}

@@ -40,7 +40,7 @@ $group = groups_get_group($groupid);
 $course = $DB->get_record('course', array('id' => $group->courseid), '*', MUST_EXIST);
 $context = context_course::instance($course->id, MUST_EXIST);
 
-$cm = \theme_imtpn\mur_pedagogique::get_mur_cm();
+$cm = \theme_imtpn\mur_pedagogique::get_cm();
 require_course_login($course, true, $cm);
 global $PAGE, $OUTPUT;
 $currenturl = new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $groupid));

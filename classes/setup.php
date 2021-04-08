@@ -95,7 +95,7 @@ class setup {
     }
 
     public static function setup_murpedago_blocks() {
-        $cm = mur_pedagogique::get_mur_cm();
+        $cm = mur_pedagogique::get_cm();
         $pageforum = new moodle_page();
         $pageforum->set_cm($cm);
         $pageforum->set_pagelayout('incourse');

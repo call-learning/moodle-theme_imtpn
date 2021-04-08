@@ -23,6 +23,11 @@ body.notloggedin {
       justify-content: space-between;
     }
 
+    .navbar-nav .nav-item.currentpage {
+      border-bottom: $primary solid;
+      border-width: 2px;
+    }
+
     &.navbar-dark {
       .nav-link {
         a, a:hover, a:visited {

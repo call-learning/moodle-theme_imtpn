@@ -58,7 +58,7 @@ if ($cmid) {
         throw new \moodle_exception('Unable to find forum with id ' . $forumid);
     }
 }
-$cm = \theme_imtpn\mur_pedagogique::get_mur_cm();
+$cm = \theme_imtpn\mur_pedagogique::get_cm();
 global $PAGE;
 // Go to the mur pedagogique page if it is the right forum and user is not editing (if not
 // it will go to the normal forum page)

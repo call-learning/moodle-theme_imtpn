@@ -32,7 +32,7 @@ define('OVERVIEW_GROUPING_NO_GROUP', -2); // The fake grouping for users with no
 
 $courseid = optional_param('id', 0, PARAM_INT);
 
-$cm = \theme_imtpn\mur_pedagogique::get_mur_cm();
+$cm = \theme_imtpn\mur_pedagogique::get_cm();
 $PAGE->set_cm($cm);
 if (empty($courseid)) {
     $courseid = $cm->course;

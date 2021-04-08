@@ -27,6 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['viewallgroups'] = 'Parcourir les groupes existants';
 $string['allgroups'] = 'Tous les groupes';
+$string['catalogue'] = 'Catalogue';
+$string['userinfos'] = 'Infos';
 $string['murpedagogrouprules'] = 'Rules displayed on each group for participants.';
 $string['murpedagogrouprules_desc'] = 'Rules displayed on each group for participants.';
 $string['pluginname'] = 'Theme IMT Pédagothèque Numérique';

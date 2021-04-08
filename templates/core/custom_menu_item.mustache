@@ -33,13 +33,13 @@
 {{^divider}}
 {{#haschildren}}
 <li class="dropdown nav-item">
-    <a class="dropdown-toggle nav-link" id="drop-down-{{uniqid}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#" {{#title}}title="{{{title}}}"{{/title}} aria-controls="drop-down-menu-{{uniqid}}">
+    <a class="dropdown-toggle nav-link {{additionalclasses}}" id="drop-down-{{uniqid}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#" {{#title}}title="{{{title}}}"{{/title}} aria-controls="drop-down-menu-{{uniqid}}">
         {{#iconclasses}}<i class="{{iconclasses}} mr-2"></i>{{/iconclasses}}{{{text}}}
     </a>
     <div class="dropdown-menu" role="menu" id="drop-down-menu-{{uniqid}}" aria-labelledby="drop-down-{{uniqid}}">
         {{#children}}
             {{^divider}}
-               <a class="dropdown-item" role="menuitem" href="{{{url}}}" {{#title}}title="{{{title}}}"{{/title}}>{{#iconclasses}}<i class="{{iconclasses}} mr-2"></i>{{/iconclasses}}{{{text}}}</a>
+               <a class="dropdown-item  {{additionalclasses}}" role="menuitem" href="{{{url}}}" {{#title}}title="{{{title}}}"{{/title}}>{{#iconclasses}}<i class="{{iconclasses}} mr-2"></i>{{/iconclasses}}{{{text}}}</a>
             {{/divider}}
             {{#divider}}
                 <div class="dropdown-divider" role="presentation"></div>
@@ -49,8 +49,8 @@
 </li>
 {{/haschildren}}
 {{^haschildren}}
-<li class="nav-item">
-    <a class="nav-item nav-link" href="{{{url}}}" {{#title}}title="{{{title}}}"{{/title}}>{{{text}}}</a>
+<li class="nav-item d-inline-flex {{additionalclasses}}">
+    {{#iconclasses}}<span class="align-self-center {{iconclasses}}"></span>{{/iconclasses}}<a class="nav-item nav-link" href="{{{url}}}" {{#title}}title="{{{title}}}"{{/title}}>{{{text}}}</a>
 </li>
 {{/haschildren}}
 {{/divider}}

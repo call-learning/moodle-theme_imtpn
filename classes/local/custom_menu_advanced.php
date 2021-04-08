@@ -33,6 +33,6 @@ use moodle_url;
  * @copyright 2020 - CALL Learning - Laurent David <laurent@call-learning.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class custom_menu_with_icon extends custom_menu {
-    use custom_menu_with_icon_trait;
+class custom_menu_advanced extends custom_menu {
+    use custom_menu_advanced_trait;
 }

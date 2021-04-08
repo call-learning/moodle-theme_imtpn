@@ -26,7 +26,7 @@ namespace theme_imtpn\local;
 
 use moodle_url;
 
-trait custom_menu_with_icon_trait {
+trait custom_menu_advanced_trait {
     /**
      * Adds a custom menu item as a child of this node given its properties.
      *
@@ -34,15 +34,21 @@ trait custom_menu_with_icon_trait {
      * @param moodle_url $url
      * @param string $title
      * @param int $sort
-     * @return custom_menu_item_with_icon
+     * @return custom_menu_item_advanced
      */
     public function add($text, moodle_url $url = null, $title = null, $sort = null, $iconclasses = null) {
         $key = count($this->children);
         if (empty($sort)) {
             $sort = $this->lastsort + 1;
         }
-        $this->children[$key] = new custom_menu_item_with_icon($text, $url, $title, $sort, $this, $iconclasses);
+        $this->children[$key] = new custom_menu_item_advanced($text, $url, $title, $sort, $this, $iconclasses);
         $this->lastsort = (int) $sort;
         return $this->children[$key];
+    }
+
+    protected function add_icon_to_context(&$context) {
+        if ($this->iconclasses) {
+            $context->iconclasses = $this->iconclasses;
+        }
     }
 }

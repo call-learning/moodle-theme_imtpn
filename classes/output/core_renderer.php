@@ -31,7 +31,8 @@ use html_writer;
 use moodle_url;
 use single_select;
 use stdClass;
-use theme_imtpn\local\custom_menu_with_icon;
+use theme_imtpn\local\custom_menu_advanced;
+use theme_imtpn\mur_pedagogique;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -117,15 +118,59 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      * @return string
      */
     protected function render_custom_menu(custom_menu $menu) {
-        global $CFG;
+        global $CFG, $USER;
 
-        $langs = get_string_manager()->get_list_of_translations();
-        $haslangmenu = $this->lang_menu() != '';
-
-        if (!$menu->has_children() && !$haslangmenu) {
+        $this->add_if_not_exist($menu, new moodle_url('/my'), get_string('mymoodle', 'my'));
+        if (mur_pedagogique::has_access($USER->id)) {
+            $menu->add(get_string('murpedagogique', 'theme_imtpn'), mur_pedagogique::get_url());
+        }
+        if (!empty($CFG->enableresourcelibrary)) {
+            $this->add_if_not_exist($menu, new moodle_url('/local/resourcelibrary/index.php'),
+                get_string('catalogue', 'theme_imtpn'), 'fa fa-star-o text-primary');
+        }
+        if (!$menu->has_children()) {
             return '';
         }
 
+        $content = '';
+        foreach ($menu->get_children() as $item) {
+            $context = $item->export_for_template($this);
+            $content .= $this->render_from_template('core/custom_menu_item', $context);
+        }
+
+        return $content;
+    }
+
+    protected function add_if_not_exist(custom_menu_advanced $menu, moodle_url $url, $label, $class='') {
+        foreach($menu->get_children() as $child) {
+            if ($url->out_omit_querystring() == $child->get_url()->out_omit_querystring()) {
+                return;
+            }
+        }
+        $menu->add($label, $url, null, null, $class);
+    }
+
+    /**
+     * Lang menu renderer
+     *
+     * {@link core_renderer::render_custom_menu()} instead.
+     *
+     * @param string $custommenuitems - custom menuitems set by theme instead of global theme settings
+     * @return string
+     */
+    public function lang_menu($custommenuitems = '') {
+        global $CFG;
+
+        if (empty($CFG->langmenu)) {
+            return '';
+        }
+        if ($this->page->course != SITEID and !empty($this->page->course->lang)) {
+            // do not show lang menu if language forced
+            return '';
+        }
+        $langs = get_string_manager()->get_list_of_translations();
+        $haslangmenu = parent::lang_menu() != '';
+        $menu = new custom_menu_advanced();
         if ($haslangmenu) {
             $strlang = get_string('language');
             $shortlangcode = current_language();
@@ -151,6 +196,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         return $content;
     }
 
+
     /**
      * Returns the custom menu if one has been set
      *
@@ -170,7 +216,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
             $custommenuitems = $CFG->custommenuitems;
         }
-        $custommenu = new custom_menu_with_icon($custommenuitems, current_language());
+        $custommenu = new custom_menu_advanced($custommenuitems, current_language());
         return $this->render_custom_menu($custommenu);
     }
 

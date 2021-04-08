@@ -26,7 +26,7 @@ namespace theme_imtpn;
 
 use mod_forum\grades\forum_gradeitem;
 use mod_forum\local\container;
-use mod_forum\local\renderers\discussion_list as discussion_list_renderer;
+use cm_info;
 use moodle_url;
 use theme_imtpn\local\forum\discussion_list_mur_pedago;
 
@@ -40,10 +40,34 @@ defined('MOODLE_INTERNAL') || die();
 class mur_pedagogique {
 
     /**
+     * @param int $userid
+     * @return bool
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
+    public static function has_access($userid) {
+        $cm = static::get_cm();
+        if ($cm) {
+            $cminfo = cm_info::create($cm, $userid);
+            return $cminfo->uservisible;
+        }
+        return false;
+    }
+
+    /**
+     * Get URL
+     * @return moodle_url
+     */
+    public static function get_url() {
+        return new moodle_url('/theme/imtpn/pages/murpedagogique/index.php');
+    }
+
+    /**
+     * Get CM
      * @return false|mixed|\stdClass
      * @throws \dml_exception
      */
-    public static function get_mur_cm() {
+    public static function get_cm() {
         global $DB;
         $murpedagoidnumber = get_config('theme_imtpn', 'murpedagoidnumber');
         $murpedagogiquecm = $DB->get_record('course_modules', array('idnumber' => $murpedagoidnumber));
@@ -53,6 +77,8 @@ class mur_pedagogique {
         return $murpedagogiquecm;
     }
     /**
+     * Display Wall
+     *
      * @param $forum
      * @param $managerfactory
      * @param $legacydatamapperfactory

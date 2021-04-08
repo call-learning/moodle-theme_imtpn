@@ -34,14 +34,16 @@ use renderer_base;
  * @copyright 2020 - CALL Learning - Laurent David <laurent@call-learning.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class custom_menu_item_with_icon extends custom_menu_item {
+class custom_menu_item_advanced extends custom_menu_item {
 
-    use custom_menu_with_icon_trait;
+    use custom_menu_advanced_trait;
 
     /**
      * @var mixed|null icon
      */
     protected $iconclasses;
+
+    protected $iscurrentpage = false;
 
     /**
      * Constructs the new custom menu item
@@ -55,8 +57,12 @@ class custom_menu_item_with_icon extends custom_menu_item {
      */
     public function __construct($text, moodle_url $url=null, $title=null, $sort = null, custom_menu_item $parent = null,
         $iconclasses = null) {
+        global $PAGE;
         parent::__construct($text, $url, $title, $sort, $parent);
         $this->iconclasses = $iconclasses;
+        if ($url->out_omit_querystring() == $PAGE->url->out_omit_querystring()) {
+            $this->iscurrentpage = true;
+        }
     }
 
     /**
@@ -67,9 +73,8 @@ class custom_menu_item_with_icon extends custom_menu_item {
      */
     public function export_for_template(renderer_base $output) {
         $context = parent::export_for_template($output);
-        if ($this->iconclasses) {
-            $context->iconclasses = $this->iconclasses;
-        }
+        $this->add_icon_to_context($context);
+        $context->additionalclasses = $this->iscurrentpage ? 'currentpage': '';
         return $context;
     }
 }
