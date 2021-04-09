@@ -67,6 +67,7 @@ class settings extends \theme_clboost\local\settings {
             static::get_string('murpedagoidnumber_desc', 'theme_imtpn'),
             'MUR_PEDAGOGIQUE',
             PARAM_ALPHANUMEXT);
+        $setting->set_updatedcallback('reset_mur_pedago_blocks');
         $page->add($setting);
 
         $setting = new \admin_setting_confightmleditor('theme_imtpn/murpedagogrouprules',

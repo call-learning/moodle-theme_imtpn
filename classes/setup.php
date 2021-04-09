@@ -88,11 +88,9 @@ class setup {
         $page = new moodle_page();
         $page->set_pagetype('site-index');
         $page->set_docs_path('');
-
+        $page->set_context(context_system::instance());
         $PAGE = $page;
         static::setup_page_blocks($page, self::HOMEPAGE_BLOCK_DEFINITION);
-        
-        self::setup_murpedago_blocks();
         $PAGE = $oldpage;
     }
 

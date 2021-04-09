@@ -91,3 +91,7 @@ function theme_imtpn_get_extra_scss($theme) {
     }';
     return $extracss . $profileimagedef;
 }
+
+function reset_mur_pedago_blocks() {
+    setup::setup_murpedago_blocks();
+}
