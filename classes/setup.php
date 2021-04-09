@@ -96,24 +96,26 @@ class setup {
 
     public static function setup_murpedago_blocks() {
         $cm = mur_pedagogique::get_cm();
-        $pageforum = new moodle_page();
-        $pageforum->set_cm($cm);
-        $pageforum->set_pagelayout('incourse');
-        $pageforum->set_pagetype('mod-forum-view');
-        self::setup_page_blocks($pageforum, self::MUR_PEDAGO_BLOCK_DEFINITION, $regionname = 'side-pre');
-        $pagemurpedago = new moodle_page();
-        $pageforum->set_cm($cm);
-        $pageforum->set_pagelayout('incourse');
-        $pagemurpedago->set_pagetype('theme-imtpn-pages-murpedagogique-index');
-        $pagegroupoverview = new moodle_page();
-        $pagegroupoverview->set_pagelayout('standard');
-        $pagegroupoverview->set_pagetype('group-overview');
-        self::setup_page_blocks($pagegroupoverview, self::MUR_PEDAGO_BLOCK_DEFINITION, $regionname = 'side-pre');
-        $pagegroups = new moodle_page();
-        $pagegroups->set_pagelayout('incourse');
-        $pagegroups->set_pagetype('group-page');
-        $pagegroups->set_context(\context_module::instance($cm->id));
-        self::setup_page_blocks($pagegroups, self::MUR_PEDAGO_GROUP_BLOCK_DEFINITION, $regionname = 'side-pre');
+        if ($cm) {
+            $pageforum = new moodle_page();
+            $pageforum->set_cm($cm);
+            $pageforum->set_pagelayout('incourse');
+            $pageforum->set_pagetype('mod-forum-view');
+            self::setup_page_blocks($pageforum, self::MUR_PEDAGO_BLOCK_DEFINITION, $regionname = 'side-pre');
+            $pagemurpedago = new moodle_page();
+            $pageforum->set_cm($cm);
+            $pageforum->set_pagelayout('incourse');
+            $pagemurpedago->set_pagetype('theme-imtpn-pages-murpedagogique-index');
+            $pagegroupoverview = new moodle_page();
+            $pagegroupoverview->set_pagelayout('standard');
+            $pagegroupoverview->set_pagetype('group-overview');
+            self::setup_page_blocks($pagegroupoverview, self::MUR_PEDAGO_BLOCK_DEFINITION, $regionname = 'side-pre');
+            $pagegroups = new moodle_page();
+            $pagegroups->set_pagelayout('incourse');
+            $pagegroups->set_pagetype('group-page');
+            $pagegroups->set_context(\context_module::instance($cm->id));
+            self::setup_page_blocks($pagegroups, self::MUR_PEDAGO_GROUP_BLOCK_DEFINITION, $regionname = 'side-pre');
+        }
     }
 
     // @codingStandardsIgnoreStart

@@ -46,12 +46,17 @@ class mur_pedagogique {
      * @throws \dml_exception
      */
     public static function has_access($userid) {
-        $cm = static::get_cm();
-        if ($cm) {
-            $cminfo = cm_info::create($cm, $userid);
-            return $cminfo->uservisible;
+        $hasaccess = false;
+        try {
+            $cm = static::get_cm();
+            if ($cm) {
+                $cminfo = cm_info::create($cm, $userid);
+                $hasaccess = $cminfo->uservisible;
+            }
+        } catch (\moodle_exception $e) {
+            debugging($e->getMessage());
         }
-        return false;
+        return $hasaccess;
     }
 
     /**
@@ -69,12 +74,25 @@ class mur_pedagogique {
      */
     public static function get_cm() {
         global $DB;
-        $murpedagoidnumber = get_config('theme_imtpn', 'murpedagoidnumber');
-        $murpedagogiquecm = $DB->get_record('course_modules', array('idnumber' => $murpedagoidnumber));
-        if (empty($murpedagogiquecm)) {
-            throw new \moodle_exception('Unable to find the Mur pedagogique. Please check global settings.');
+        $murpedagogiquecm = null;
+        if (self::enabled()) {
+            $murpedagoidnumber = get_config('theme_imtpn', 'murpedagoidnumber');
+            $murpedagogiquecm = $DB->get_record('course_modules', array('idnumber' => $murpedagoidnumber));
+            if (empty($murpedagogiquecm)) {
+                throw new \moodle_exception('Unable to find the Mur pedagogique. Please check global settings.');
+            }
         }
         return $murpedagogiquecm;
+    }
+
+    /**
+     * Get CM
+     * @return false|mixed|\stdClass
+     * @throws \dml_exception
+     */
+    public static function enabled() {
+        global $DB;
+        return get_config('theme_imtpn', 'murpedagoenabled');
     }
     /**
      * Display Wall

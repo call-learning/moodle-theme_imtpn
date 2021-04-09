@@ -43,8 +43,9 @@ if (empty($forum)) {
 
     if (empty($forumid)) {
         $cm = \theme_imtpn\mur_pedagogique::get_cm();
-
-        $forum = $forumvault->get_from_course_module_id($cm->id);
+        if ($cm) {
+            $forum = $forumvault->get_from_course_module_id($cm->id);
+        }
         if (empty($forum)) {
             throw new \moodle_exception('Unable to find forum with cmid ' . $cm->id);
         }

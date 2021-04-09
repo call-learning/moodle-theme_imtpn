@@ -70,6 +70,14 @@ class settings extends \theme_clboost\local\settings {
         $setting->set_updatedcallback('reset_mur_pedago_blocks');
         $page->add($setting);
 
+        $setting = new \admin_setting_configcheckbox('theme_imtpn/murpedagoenabled',
+            static::get_string('murpedagoenabled', 'theme_imtpn'),
+            static::get_string('murpedagoenabled_desc', 'theme_imtpn'),
+            false);
+        $setting->set_updatedcallback('reset_mur_pedago_blocks');
+        $page->add($setting);
+
+
         $setting = new \admin_setting_confightmleditor('theme_imtpn/murpedagogrouprules',
             static::get_string('murpedagogrouprules', 'theme_imtpn'),
             static::get_string('murpedagogrouprules_desc', 'theme_imtpn'),

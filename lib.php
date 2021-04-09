@@ -93,5 +93,5 @@ function theme_imtpn_get_extra_scss($theme) {
 }
 
 function reset_mur_pedago_blocks() {
-    setup::setup_murpedago_blocks();
+    \theme_imtpn\setup::setup_murpedago_blocks();
 }

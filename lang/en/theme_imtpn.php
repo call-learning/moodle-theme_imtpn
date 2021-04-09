@@ -60,6 +60,10 @@ $string['murpedagoidnumber'] = 'Mur pédagogique (idnumber)';
 $string['murpedagoidnumber_desc'] = 'Mur pédagogique (idnumber) : identifiant unique pour l\'activité forum contenant
 le mur pédagogique';
 
+$string['murpedagoenabled'] = 'Enable mur pedagogique';
+$string['murpedagoenabled_desc'] = 'Enable mur pedagogique';
+
+
 $string['themescat:title'] = 'Catalogue par thème';
 $string['createcourse'] = 'Créer un cours';
 $string['viewcatalog'] = 'Voir le catalogue';
