@@ -71,11 +71,13 @@ if ($PAGE->user_allowed_editing()) {
     $USER->editing = $edit = 0;
 }
 $url = new moodle_url("$CFG->wwwroot/local/resourcelibrary/index.php");
-$viewcatalog = $OUTPUT->single_button($url, get_string('viewcatalog','theme_imtpn'));
+$button  = new single_button($url, get_string('viewcatalog','theme_imtpn'), 'post', true);
+$viewcatalog = $OUTPUT->render($button);
 
 $url = new moodle_url("$CFG->wwwroot/course/edit.php", array('category' =>
     core_course_category::get_default()->id, 'returnto' =>  $baseurl->out()));
-$createacourse = $OUTPUT->single_button($url, get_string('createcourse','theme_imtpn'));
+$button  = new single_button($url, get_string('createcourse','theme_imtpn'), 'post', true);
+$createacourse = $OUTPUT->render($button);
 $PAGE->set_button($viewcatalog . $createacourse . $editbutton);
 
 $PAGE->blocks->set_default_region('content');

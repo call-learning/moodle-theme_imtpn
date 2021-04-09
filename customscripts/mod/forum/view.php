@@ -62,14 +62,18 @@ $cm = \theme_imtpn\mur_pedagogique::get_cm();
 global $PAGE;
 // Go to the mur pedagogique page if it is the right forum and user is not editing (if not
 // it will go to the normal forum page)
-if (!empty($cm) && ($cm->id === $forum->get_course_module_record()->id) &&
-    !$PAGE->user_is_editing()) {
-    global $CFG;
-    if (!empty($groupid)) {
-        redirect(new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid'=>$groupid)));
+if (!empty($cm) && ($cm->id === $forum->get_course_module_record()->id)) {
+    $PAGE->set_cm($cm);
+    if (!$PAGE->user_is_editing()) {
+        global $CFG;
+        if (!empty($groupid)) {
+            redirect(new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $groupid)));
+        }
+        \theme_imtpn\mur_pedagogique::display_wall($forum, $managerfactory, $legacydatamapperfactory, $discussionlistvault,
+            $postvault,
+            $mode,
+            $search, $sortorder, $pageno, $pagesize);
+        die();
     }
-    \theme_imtpn\mur_pedagogique::display_wall($forum, $managerfactory, $legacydatamapperfactory, $discussionlistvault, $postvault, $mode,
-        $search, $sortorder, $pageno, $pagesize);
-    die();
 }
 

@@ -143,7 +143,6 @@ class mur_pedagogique {
         $PAGE->set_title($forum->get_name());
         $PAGE->add_body_class('forumtype-' . $forum->get_type());
         $PAGE->set_heading($course->fullname);
-        $PAGE->set_button(forum_search_form($course, $search));
         $PAGE->set_pagelayout('incourse');
         $PAGE->set_cm($cm);
         $PAGE->navbar->ignore_active();
@@ -154,7 +153,7 @@ class mur_pedagogique {
         $viewallgroups = $OUTPUT->single_button(
             new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php'),
             get_string('viewallgroups', 'theme_imtpn'));
-        $PAGE->set_button($viewallgroups. forum_search_form($course, $search));
+        $PAGE->set_button($viewallgroups);
 
         if ($istypesingle && $displaymode == FORUM_MODE_NESTED_V2) {
             $PAGE->add_body_class('nested-v2-display-mode reset-style');
@@ -207,6 +206,7 @@ class mur_pedagogique {
         echo $OUTPUT->heading(format_string($forum->get_name()), 2);
 
         if (!$istypesingle && !empty($forum->get_intro())) {
+            echo forum_search_form($course, $search);
             echo $OUTPUT->box(format_module_intro('forum', $forumrecord, $cm->id), 'generalbox', 'murpedago-intro');
         }
 
@@ -287,7 +287,7 @@ class mur_pedagogique {
 
         // Blog forums always show discussions newest first.
         echo $discussionsrenderer->render($USER, $cm, $groupid, $discussionlistvault::SORTORDER_CREATED_DESC,
-            $pageno, $pagesize);
+            $pageno, $pagesize, FORUM_MODE_NESTED_V2);
 
         if (!$CFG->forum_usermarksread && forum_tp_is_tracked($forumrecord, $USER)) {
             $discussions = mod_forum_get_discussion_summaries($forum, $USER, null, null, $pageno, $pagesize);

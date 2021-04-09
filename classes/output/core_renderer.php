@@ -125,7 +125,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
             $menu->add(get_string('murpedagogique', 'theme_imtpn'), mur_pedagogique::get_url());
         }
         if (!empty($CFG->enableresourcelibrary)) {
-            $this->add_if_not_exist($menu, new moodle_url('/local/resourcelibrary/index.php'),
+            $this->add_if_not_exist($menu, new moodle_url('/theme/imtpn/pages/themescat.php'),
                 get_string('catalogue', 'theme_imtpn'), 'fa fa-star-o text-primary');
         }
         if (!$menu->has_children()) {

@@ -64,3 +64,6 @@ $string['themescat:title'] = 'Catalogue par thème';
 $string['createcourse'] = 'Créer un cours';
 $string['viewcatalog'] = 'Voir le catalogue';
 $string['populargroups'] = 'Groupes populaires';
+$string['othersettings'] = 'Other settings';
+$string['profilebgimage'] = 'Profile background image';
+$string['profilebgimage_desc'] = 'Profile background image';

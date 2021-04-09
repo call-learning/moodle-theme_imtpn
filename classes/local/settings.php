@@ -78,12 +78,17 @@ class settings extends \theme_clboost\local\settings {
 
         $settings->add($page);
 
+        // Advanced settings.
+        $page = new admin_settingpage('othersettings',
+            static::get_string('othersettings', 'theme_imtpn'));
+
         $setting = new admin_setting_configstoredfile('theme_imtpn/profilebgimage',
             static::get_string('profilebgimage', 'theme_imtpn'),
             static::get_string('profilebgimage_desc', 'theme_imtpn'),
             utils::PROFILE_IMAGE_FILE_AREA);
         $setting->set_updatedcallback('theme_reset_all_caches');
         $page->add($setting);
+        $settings->add($page);
 
     }
 

@@ -91,6 +91,8 @@ class setup {
 
         $PAGE = $page;
         static::setup_page_blocks($page, self::HOMEPAGE_BLOCK_DEFINITION);
+        
+        self::setup_murpedago_blocks();
         $PAGE = $oldpage;
     }
 
@@ -305,7 +307,7 @@ class setup {
         <img src="/theme/imtpn/pix/icons/hand-leaf.svg" alt="">
         <div>Partager une ressource</div>
     </a>
-    <a>
+    <a href="/theme/imtpn/pages/themescat.php">
         <img src="/theme/imtpn/pix/icons/globe-glass.svg" alt="">
         <div>Explorer le catalogue</div>
     </a>
