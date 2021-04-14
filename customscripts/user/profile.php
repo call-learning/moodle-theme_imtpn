@@ -191,7 +191,7 @@ if ($PAGE->user_allowed_editing()) {
     $USER->editing = $edit = 0;
 }
 
-// IMTTPN Change
+// IMTTPN Change.
 // Edit profile.
 if (isloggedin() && !isguestuser($user) && !is_mnet_remote_user($user)) {
     global $OUTPUT;
@@ -228,7 +228,7 @@ if (isloggedin() && !isguestuser($user) && !is_mnet_remote_user($user)) {
         }
     }
 }
-// END IMTTPN Change
+// END IMTTPN Change.
 
 // Trigger a user profile viewed event.
 profile_view($user, $usercontext);
@@ -255,9 +255,9 @@ echo $OUTPUT->custom_block_region('content');
 // Render custom blocks.
 $renderer = $PAGE->get_renderer('core_user', 'myprofile');
 
-// IMTPN Change
+// IMTPN Change.
 $tree = \theme_imtpn\profile::build_tree($user, $currentuser);
-// END IMTPN Change
+// END IMTPN Change.
 
 echo $renderer->render($tree);
 

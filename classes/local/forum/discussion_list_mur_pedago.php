@@ -49,7 +49,7 @@ class discussion_list_mur_pedago {
     // NOTE: Real shame here as we could have inherited from  mod_forum\local\renderers\discussion_list
     // BUT everything was private, including the bits we wanted to change/
     // We should have had a split between the  renderer and the export_for_template function instead...
-    // To be reviewed on mod_form upgrades
+    // To be reviewed on mod_form upgrades.
 
     /** @var forum_entity The forum being rendered */
     private $forum;

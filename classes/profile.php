@@ -50,9 +50,11 @@ class profile {
      *
      * @param integer $user ID of the user for which the profile is displayed.
      * @param bool $iscurrentuser true if the profile being viewed is of current user, else false.
-     * @param \stdClass $course Course object
+     * @param null $course Course object
      *
      * @return tree Fully build tree to be rendered on my profile page.
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function build_tree($user, $iscurrentuser, $course = null) {
         global $CFG;
@@ -61,12 +63,18 @@ class profile {
         // Add core nodes.
 
         require_once($CFG->libdir . "/myprofilelib.php");
+
+        $simplified = get_config('theme_imtpn', 'simplifiedprofilepage');
+
         self::core_myprofile_navigation($tree, $user, $iscurrentuser, $course);
 
         // Core components.
         $components = \core_component::get_core_subsystems();
         foreach ($components as $component => $directory) {
             if (empty($directory)) {
+                continue;
+            }
+            if (!self::check_display($component)) {
                 continue;
             }
             $file = $directory . "/lib.php";
@@ -81,14 +89,54 @@ class profile {
 
         // Plugins.
         $pluginswithfunction = get_plugins_with_function('myprofile_navigation', 'lib.php');
-        foreach ($pluginswithfunction as $plugins) {
-            foreach ($plugins as $function) {
+        foreach ($pluginswithfunction as $component => $plugins) {
+            if (!self::check_display($component)) {
+                continue;
+            }
+            foreach ($plugins as $module => $function) {
+                if (!self::check_display($component, $module)) {
+                    continue;
+                }
+
                 $function($tree, $user, $iscurrentuser, $course);
             }
         }
 
         $tree->sort_categories();
         return $tree;
+    }
+
+    /**
+     * Return true if the component can be displayed
+     *
+     * @param string $component a name of a component of the profile page.
+     * @param null $module a module name (for subcomponents)
+     * @return bool
+     * @throws \dml_exception
+     */
+    protected static function check_display($component, $module = null) {
+        static $simplified = null, $excludedcomponents = null, $excludedmodules = null;
+        if (is_null($simplified)) {
+            $simplified = get_config('theme_imtpn', 'simplifiedprofilepage');
+        }
+        if (is_null($excludedcomponents)) {
+            $excludedcomponentscfg = get_config('theme_imtpn', 'profilecomponentsexclusion');
+            $excludedcomponents = array_map('trim',
+                explode(',', $excludedcomponentscfg ? $excludedcomponentscfg : ''));
+        }
+        if (is_null($excludedmodules)) {
+            $excludedmodulescfg = get_config('theme_imtpn', 'profilemodulessexclusion');
+            $excludedmodules = array_map('trim',
+                explode(',', $excludedmodulescfg ? $excludedmodulescfg : ''));
+        }
+        if ($simplified) {
+            if (empty($module)) {
+                return !in_array($component, $excludedcomponents);
+            } else {
+                return !in_array("{$component}_{$module}", $excludedmodules);
+            }
+        }
+        return false;
     }
 
     /**
@@ -112,7 +160,8 @@ class profile {
 
         $contactcategory = new category('contact', get_string('userinfos', 'theme_imtpn'), '',
             ' profile-contact');
-        // No after property specified intentionally. It is a hack to make administration block appear towards the end. Refer MDL-49928.
+        // No after property specified intentionally. It is a hack to make administration block appear towards the end
+        // Refer MDL-49928.
         $coursedetailscategory = new category('coursedetails', get_string('coursedetails'));
         $miscategory = new category('miscellaneous', get_string('miscellaneous'), 'coursedetails');
         $reportcategory = new category('reports', get_string('reports'), 'miscellaneous');
@@ -130,10 +179,13 @@ class profile {
         // Add core nodes.
         // Full profile node.
         if (!empty($course)) {
-            if (user_can_view_profile($user, null, $usercontext)) {
-                $url = new moodle_url('/user/profile.php', array('id' => $user->id));
-                $node = new node('miscellaneous', 'fullprofile', get_string('fullprofile'), null, $url);
-                $tree->add_node($node);
+            if (self::check_display('miscellaneous')) {
+                if (user_can_view_profile($user, null, $usercontext)) {
+                    $url = new moodle_url('/user/profile.php', array('id' => $user->id));
+                    $node = new node('miscellaneous', 'fullprofile',
+                        get_string('fullprofile'), null, $url);
+                    $tree->add_node($node);
+                }
             }
         }
 
@@ -179,9 +231,10 @@ class profile {
             $remoteuser->remotetype = $remotehost->display_name;
             $hostinfo = new stdclass();
             $hostinfo->remotename = $remotehost->name;
-            $hostinfo->remoteurl  = $remotehost->wwwroot;
+            $hostinfo->remoteurl = $remotehost->wwwroot;
 
-            $node = new node('contact', 'mnet', get_string('remoteuser', 'mnet', $remoteuser), null, null,
+            $node = new node('contact', 'mnet', get_string('remoteuser', 'mnet', $remoteuser),
+                null, null,
                 get_string('remoteuserinfo', 'mnet', $hostinfo), null, 'remoteuserinfo');
             $tree->add_node($node);
         }
@@ -195,19 +248,20 @@ class profile {
             or (isset($identityfields['email']) and $canviewuseridentity)
         ) {
             $node = new node('contact', 'email', '', null, null,
-                obfuscate_mailto($user->email, ''), new \pix_icon('t/email',get_string('email')));
+                obfuscate_mailto($user->email, ''), new \pix_icon('t/email', get_string('email')));
             $tree->add_node($node);
         }
 
         if (!isset($hiddenfields['moodlenetprofile']) && $user->moodlenetprofile) {
-            $node = new node('contact', 'moodlenetprofile', get_string('moodlenetprofile', 'user'), null,
+            $node = new node('contact', 'moodlenetprofile', get_string('moodlenetprofile', 'user'),
+                null,
                 null, $user->moodlenetprofile);
             $tree->add_node($node);
         }
 
         if (!isset($hiddenfields['country']) && $user->country) {
             $node = new node('contact', 'country', '', null, null,
-                get_string($user->country, 'countries'), new \pix_icon('t/sendmessage',get_string('country')));
+                get_string($user->country, 'countries'), new \pix_icon('t/sendmessage', get_string('country')));
             $tree->add_node($node);
         }
 
@@ -252,7 +306,7 @@ class profile {
         if ($user->url && !isset($hiddenfields['webpage'])) {
             $url = $user->url;
             if (strpos($user->url, '://') === false) {
-                $url = 'http://'. $url;
+                $url = 'http://' . $url;
             }
             $webpageurl = new moodle_url($url);
             $node = new node('contact', 'webpage', get_string('webpage'), null, null,
@@ -295,7 +349,6 @@ class profile {
                     }
                 }
                 $coursethumnails = new courses_thumbnails($coursesid);
-                //$renderer = $PAGE->get_renderer('theme_imtpn');
                 $courselisting = $OUTPUT->render($coursethumnails);
                 if ($showmorelink) {
                     $url = null;
@@ -321,7 +374,8 @@ class profile {
 
             // Show roles in this course.
             if ($rolestring = get_user_roles_in_course($user->id, $course->id)) {
-                $node = new node('coursedetails', 'roles', get_string('roles'), null, null, $rolestring);
+                $node = new node('coursedetails', 'roles', get_string('roles'), null, null,
+                    $rolestring);
                 $tree->add_node($node);
             }
 
@@ -338,11 +392,12 @@ class profile {
                         }
 
                         if ($course->groupmode != NOGROUPS) {
-                            $groupstr .= ' <a href="'.$CFG->wwwroot.'/user/index.php?id='.$course->id.'&amp;group='.$group->id.'">'
-                                .format_string($group->name).'</a>,';
+                            $groupstr .= ' <a href="' . $CFG->wwwroot . '/user/index.php?id=' . $course->id . '&amp;group=' .
+                                $group->id . '">'
+                                . format_string($group->name) . '</a>,';
                         } else {
                             // The user/index.php shows groups only when course in group mode.
-                            $groupstr .= ' '.format_string($group->name);
+                            $groupstr .= ' ' . format_string($group->name);
                         }
                     }
                     if ($groupstr !== '') {
@@ -363,7 +418,7 @@ class profile {
         }
 
         if ($user->icq && !isset($hiddenfields['icqnumber'])) {
-            $imurl = new moodle_url('https://web.icq.com/wwp', array('uin' => $user->icq) );
+            $imurl = new moodle_url('https://web.icq.com/wwp', array('uin' => $user->icq));
             $iconurl = new moodle_url('https://web.icq.com/whitepages/online', array('icq' => $user->icq, 'img' => '5'));
             $statusicon = html_writer::tag('img', '',
                 array('src' => $iconurl, 'class' => 'icon icon-post', 'alt' => get_string('status')));
@@ -408,13 +463,16 @@ class profile {
         // First access. (Why only for sites ?)
         if (!isset($hiddenfields['firstaccess']) && empty($course)) {
             if ($user->firstaccess) {
-                $datestring = userdate($user->firstaccess)."&nbsp; (".format_time(time() - $user->firstaccess).")";
+                $datestring = userdate($user->firstaccess) . "&nbsp; (" . format_time(time() - $user->firstaccess) . ")";
             } else {
                 $datestring = get_string("never");
             }
-            $node = new node('loginactivity', 'firstaccess', get_string('firstsiteaccess'), null, null,
-                $datestring);
-            $tree->add_node($node);
+            if (static::check_display('loginactivity')) {
+                $node = new node('loginactivity', 'firstaccess', get_string('firstsiteaccess'),
+                    null, null,
+                    $datestring);
+                $tree->add_node($node);
+            }
         }
 
         // Last access.
@@ -428,16 +486,20 @@ class profile {
                 }
             } else {
                 $string = get_string('lastcourseaccess');
-                if ($lastaccess = $DB->get_record('user_lastaccess', array('userid' => $user->id, 'courseid' => $course->id))) {
-                    $datestring = userdate($lastaccess->timeaccess)."&nbsp; (".format_time(time() - $lastaccess->timeaccess).")";
+                if ($lastaccess = $DB->get_record('user_lastaccess',
+                    array('userid' => $user->id, 'courseid' => $course->id))) {
+                    $datestring =
+                        userdate($lastaccess->timeaccess) . "&nbsp; (" . format_time(time() - $lastaccess->timeaccess) . ")";
                 } else {
                     $datestring = get_string("never");
                 }
             }
 
-            $node = new node('loginactivity', 'lastaccess', $string, null, null,
-                $datestring);
-            $tree->add_node($node);
+            if (static::check_display('loginactivity')) {
+                $node = new node('loginactivity', 'lastaccess', $string, null, null,
+                    $datestring);
+                $tree->add_node($node);
+            }
         }
 
         // Last ip.
@@ -448,9 +510,11 @@ class profile {
             } else {
                 $ipstring = get_string("none");
             }
-            $node = new node('loginactivity', 'lastip', get_string('lastip'), null, null,
-                $ipstring);
-            $tree->add_node($node);
+            if (static::check_display('loginactivity')) {
+                $node = new node('loginactivity', 'lastip', get_string('lastip'), null, null,
+                    $ipstring);
+                $tree->add_node($node);
+            }
         }
     }
 }

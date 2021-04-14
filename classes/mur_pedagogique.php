@@ -61,6 +61,7 @@ class mur_pedagogique {
 
     /**
      * Get URL
+     *
      * @return moodle_url
      */
     public static function get_url() {
@@ -69,6 +70,7 @@ class mur_pedagogique {
 
     /**
      * Get CM
+     *
      * @return false|mixed|\stdClass
      * @throws \dml_exception
      */
@@ -87,6 +89,7 @@ class mur_pedagogique {
 
     /**
      * Get CM
+     *
      * @return false|mixed|\stdClass
      * @throws \dml_exception
      */
@@ -94,6 +97,7 @@ class mur_pedagogique {
         global $DB;
         return get_config('theme_imtpn', 'murpedagoenabled');
     }
+
     /**
      * Display Wall
      *
@@ -167,7 +171,6 @@ class mur_pedagogique {
         $PAGE->navbar->add(get_string('murpedagogique', 'theme_imtpn'),
             new moodle_url('/theme/imtpn/pages/murpedagogique/index.php'));
 
-
         $viewallgroups = $OUTPUT->single_button(
             new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php'),
             get_string('viewallgroups', 'theme_imtpn'));
@@ -233,7 +236,6 @@ class mur_pedagogique {
 
         $capabilitymanager = $managerfactory->get_capability_manager($forum);
         $notifications = [];
-
 
         $rendererfactory = \mod_forum\local\container::get_renderer_factory();
         $exporterfactory = \mod_forum\local\container::get_exporter_factory();
@@ -338,7 +340,6 @@ class mur_pedagogique {
         $pagesize) {
         global $PAGE, $OUTPUT, $CFG, $SESSION, $USER;
 
-
         $managerfactory = \mod_forum\local\container::get_manager_factory();
         $legacydatamapperfactory = \mod_forum\local\container::get_legacy_data_mapper_factory();
         $vaultfactory = \mod_forum\local\container::get_vault_factory();
@@ -375,7 +376,6 @@ class mur_pedagogique {
             set_user_preference('forum_displaymode', $displaymode);
         }
 
-
         if (empty($cm->visible) && !has_capability('moodle/course:viewhiddenactivities', $forum->get_context())) {
             redirect(
                 $backurl,
@@ -398,10 +398,8 @@ class mur_pedagogique {
         $forumdatamapper = $legacydatamapperfactory->get_forum_data_mapper();
         $forumrecord = $forumdatamapper->to_legacy_object($forum);
 
-
         $capabilitymanager = $managerfactory->get_capability_manager($forum);
         $notifications = [];
-
 
         $exporterfactory = \mod_forum\local\container::get_exporter_factory();
         $vaultfactory = \mod_forum\local\container::get_vault_factory();

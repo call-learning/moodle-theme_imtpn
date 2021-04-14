@@ -24,7 +24,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-
 $string['viewallgroups'] = 'Parcourir les groupes existants';
 $string['allgroups'] = 'Tous les groupes';
 $string['catalogue'] = 'Catalogue';
@@ -63,7 +62,6 @@ le mur pédagogique';
 $string['murpedagoenabled'] = 'Enable mur pedagogique';
 $string['murpedagoenabled_desc'] = 'Enable mur pedagogique';
 
-
 $string['themescat:title'] = 'Catalogue par thème';
 $string['createcourse'] = 'Créer un cours';
 $string['viewcatalog'] = 'Voir le catalogue';
@@ -71,3 +69,12 @@ $string['populargroups'] = 'Groupes populaires';
 $string['othersettings'] = 'Other settings';
 $string['profilebgimage'] = 'Profile background image';
 $string['profilebgimage_desc'] = 'Profile background image';
+$string['simplifiedprofilepage'] = 'Simplified profile page';
+$string['simplifiedprofilepage_desc'] = 'Should we remove unnecessary elements from the profile page to streamline it ?';
+$string['profilepage'] = 'Profile page';
+$string['profilecomponentsexclusion'] = 'Profile component exclusion';
+$string['profilecomponentsexclusion_desc'] = 'Remove components from the profile page to streamline it ? A comma
+separated list of components, such as mod, report';
+$string['profilemodulesexclusion'] = 'Profile module exclusion';
+$string['profilemodulesexclusion_desc'] = 'Remove modules from the profile page to streamline it ? A comma separated values of
+names, such as mod_forum.';

@@ -56,6 +56,10 @@ if (empty($forum)) {
         }
     }
 }
+$course = $forum->get_course_record();
+$coursemodule = $forum->get_course_module_record();
+$cm = \cm_info::create($coursemodule);
+require_course_login($course, true, $cm);
 
 \theme_imtpn\mur_pedagogique::display_wall($forum,
     $managerfactory,

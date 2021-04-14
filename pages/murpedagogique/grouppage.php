@@ -87,7 +87,7 @@ $grouprenderer = $PAGE->get_renderer('core_group');
 $groupdetailpage = new \core_group\output\group_details($groupid);
 
 echo $grouprenderer->group_details($groupdetailpage);
-echo $OUTPUT->box(get_string('groupmessagescount','theme_imtpn',count($discussions)));
+echo $OUTPUT->box(get_string('groupmessagescount', 'theme_imtpn', count($discussions)));
 
 if (!$isingroup) {
     $rulesgroups = get_config('theme_imtpn', 'murpedagogrouprules');

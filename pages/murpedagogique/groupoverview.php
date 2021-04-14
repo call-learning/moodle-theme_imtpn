@@ -81,7 +81,7 @@ foreach ($groupings as $grouping) {
 // Groups not in a grouping.
 $members[OVERVIEW_GROUPING_GROUP_NO_GROUPING] = array();
 
-// Get all groups
+// Get all groups.
 $groups = $DB->get_records('groups', array('courseid' => $courseid), 'name');
 
 $params = array('courseid' => $courseid);
@@ -98,7 +98,7 @@ $sql = "SELECT g.id AS groupid, gg.groupingid, u.id AS userid, $allnames, u.idnu
                LEFT JOIN {groupings_groups} gg ON g.id = gg.groupid
                LEFT JOIN {groups_members} gm ON g.id = gm.groupid
                LEFT JOIN {user} u ON gm.userid = u.id
-         WHERE g.courseid = :courseid 
+         WHERE g.courseid = :courseid
       ORDER BY g.name, $sort";
 
 $rs = $DB->get_recordset_sql($sql, array_merge($params, $sortparams));
@@ -121,7 +121,7 @@ $rs->close();
 navigation_node::override_active_url($currenturl);
 $PAGE->navbar->add(get_string('overview', 'group'));
 
-/// Print header
+// Print header.
 $PAGE->set_title($strgroups);
 $PAGE->set_heading($course->fullname);
 $PAGE->set_pagelayout('standard');
@@ -133,10 +133,10 @@ $PAGE->navbar->add(get_string('allgroups', 'theme_imtpn'),
     $currenturl);
 echo $OUTPUT->header();
 
-/// Print overview
+// Print overview.
 echo $OUTPUT->heading(format_string($course->shortname, true, array('context' => $context)) . ' ' . $stroverview, 3);
 
-/// Print table
+// Print table.
 $printed = false;
 $hoverevents = array();
 foreach ($members as $gpgid => $groupdata) {
@@ -171,7 +171,7 @@ foreach ($members as $gpgid => $groupdata) {
         $viewfullnames = has_capability('moodle/site:viewfullnames', $context);
         $fullnames = array();
         foreach ($users as $user) {
-            /* @var $OUTPUT core_renderer */
+            /* @var $OUTPUT core_renderer core renderer */
             $fullnames[] = $OUTPUT->user_picture($user, ['includefullname' => true]);
         }
         $line[] = implode(', ', $fullnames);

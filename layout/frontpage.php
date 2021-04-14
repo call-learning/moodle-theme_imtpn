@@ -34,9 +34,9 @@ $templatecontext['sitename'] = format_string(
 );
 
 $sitesummarytxt = empty($SITE->summary) ?
-    get_string('defaultfpslogan', 'theme_imtpn'):
+    get_string('defaultfpslogan', 'theme_imtpn') :
     $SITE->summary;
-if(!isloggedin() || isguestuser()) {
+if (!isloggedin() || isguestuser()) {
     $templatecontext['loginurl'] = get_login_url();
 }
 $templatecontext['fppageheader'] = format_text($sitesummarytxt, FORMAT_HTML);

@@ -50,7 +50,6 @@ $PAGE->set_title($pagetitle);
 $PAGE->set_heading($header);
 $PAGE->set_subpage($pageid);
 
-
 // Toggle the editing state and switches.
 $editbutton = "";
 if ($PAGE->user_allowed_editing()) {
@@ -71,17 +70,16 @@ if ($PAGE->user_allowed_editing()) {
     $USER->editing = $edit = 0;
 }
 $url = new moodle_url("$CFG->wwwroot/local/resourcelibrary/index.php");
-$button  = new single_button($url, get_string('viewcatalog','theme_imtpn'), 'post', true);
+$button = new single_button($url, get_string('viewcatalog', 'theme_imtpn'), 'post', true);
 $viewcatalog = $OUTPUT->render($button);
 
 $url = new moodle_url("$CFG->wwwroot/course/edit.php", array('category' =>
-    core_course_category::get_default()->id, 'returnto' =>  $baseurl->out()));
-$button  = new single_button($url, get_string('createcourse','theme_imtpn'), 'post', true);
+    core_course_category::get_default()->id, 'returnto' => $baseurl->out()));
+$button = new single_button($url, get_string('createcourse', 'theme_imtpn'), 'post', true);
 $createacourse = $OUTPUT->render($button);
 $PAGE->set_button($viewcatalog . $createacourse . $editbutton);
 
 $PAGE->blocks->set_default_region('content');
-
 
 echo $OUTPUT->header();
 

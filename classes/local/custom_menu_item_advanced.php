@@ -23,6 +23,7 @@
  */
 
 namespace theme_imtpn\local;
+
 use custom_menu_item;
 use moodle_url;
 use renderer_base;
@@ -55,7 +56,7 @@ class custom_menu_item_advanced extends custom_menu_item {
      * @param custom_menu_item $parent A reference to the parent custom_menu_item this child
      *        belongs to, only if the child has a parent. [Optional]
      */
-    public function __construct($text, moodle_url $url=null, $title=null, $sort = null, custom_menu_item $parent = null,
+    public function __construct($text, moodle_url $url = null, $title = null, $sort = null, custom_menu_item $parent = null,
         $iconclasses = null) {
         global $PAGE;
         parent::__construct($text, $url, $title, $sort, $parent);
@@ -74,7 +75,7 @@ class custom_menu_item_advanced extends custom_menu_item {
     public function export_for_template(renderer_base $output) {
         $context = parent::export_for_template($output);
         $this->add_icon_to_context($context);
-        $context->additionalclasses = $this->iscurrentpage ? 'currentpage': '';
+        $context->additionalclasses = $this->iscurrentpage ? 'currentpage' : '';
         return $context;
     }
 }

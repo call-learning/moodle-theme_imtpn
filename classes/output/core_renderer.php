@@ -24,6 +24,8 @@
 
 namespace theme_imtpn\output;
 
+use context_course;
+use context_header;
 use context_system;
 use core_userfeedback;
 use custom_menu;
@@ -49,6 +51,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      * Add more info that can then be used in the mustache template.
      *
      * For example {{# additionalinfo.isloggedin }} {{/ additionalinfo.isloggedin }}
+     *
      * @return stdClass
      */
     public function get_template_additional_information() {
@@ -56,7 +59,6 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         $additionalinfo->footercontent = get_config('theme_imtpn', 'footercontent');
         return $additionalinfo;
     }
-
 
     /**
      * Get Logo URL
@@ -120,7 +122,10 @@ class core_renderer extends \theme_clboost\output\core_renderer {
     protected function render_custom_menu(custom_menu $menu) {
         global $CFG, $USER;
 
-        $this->add_if_not_exist($menu, new moodle_url('/my'), get_string('mymoodle', 'my'));
+        $loggedin = isloggedin() && !isguestuser(); // Check if really logged in and not just as a guest.
+        if ($loggedin) {
+            $this->add_if_not_exist($menu, new moodle_url('/my'), get_string('mymoodle', 'my'));
+        }
         if (mur_pedagogique::has_access($USER->id)) {
             $menu->add(get_string('murpedagogique', 'theme_imtpn'), mur_pedagogique::get_url());
         }
@@ -141,8 +146,8 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         return $content;
     }
 
-    protected function add_if_not_exist(custom_menu_advanced $menu, moodle_url $url, $label, $class='') {
-        foreach($menu->get_children() as $child) {
+    protected function add_if_not_exist(custom_menu_advanced $menu, moodle_url $url, $label, $class = '') {
+        foreach ($menu->get_children() as $child) {
             if ($url->out_omit_querystring() == $child->get_url()->out_omit_querystring()) {
                 return;
             }
@@ -165,7 +170,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
             return '';
         }
         if ($this->page->course != SITEID and !empty($this->page->course->lang)) {
-            // do not show lang menu if language forced
+            // Do not show lang menu if language forced.
             return '';
         }
         $langs = get_string_manager()->get_list_of_translations();
@@ -183,7 +188,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
                 "flag-icon flag-icon-{$shortlangcode}");
             foreach ($langs as $langtype => $langname) {
                 $this->language->add($langname, new moodle_url($this->page->url, array('lang' => $langtype)), null,
-                    null,"flag-icon flag-icon-{$langtype}");
+                    null, "flag-icon flag-icon-{$langtype}");
             }
         }
 
@@ -195,7 +200,6 @@ class core_renderer extends \theme_clboost\output\core_renderer {
 
         return $content;
     }
-
 
     /**
      * Returns the custom menu if one has been set
@@ -220,11 +224,12 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         return $this->render_custom_menu($custommenu);
     }
 
-
     /**
      * The standard tags (typically performance information and validation links,
      * if we are in developer debug mode) that should be output in the footer area
      * of the page. Designed to be called in theme layout.php files.
+     *
+     * Core change : output footer as a list instead of a just raw output.
      *
      * @return string HTML fragment.
      */
@@ -236,7 +241,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         if (during_initial_install()) {
             // Debugging info can not work before install is finished,
             // in any case we do not want any links during installation!
-            return '';
+            return $output;
         }
 
         // Give plugins an opportunity to add any footer elements.
@@ -249,9 +254,10 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         }
 
         if (core_userfeedback::can_give_feedback()) {
-            $list[]= html_writer::div(
-                $this->render_from_template('core/userfeedback_footer_link', ['url' => core_userfeedback::make_link()->out(false)])
-            );
+            $list[] = html_writer::div(
+                $this->render_from_template('core/userfeedback_footer_link',
+                    ['url' => core_userfeedback::make_link()->out(false)])
+            ); // IMTPN: output as a list.
         }
 
         // This function is normally called from a layout.php file in {@link core_renderer::header()}
@@ -259,40 +265,157 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         // for now. This will be replaced with the real content in {@link core_renderer::footer()}.
         $output .= $this->unique_performance_info_token;
         if ($this->page->devicetypeinuse == 'legacy') {
-            // The legacy theme is in use print the notification
-            $list[] = html_writer::tag('div', get_string('legacythemeinuse'), array('class'=>'legacythemeinuse'));
+            // The legacy theme is in use print the notification.
+            $list[] = html_writer::tag('div', get_string('legacythemeinuse'),
+                array('class' => 'legacythemeinuse')); // IMTPN: output as a list.
         }
 
-        // Get links to switch device types (only shown for users not on a default device)
+        // Get links to switch device types (only shown for users not on a default device).
         $list[] = $this->theme_switch_links();
 
         if (!empty($CFG->debugpageinfo)) {
-            $list[] = '<div class="performanceinfo pageinfo">' . get_string('pageinfodebugsummary', 'core_admin',
+            $list[] = '<div class="performanceinfo pageinfo">' .
+                get_string('pageinfodebugsummary', 'core_admin', // IMTPN: output as a list.
                     $this->page->debug_summary()) . '</div>';
         }
-        if (debugging(null, DEBUG_DEVELOPER) and has_capability('moodle/site:config', context_system::instance())) {  // Only in developer mode
-            // Add link to profiling report if necessary
+        if (debugging(null, DEBUG_DEVELOPER) and
+            has_capability('moodle/site:config', context_system::instance())) {  // Only in developer mode
+            // Add link to profiling report if necessary.
             if (function_exists('profiling_is_running') && profiling_is_running()) {
                 $txt = get_string('profiledscript', 'admin');
                 $title = get_string('profiledscriptview', 'admin');
                 $url = $CFG->wwwroot . '/admin/tool/profiling/index.php?script=' . urlencode($SCRIPT);
-                $link= '<a title="' . $title . '" href="' . $url . '">' . $txt . '</a>';
-                $list[]  = '<div class="profilingfooter">' . $link . '</div>';
+                $link = '<a title="' . $title . '" href="' . $url . '">' . $txt . '</a>';
+                $list[] = '<div class="profilingfooter">' . $link . '</div>'; // IMTPN: output as a list.
             }
             $purgeurl = new moodle_url('/admin/purgecaches.php', array('confirm' => 1,
                 'sesskey' => sesskey(), 'returnurl' => $this->page->url->out_as_local_url(false)));
             $list[] = '<div class="purgecaches">' .
                 html_writer::link($purgeurl, get_string('purgecaches', 'admin')) . '</div>';
+            // IMTPN: output as a list.
         }
         if (!empty($CFG->debugvalidators)) {
             // NOTE: this is not a nice hack, $this->page->url is not always accurate and
             // $FULLME neither, it is not a bug if it fails. --skodak.
             $list[] = '<div class="validators"><ul class="list-unstyled ml-1">
-              <li><a href="http://validator.w3.org/check?verbose=1&amp;ss=1&amp;uri=' . urlencode(qualified_me()) . '">Validate HTML</a></li>
-              <li><a href="http://www.contentquality.com/mynewtester/cynthia.exe?rptmode=-1&amp;url1=' . urlencode(qualified_me()) . '">Section 508 Check</a></li>
-              <li><a href="http://www.contentquality.com/mynewtester/cynthia.exe?rptmode=0&amp;warnp2n3e=1&amp;url1=' . urlencode(qualified_me()) . '">WCAG 1 (2,3) Check</a></li>
-            </ul></div>';
+              <li><a href="http://validator.w3.org/check?verbose=1&amp;ss=1&amp;uri='
+                . urlencode(qualified_me()) . '">Validate HTML</a></li>
+              <li><a href="http://www.contentquality.com/mynewtester/cynthia.exe?rptmode=-1&amp;url1='
+                . urlencode(qualified_me()) . '">Section 508 Check</a></li>
+              <li><a href="http://www.contentquality.com/mynewtester/cynthia.exe?rptmode=0&amp;warnp2n3e=1&amp;url1=' .
+                urlencode(qualified_me()) . '">WCAG 1 (2,3) Check</a></li>
+            </ul></div>'; // IMTPN: output as a list.
         }
-        return \html_writer::alist($list). $output;
+        return \html_writer::alist($list) . $output; // IMTPN: output as a list.
     }
+
+    const PROFILE_IMAGE_SIZE = 150;
+
+    /**
+     * Output context header.
+     *
+     * Core change: Change in context header to display a bigger profile image.
+     * This could have been avoided if the context header was broken in two parts: the data and the renderer.
+     *
+     * @param null $headerinfo
+     * @param int $headinglevel
+     * @return string
+     * @throws \coding_exception
+     * @throws \dml_exception
+     * @throws \moodle_exception
+     */
+    public function context_header($headerinfo = null, $headinglevel = 1) {
+        global $DB, $USER, $CFG, $SITE;
+        require_once($CFG->dirroot . '/user/lib.php');
+        $context = $this->page->context;
+        $heading = null;
+        $imagedata = null;
+        $subheader = null;
+        $userbuttons = null;
+
+        if ($this->should_display_main_logo($headinglevel)) {
+            $sitename = format_string($SITE->fullname, true, array('context' => context_course::instance(SITEID)));
+            return html_writer::div(html_writer::empty_tag('img', [
+                'src' => $this->get_logo_url(null, 150), 'alt' => $sitename, 'class' => 'img-fluid']), 'logo');
+        }
+
+        // Make sure to use the heading if it has been set.
+        if (isset($headerinfo['heading'])) {
+            $heading = $headerinfo['heading'];
+        } else {
+            $heading = $this->page->heading;
+        }
+
+        // The user context currently has images and buttons. Other contexts may follow.
+        if (isset($headerinfo['user']) || $context->contextlevel == CONTEXT_USER) {
+            if (isset($headerinfo['user'])) {
+                $user = $headerinfo['user'];
+            } else {
+                // Look up the user information if it is not supplied.
+                $user = $DB->get_record('user', array('id' => $context->instanceid));
+            }
+
+            // If the user context is set, then use that for capability checks.
+            if (isset($headerinfo['usercontext'])) {
+                $context = $headerinfo['usercontext'];
+            }
+
+            // Only provide user information if the user is the current user, or a user which the current user can view.
+            // When checking user_can_view_profile(), either:
+            // If the page context is course, check the course context (from the page object) or;
+            // If page context is NOT course, then check across all courses.
+            $course = ($this->page->context->contextlevel == CONTEXT_COURSE) ? $this->page->course : null;
+
+            if (user_can_view_profile($user, $course)) {
+                // Use the user's full name if the heading isn't set.
+                if (empty($heading)) {
+                    $heading = fullname($user);
+                }
+
+                $imagedata = $this->user_picture($user, array('size' => self::PROFILE_IMAGE_SIZE));
+
+                // Check to see if we should be displaying a message button.
+                if (!empty($CFG->messaging) && has_capability('moodle/site:sendmessage', $context)) {
+                    $userbuttons = array(
+                        'messages' => array(
+                            'buttontype' => 'message',
+                            'title' => get_string('message', 'message'),
+                            'url' => new moodle_url('/message/index.php', array('id' => $user->id)),
+                            'image' => 'message',
+                            'linkattributes' => \core_message\helper::messageuser_link_params($user->id),
+                            'page' => $this->page
+                        )
+                    );
+
+                    if ($USER->id != $user->id) {
+                        $iscontact = \core_message\api::is_contact($USER->id, $user->id);
+                        $contacttitle = $iscontact ? 'removefromyourcontacts' : 'addtoyourcontacts';
+                        $contacturlaction = $iscontact ? 'removecontact' : 'addcontact';
+                        $contactimage = $iscontact ? 'removecontact' : 'addcontact';
+                        $userbuttons['togglecontact'] = array(
+                            'buttontype' => 'togglecontact',
+                            'title' => get_string($contacttitle, 'message'),
+                            'url' => new moodle_url('/message/index.php', array(
+                                    'user1' => $USER->id,
+                                    'user2' => $user->id,
+                                    $contacturlaction => $user->id,
+                                    'sesskey' => sesskey())
+                            ),
+                            'image' => $contactimage,
+                            'linkattributes' => \core_message\helper::togglecontact_link_params($user, $iscontact),
+                            'page' => $this->page
+                        );
+                    }
+
+                    $this->page->requires->string_for_js('changesmadereallygoaway', 'moodle');
+                }
+            } else {
+                $heading = null;
+            }
+        }
+
+        $contextheader = new context_header($heading, $headinglevel, $imagedata, $userbuttons);
+        return $this->render_context_header($contextheader);
+    }
+
 }

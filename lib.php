@@ -95,3 +95,19 @@ function theme_imtpn_get_extra_scss($theme) {
 function reset_mur_pedago_blocks() {
     \theme_imtpn\setup::setup_murpedago_blocks();
 }
+
+/**
+ * Fix issue with notloggedin class
+ *
+ * Usually the pages are marked as notlogged in if no user is logged in. In case the guest user
+ * is logged in, the notloggedin is not there anymore, resulting in the left navbar taking space.
+ * This resolves this issue on this theme.
+ *
+ * @param $page
+ */
+function theme_imtpn_page_init($page) {
+    $loggedin = isloggedin() && !isguestuser();
+    if (!$loggedin) {
+        $page->add_body_class('notloggedin');
+    }
+}

@@ -84,7 +84,7 @@ class setup {
         // Note here: this will only define capabilities for the default page. If we
         // want the dashboard to work as expected we also need to set forcedefaultmymoodle to true.
 
-        // Setup Home page
+        // Setup Home page.
         $page = new moodle_page();
         $page->set_pagetype('site-index');
         $page->set_docs_path('');
