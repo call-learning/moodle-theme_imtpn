@@ -62,10 +62,6 @@ $cm = \cm_info::create($coursemodule);
 require_course_login($course, true, $cm);
 
 \theme_imtpn\mur_pedagogique::display_wall($forum,
-    $managerfactory,
-    $legacydatamapperfactory,
-    $discussionlistvault,
-    $postvault,
     $mode,
     $search,
     $sortorder,

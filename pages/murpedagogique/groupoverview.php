@@ -22,6 +22,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use theme_imtpn\local\utils;
+use theme_imtpn\mur_pedagogique;
+
 require_once('../../../../config.php');
 global $CFG, $PAGE, $DB, $OUTPUT;
 require_once($CFG->libdir . '/filelib.php');
@@ -32,7 +35,7 @@ define('OVERVIEW_GROUPING_NO_GROUP', -2); // The fake grouping for users with no
 
 $courseid = optional_param('id', 0, PARAM_INT);
 
-$cm = \theme_imtpn\mur_pedagogique::get_cm();
+$cm = mur_pedagogique::get_cm();
 if ($cm) {
     $PAGE->set_cm($cm);
 } else {
@@ -149,12 +152,7 @@ foreach ($members as $gpgid => $groupdata) {
     $table->data = array();
     foreach ($groupdata as $gpid => $users) {
         $line = array();
-        $pictureurl = get_group_picture_url($groups[$gpid], $courseid, false, false);
-        $groupname = s($groups[$gpid]->name);
-        $name = html_writer::link(
-            new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $gpid)),
-            html_writer::img($pictureurl, $groupname, ['title' => $groupname])
-        );
+        $name = mur_pedagogique::get_group_link($groups[$gpid],$courseid, true);
         $description =
             file_rewrite_pluginfile_urls($groups[$gpid]->description, 'pluginfile.php', $context->id, 'group', 'description',
                 $gpid);

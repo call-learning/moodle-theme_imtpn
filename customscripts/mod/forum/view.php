@@ -23,14 +23,8 @@
  */
 
 use mod_forum\grades\forum_gradeitem;
-
-$managerfactory = mod_forum\local\container::get_manager_factory();
-$legacydatamapperfactory = mod_forum\local\container::get_legacy_data_mapper_factory();
 $vaultfactory = mod_forum\local\container::get_vault_factory();
 $forumvault = $vaultfactory->get_forum_vault();
-$discussionvault = $vaultfactory->get_discussion_vault();
-$postvault = $vaultfactory->get_post_vault();
-$discussionlistvault = $vaultfactory->get_discussions_in_forum_vault();
 
 $cmid = optional_param('id', 0, PARAM_INT);
 $forumid = optional_param('f', 0, PARAM_INT);
@@ -69,10 +63,12 @@ if (!empty($cm) && ($cm->id === $forum->get_course_module_record()->id)) {
         if (!empty($groupid)) {
             redirect(new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $groupid)));
         }
-        \theme_imtpn\mur_pedagogique::display_wall($forum, $managerfactory, $legacydatamapperfactory, $discussionlistvault,
-            $postvault,
-            $mode,
-            $search, $sortorder, $pageno, $pagesize);
+        \theme_imtpn\mur_pedagogique::display_wall($forum,
+            FORUM_MODE_NESTED,
+            $search,
+            $sortorder,
+            $pageno,
+            $pagesize);
         die();
     }
 }

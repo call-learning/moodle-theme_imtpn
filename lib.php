@@ -70,7 +70,7 @@ function theme_imtpn_get_extra_scss($theme) {
         $profileimageurl[utils::IMAGE_SIZE_TYPE_XL] = '[[pix:theme|backgrounds/profile-3x]]';
     }
     $profileimagedef = '
-    #page-user-profile {
+    .pagelayout-mypublic {
         #page-header {
         ';
     foreach ($profileimageurl as $type => $def) {

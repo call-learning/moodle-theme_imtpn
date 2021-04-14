@@ -24,11 +24,13 @@
 
 namespace theme_imtpn;
 
+use html_writer;
 use mod_forum\grades\forum_gradeitem;
 use mod_forum\local\container;
 use cm_info;
 use moodle_url;
 use theme_imtpn\local\forum\discussion_list_mur_pedago;
+use theme_imtpn\local\utils;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -115,16 +117,16 @@ class mur_pedagogique {
      * @throws \moodle_exception
      */
     public static function display_wall($forum,
-        $managerfactory,
-        $legacydatamapperfactory,
-        $discussionlistvault,
-        $postvault,
         $mode,
         $search,
         $sortorder,
         $pageno,
         $pagesize) {
         global $PAGE, $OUTPUT, $CFG, $SESSION, $USER;
+        $vaultfactory = \mod_forum\local\container::get_vault_factory();
+        $discussionlistvault = $vaultfactory->get_discussions_in_forum_vault();
+        $managerfactory = \mod_forum\local\container::get_manager_factory();
+        $legacydatamapperfactory = \mod_forum\local\container::get_legacy_data_mapper_factory();
         $urlfactory = container::get_url_factory();
         $capabilitymanager = $managerfactory->get_capability_manager($forum);
 
@@ -144,21 +146,7 @@ class mur_pedagogique {
         if ($mode) {
             $displaymode = $mode;
         } else {
-            $displaymode = $saveddisplaymode;
-        }
-
-        if (get_user_preferences('forum_useexperimentalui', false)) {
-            if ($displaymode == FORUM_MODE_NESTED) {
-                $displaymode = FORUM_MODE_NESTED_V2;
-            }
-        } else {
-            if ($displaymode == FORUM_MODE_NESTED_V2) {
-                $displaymode = FORUM_MODE_NESTED;
-            }
-        }
-
-        if ($displaymode != $saveddisplaymode) {
-            set_user_preference('forum_displaymode', $displaymode);
+            $displaymode = FORUM_MODE_NESTED;
         }
 
         $PAGE->set_context($forum->get_context());
@@ -166,6 +154,7 @@ class mur_pedagogique {
         $PAGE->add_body_class('forumtype-' . $forum->get_type());
         $PAGE->set_heading($course->fullname);
         $PAGE->set_pagelayout('incourse');
+        $PAGE->add_body_class('path-mod-forum'); // Make sure the usual classes apply.
         $PAGE->set_cm($cm);
         $PAGE->navbar->ignore_active();
         $PAGE->navbar->add(get_string('murpedagogique', 'theme_imtpn'),
@@ -234,75 +223,9 @@ class mur_pedagogique {
         // Fetch the current groupid.
         $groupid = groups_get_activity_group($cm, true) ?: null;
 
-        $capabilitymanager = $managerfactory->get_capability_manager($forum);
-        $notifications = [];
-
-        $rendererfactory = \mod_forum\local\container::get_renderer_factory();
-        $exporterfactory = \mod_forum\local\container::get_exporter_factory();
-        $vaultfactory = \mod_forum\local\container::get_vault_factory();
-        $builderfactory = \mod_forum\local\container::get_builder_factory();
-
         $discussionsrenderer = new discussion_list_mur_pedago(
             $forum,
-            $PAGE->get_renderer('mod_forum'),
-            $legacydatamapperfactory,
-            $exporterfactory,
-            $vaultfactory,
-            $builderfactory,
-            $capabilitymanager,
-            $urlfactory,
-            forum_gradeitem::load_from_forum_entity($forum),
-            'mod_forum/blog_discussion_list',
-            $notifications,
-            function($discussions, $user, $forum) use ($capabilitymanager, $builderfactory, $vaultfactory, $legacydatamapperfactory
-            ) {
-                $exportedpostsbuilder = $builderfactory->get_exported_posts_builder();
-                $discussionentries = [];
-                $postentries = [];
-                foreach ($discussions as $discussion) {
-                    $discussionentries[] = $discussion->get_discussion();
-                    $discussionentriesids[] = $discussion->get_discussion()->get_id();
-                    $postentries[] = $discussion->get_first_post();
-                }
-
-                $exportedposts['posts'] = $exportedpostsbuilder->build(
-                    $user,
-                    [$forum],
-                    $discussionentries,
-                    $postentries
-                );
-
-                $postvault = $vaultfactory->get_post_vault();
-                $canseeanyprivatereply = $capabilitymanager->can_view_any_private_reply($user);
-                $discussionrepliescount = $postvault->get_reply_count_for_discussion_ids(
-                    $user,
-                    $discussionentriesids,
-                    $canseeanyprivatereply
-                );
-                $forumdatamapper = $legacydatamapperfactory->get_forum_data_mapper();
-                $forumrecord = $forumdatamapper->to_legacy_object($forum);
-                if (forum_tp_is_tracked($forumrecord, $user)) {
-                    $discussionunreadscount = $postvault->get_unread_count_for_discussion_ids(
-                        $user,
-                        $discussionentriesids,
-                        $canseeanyprivatereply
-                    );
-                } else {
-                    $discussionunreadscount = [];
-                }
-
-                array_walk($exportedposts['posts'], function($post) use ($discussionrepliescount, $discussionunreadscount) {
-                    $post->discussionrepliescount = $discussionrepliescount[$post->discussionid] ?? 0;
-                    $post->discussionunreadscount = $discussionunreadscount[$post->discussionid] ?? 0;
-                    // TODO: Find a better solution due to language differences when defining the singular and plural form.
-                    $post->isreplyplural = $post->discussionrepliescount != 1 ? true : false;
-                    $post->isunreadplural = $post->discussionunreadscount != 1 ? true : false;
-                });
-
-                $exportedposts['state']['hasdiscussions'] = $exportedposts['posts'] ? true : false;
-
-                return $exportedposts;
-            }
+            $PAGE->get_renderer('mod_forum')
         );
 
         // Blog forums always show discussions newest first.
@@ -338,43 +261,25 @@ class mur_pedagogique {
         $sortorder,
         $pageno,
         $pagesize) {
-        global $PAGE, $OUTPUT, $CFG, $SESSION, $USER;
+        global $PAGE, $CFG, $USER;
 
         $managerfactory = \mod_forum\local\container::get_manager_factory();
         $legacydatamapperfactory = \mod_forum\local\container::get_legacy_data_mapper_factory();
         $vaultfactory = \mod_forum\local\container::get_vault_factory();
         $discussionlistvault = $vaultfactory->get_discussions_in_forum_vault();
-
-        $course = $forum->get_course_record();
         $coursemodule = $forum->get_course_module_record();
         $cm = \cm_info::create($coursemodule);
 
-        $urlfactory = container::get_url_factory();
         $capabilitymanager = $managerfactory->get_capability_manager($forum);
 
         $backurl = new moodle_url('/my'); // URL to go to if any issue with visibility.
 
-        $saveddisplaymode = get_user_preferences('forum_displaymode', $CFG->forum_displaymode);
-
         if ($mode) {
             $displaymode = $mode;
         } else {
-            $displaymode = $saveddisplaymode;
+            $displaymode = FORUM_MODE_NESTED;
         }
 
-        if (get_user_preferences('forum_useexperimentalui', false)) {
-            if ($displaymode == FORUM_MODE_NESTED) {
-                $displaymode = FORUM_MODE_NESTED_V2;
-            }
-        } else {
-            if ($displaymode == FORUM_MODE_NESTED_V2) {
-                $displaymode = FORUM_MODE_NESTED;
-            }
-        }
-
-        if ($displaymode != $saveddisplaymode) {
-            set_user_preference('forum_displaymode', $displaymode);
-        }
 
         if (empty($cm->visible) && !has_capability('moodle/course:viewhiddenactivities', $forum->get_context())) {
             redirect(
@@ -397,75 +302,11 @@ class mur_pedagogique {
         // Mark viewed and trigger the course_module_viewed event.
         $forumdatamapper = $legacydatamapperfactory->get_forum_data_mapper();
         $forumrecord = $forumdatamapper->to_legacy_object($forum);
-
-        $capabilitymanager = $managerfactory->get_capability_manager($forum);
         $notifications = [];
-
-        $exporterfactory = \mod_forum\local\container::get_exporter_factory();
-        $vaultfactory = \mod_forum\local\container::get_vault_factory();
-        $builderfactory = \mod_forum\local\container::get_builder_factory();
-
         $discussionsrenderer = new discussion_list_mur_pedago(
             $forum,
             $PAGE->get_renderer('mod_forum'),
-            $legacydatamapperfactory,
-            $exporterfactory,
-            $vaultfactory,
-            $builderfactory,
-            $capabilitymanager,
-            $urlfactory,
-            forum_gradeitem::load_from_forum_entity($forum),
-            'mod_forum/blog_discussion_list',
-            $notifications,
-            function($discussions, $user, $forum) use ($capabilitymanager, $builderfactory, $vaultfactory, $legacydatamapperfactory
-            ) {
-                $exportedpostsbuilder = $builderfactory->get_exported_posts_builder();
-                $discussionentries = [];
-                $postentries = [];
-                foreach ($discussions as $discussion) {
-                    $discussionentries[] = $discussion->get_discussion();
-                    $discussionentriesids[] = $discussion->get_discussion()->get_id();
-                    $postentries[] = $discussion->get_first_post();
-                }
-
-                $exportedposts['posts'] = $exportedpostsbuilder->build(
-                    $user,
-                    [$forum],
-                    $discussionentries,
-                    $postentries
-                );
-
-                $postvault = $vaultfactory->get_post_vault();
-                $canseeanyprivatereply = $capabilitymanager->can_view_any_private_reply($user);
-                $discussionrepliescount = $postvault->get_reply_count_for_discussion_ids(
-                    $user,
-                    $discussionentriesids,
-                    $canseeanyprivatereply
-                );
-                $forumdatamapper = $legacydatamapperfactory->get_forum_data_mapper();
-                $forumrecord = $forumdatamapper->to_legacy_object($forum);
-                if (forum_tp_is_tracked($forumrecord, $user)) {
-                    $discussionunreadscount = $postvault->get_unread_count_for_discussion_ids(
-                        $user,
-                        $discussionentriesids,
-                        $canseeanyprivatereply
-                    );
-                } else {
-                    $discussionunreadscount = [];
-                }
-
-                array_walk($exportedposts['posts'], function($post) use ($discussionrepliescount, $discussionunreadscount) {
-                    $post->discussionrepliescount = $discussionrepliescount[$post->discussionid] ?? 0;
-                    $post->discussionunreadscount = $discussionunreadscount[$post->discussionid] ?? 0;
-                    // TODO: Find a better solution due to language differences when defining the singular and plural form.
-                    $post->isreplyplural = $post->discussionrepliescount != 1 ? true : false;
-                    $post->isunreadplural = $post->discussionunreadscount != 1 ? true : false;
-                });
-
-                $exportedposts['state']['hasdiscussions'] = $exportedposts['posts'] ? true : false;
-
-                return $exportedposts;
-            }
+            $notifications
         );
 
         // Blog forums always show discussions newest first.
@@ -479,6 +320,26 @@ class mur_pedagogique {
             }, array_values($discussions));
             forum_tp_mark_posts_read($USER, $firstpostids);
         }
+    }
+
+    /**
+     * Display a group link with picture if needed.
+     *
+     * @param object $group
+     * @param $courseid
+     * @param false $withpicture
+     * @return string
+     * @throws \moodle_exception
+     */
+    public static function get_group_link(object $group, $courseid, $withpicture = false) {
+        $pictureurl = get_group_picture_url($group, $courseid, false, false);
+        $groupname = s($group->name);
+        $content  = $withpicture ? html_writer::img($pictureurl, $groupname, ['title' => $groupname])
+            : html_writer::span($groupname);
+        return html_writer::link(
+            new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $group->id)),
+            $content
+        );
     }
 
 }

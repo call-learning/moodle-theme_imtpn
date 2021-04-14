@@ -347,12 +347,19 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         }
 
         // The user context currently has images and buttons. Other contexts may follow.
-        if (isset($headerinfo['user']) || $context->contextlevel == CONTEXT_USER) {
+        if (isset($headerinfo['user'])
+            || $context->contextlevel == CONTEXT_USER
+            || $this->page->pagelayout == 'mypublic'
+        ) {
             if (isset($headerinfo['user'])) {
                 $user = $headerinfo['user'];
             } else {
                 // Look up the user information if it is not supplied.
-                $user = $DB->get_record('user', array('id' => $context->instanceid));
+                if ($context->contextlevel == CONTEXT_USER) {
+                    $user = $DB->get_record('user', array('id' => $context->instanceid));
+                } else {
+                    $user = $USER;
+                }
             }
 
             // If the user context is set, then use that for capability checks.
@@ -366,7 +373,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
             // If page context is NOT course, then check across all courses.
             $course = ($this->page->context->contextlevel == CONTEXT_COURSE) ? $this->page->course : null;
 
-            if (user_can_view_profile($user, $course)) {
+            if (user_can_view_profile($user, $course) || ($user->id == $USER->id)) {
                 // Use the user's full name if the heading isn't set.
                 if (empty($heading)) {
                     $heading = fullname($user);

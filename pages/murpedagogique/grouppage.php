@@ -57,7 +57,7 @@ $PAGE->navbar->add(get_string('murpedagogique', 'theme_imtpn'),
 $PAGE->navbar->add(get_string('allgroups', 'theme_imtpn'),
     new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php', array('id' => $course->id)));
 $PAGE->navbar->add($group->name, $currenturl);
-
+$PAGE->add_body_class('path-mod-forum'); // Make sure the usual classes apply.
 $PAGE->set_other_editing_capability('moodle/course:manageactivities');
 $mygroups = groups_get_user_groups($course->id);
 $isingroup = false;

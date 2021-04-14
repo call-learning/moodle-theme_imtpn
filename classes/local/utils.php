@@ -21,13 +21,14 @@
  * @copyright 2020 - CALL Learning - Laurent David <laurent@call-learning>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace theme_imtpn\local;
 
 use coding_exception;
 use context_system;
 use dml_exception;
+use html_writer;
 use moodle_url;
-
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -43,6 +44,7 @@ class utils {
      * Profile image file area name
      */
     const PROFILE_IMAGE_FILE_AREA = 'profileimage';
+
     /**
      * Get frontpage images URL
      *
@@ -100,4 +102,6 @@ class utils {
      * XL Size for image
      */
     const IMAGE_SIZE_TYPE_XL = 'xl';
+
+
 }

@@ -32,8 +32,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use core_user\output\myprofile\node;
-
 require_once($CFG->dirroot . '/my/lib.php');
 require_once($CFG->dirroot . '/user/profile/lib.php');
 require_once($CFG->dirroot . '/user/lib.php');
