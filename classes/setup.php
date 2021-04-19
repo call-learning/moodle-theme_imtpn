@@ -155,6 +155,7 @@ class setup {
             'capabilities' => array(),
         )
     );
+
     /**
      * Setup dashboard  - to be completed
      *
@@ -237,7 +238,7 @@ class setup {
                 'contextid' => $context->id,
                 'component' => 'block_' . $blockinstance->blockname,
                 'filearea' => empty($filespec['filearea']) ? "files" : $filespec['filearea'],
-                'itemid' => isset($filespec['itemid']) ? $filespec['itemid']: $blockinstance->id,
+                'itemid' => isset($filespec['itemid']) ? $filespec['itemid'] : $blockinstance->id,
                 'filepath' => dirname($filename) == '.' ? '/' : dirname($filename),
                 'filename' => basename($filename),
             );
@@ -323,7 +324,7 @@ class setup {
             'showinsubcontexts' => '0',
             'defaultregion' => 'content',
             'defaultweight' => '1',
-            'configdata' => array('title'=>'Les news du mur pédagogique'),
+            'configdata' => array('title' => 'Les news du mur pédagogique', 'maxtextlength' => 75),
             'capabilities' => array()
         ),
         array(
@@ -339,7 +340,7 @@ class setup {
             'showinsubcontexts' => '0',
             'defaultregion' => 'content',
             'defaultweight' => '3',
-            'configdata' => array('title' => 'Les cours que j\'enseigne', 'filter'=>'iteach'),
+            'configdata' => array('title' => 'Les cours que j\'enseigne', 'filter' => 'iteach'),
             'capabilities' => array()
         ),
         array(

@@ -25,12 +25,10 @@
 namespace theme_imtpn;
 
 use html_writer;
-use mod_forum\grades\forum_gradeitem;
 use mod_forum\local\container;
 use cm_info;
 use moodle_url;
 use theme_imtpn\local\forum\discussion_list_mur_pedago;
-use theme_imtpn\local\utils;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -154,7 +152,6 @@ class mur_pedagogique {
         $PAGE->add_body_class('forumtype-' . $forum->get_type());
         $PAGE->set_heading($course->fullname);
         $PAGE->set_pagelayout('incourse');
-        $PAGE->add_body_class('path-mod-forum'); // Make sure the usual classes apply.
         $PAGE->set_cm($cm);
         $PAGE->navbar->ignore_active();
         $PAGE->navbar->add(get_string('murpedagogique', 'theme_imtpn'),

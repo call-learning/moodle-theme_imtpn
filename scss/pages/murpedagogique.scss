@@ -1,0 +1,11 @@
+/* Hide some Forum features not necessary for the "Mur pedagogique" */
+.mur-pedagogique {
+    // Do not display the groups user belong to.
+     .author-groups-container {
+         display: none;
+     }
+    // No rating.
+    .rating-aggregate-container {
+        display: none; // We also do not want this to be accessible.
+    }
+}

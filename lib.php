@@ -45,16 +45,6 @@ function theme_imtpn_pluginfile($course, $cm, $context, $filearea, $args, $force
 }
 
 /**
- * @param \core_user\output\myprofile\tree $tree
- * @param $user
- * @param $iscurrentuser
- * @param $course
- */
-function theme_imtpn_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course) {
-
-}
-
-/**
  * Inject additional SCSS.
  *
  * @param theme_config $theme The theme config object.
@@ -62,34 +52,8 @@ function theme_imtpn_myprofile_navigation(core_user\output\myprofile\tree $tree,
  */
 function theme_imtpn_get_extra_scss($theme) {
     $extracss = theme_clboost_get_extra_scss($theme);
-
-    $profileimageurl = utils::get_profile_page_image_url($theme->name);
-    if (empty($profileimageurl)) {
-        $profileimageurl[utils::IMAGE_SIZE_TYPE_NORMAL] = '[[pix:theme|backgrounds/profile]]';
-        $profileimageurl[utils::IMAGE_SIZE_TYPE_LG] = '[[pix:theme|backgrounds/profile-2x]]';
-        $profileimageurl[utils::IMAGE_SIZE_TYPE_XL] = '[[pix:theme|backgrounds/profile-3x]]';
-    }
-    $profileimagedef = '
-    .pagelayout-mypublic {
-        #page-header {
-        ';
-    foreach ($profileimageurl as $type => $def) {
-        $bgdef = "
-        background-size: cover;
-        background-image: url($def);";
-        if ($type != utils::IMAGE_SIZE_TYPE_NORMAL) {
-            $profileimagedef .= " @include media-breakpoint-up($type) {
-                $bgdef
-             }";
-        } else {
-            $profileimagedef .= $bgdef;
-        }
-
-    }
-    $profileimagedef .= '
-        }
-    }';
-    return $extracss . $profileimagedef;
+    $additionalcss = \theme_imtpn\profile::inject_scss($theme->name);
+    return $extracss . $additionalcss;
 }
 
 function reset_mur_pedago_blocks() {
@@ -106,8 +70,5 @@ function reset_mur_pedago_blocks() {
  * @param $page
  */
 function theme_imtpn_page_init($page) {
-    $loggedin = isloggedin() && !isguestuser();
-    if (!$loggedin) {
-        $page->add_body_class('notloggedin');
-    }
+    utils::set_additional_page_classes($page);
 }

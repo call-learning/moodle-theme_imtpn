@@ -35,6 +35,7 @@ use core_user\output\myprofile\tree;
 use html_writer;
 use moodle_url;
 use stdClass;
+use theme_imtpn\local\utils;
 use theme_imtpn\output\courses_thumbnails;
 
 defined('MOODLE_INTERNAL') || die();
@@ -45,6 +46,36 @@ defined('MOODLE_INTERNAL') || die();
  * @package theme_imtpn
  */
 class profile {
+
+    public static function inject_scss($themename) {
+        $profileimageurl = utils::get_profile_page_image_url($themename);
+        if (empty($profileimageurl)) {
+            $profileimageurl[utils::IMAGE_SIZE_TYPE_NORMAL] = '[[pix:theme|backgrounds/profile]]';
+            $profileimageurl[utils::IMAGE_SIZE_TYPE_LG] = '[[pix:theme|backgrounds/profile-2x]]';
+            $profileimageurl[utils::IMAGE_SIZE_TYPE_XL] = '[[pix:theme|backgrounds/profile-3x]]';
+        }
+        $profileimagedef = '
+        .pagelayout-mypublic {
+            #page-header {
+            ';
+        foreach ($profileimageurl as $type => $def) {
+            $bgdef = "
+            background-size: cover;
+            background-image: url($def);";
+            if ($type != utils::IMAGE_SIZE_TYPE_NORMAL) {
+                $profileimagedef .= " @include media-breakpoint-up($type) {
+                $bgdef
+             }";
+            } else {
+                $profileimagedef .= $bgdef;
+            }
+
+        }
+            $profileimagedef .= '
+            }
+        }';
+        return $profileimagedef;
+    }
     /**
      * Parse all callbacks and builds the tree.
      *
