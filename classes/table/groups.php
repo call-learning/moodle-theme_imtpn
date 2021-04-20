@@ -28,6 +28,8 @@ namespace theme_imtpn\table;
 use context;
 use core_table\dynamic as dynamic_table;
 use core_table\local\filter\filterset;
+use moodle_url;
+use theme_imtpn\mur_pedagogique;
 use user_picture;
 
 defined('MOODLE_INTERNAL') || die;
@@ -62,20 +64,30 @@ class groups extends \table_sql implements dynamic_table {
         parent::__construct($uniqueid);
         $this->sql = new \stdClass();
         $cols = [
-            'groupid'=> get_string('groups:groupid', 'theme_imtpn'),
-            'groupimage'=> get_string('groups:groupimage', 'theme_imtpn'),
+            'groupimage'=> '',
+            'groupname' => get_string('groups:groupname', 'theme_imtpn'),
             'members'=> get_string('groups:members', 'theme_imtpn'),
             'postcount'=> get_string('groups:postcount', 'theme_imtpn'),
-            'grouplink'=> get_string('groups:grouplink', 'theme_imtpn')
+            'grouplink'=> ''
         ];
 
         $this->define_columns(array_keys($cols));
         $this->define_headers(array_values($cols));
         $this->collapsible(false);
-        $this->sortable(false);
+        $this->sortable(true);
+        $this->no_sorting('members');
+        $this->no_sorting('grouplink');
+        $this->no_sorting('groupimage');
         $this->pageable(true);
-        $this->sql->fields = "g.id AS groupid,g.name AS groupname";
-        $this->sql->from = "FROM {groups} g";
+        $forumcondition = '';
+        $cm = mur_pedagogique::get_cm();
+        if ($cm) {
+            $forumcondition = " WHERE d.forum = {$cm->instance}";
+        }
+        $this->sql->fields = "g.id AS groupid,g.name AS groupname, COALESCE(dc.count,0) as postcount";
+        $this->sql->from = " {groups} g 
+            LEFT JOIN (SELECT COUNT(*) count, d.groupid FROM {forum_discussions} d 
+            LEFT JOIN {forum_posts} p ON p.discussion = d.id $forumcondition  GROUP BY d.groupid) dc ON g.id = dc.groupid ";
         $this->sql->where = "g.courseid = :courseid";
         $this->sql->params = [];
     }
@@ -87,6 +99,7 @@ class groups extends \table_sql implements dynamic_table {
      * @throws \dml_exception
      */
     public function set_filterset(filterset $filterset): void {
+        global $DB;
         // Get the context.
         $this->courseid = $filterset->get_filter('courseid')->current();
         $this->course = get_course($this->courseid);
@@ -95,5 +108,61 @@ class groups extends \table_sql implements dynamic_table {
         // Process the filterset.
         parent::set_filterset($filterset);
         $this->sql->params = ['courseid' => $this->courseid];
+        if ($filterset->has_filter('name')) {
+            $groupname = $filterset->get_filter('name')->current();
+            if (!empty($groupname)) {
+                $this->sql->where .= ' AND ' . $DB->sql_like('g.name', ':groupname', false, false);
+                $this->sql->params['groupname'] = "%{$groupname}%";
+            }
+        }
+    }
+
+    public function col_name($row) {
+        return format_string($row->groupname, true, ['context' => $this->get_context()]);
+    }
+    public function col_groupimage($row) {
+        $group = groups_get_group($row->groupid, '*', MUST_EXIST);
+        return \html_writer::img(get_group_picture_url($group, $this->courseid, true),
+            $row->groupname
+        );
+    }
+
+    public function col_members($row) {
+        global $OUTPUT;
+        $extrafields = get_extra_user_fields($this->get_context());
+        $extrafields[] = 'picture';
+        $extrafields[] = 'imagealt';
+        $allnames = 'u.id, ' . user_picture::fields('u', $extrafields);
+        $members = groups_get_members($row->groupid, $allnames);
+        $html = '';
+        // TODO: create a template.
+        foreach ($members as $user) {
+            /* @var $OUTPUT core_renderer core renderer */
+            $html .= \html_writer::span($OUTPUT->user_picture($user, ['includefullname' => false]));
+        }
+        return $html;
+    }
+
+    public function col_grouplink($row) {
+        $group = groups_get_group($row->groupid, '*', MUST_EXIST);
+        return mur_pedagogique::get_group_link($group,$this->courseid, false);
+    }
+
+    /**
+     * Guess the base url for the participants table.
+     */
+    public function guess_base_url(): void {
+        $this->baseurl = new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php');
+    }
+
+    /**
+     * Get the context of the current table.
+     *
+     * Note: This function should not be called until after the filterset has been provided.
+     *
+     * @return context
+     */
+    public function get_context(): context {
+        return $this->context;
     }
 }

@@ -24,7 +24,7 @@
 
 declare(strict_types=1);
 
-namespace core_user\table;
+namespace theme_imtpn\table;
 
 use core_table\local\filter\filterset;
 use core_table\local\filter\integer_filter;
@@ -55,23 +55,13 @@ class groups_filterset extends filterset {
      * Get the optional filters.
      *
      * These are:
-     * - accesssince;
-     * - enrolments;
-     * - groups;
-     * - keywords;
-     * - roles; and
-     * - status.
+     * - name.
      *
      * @return array
      */
     public function get_optional_filters(): array {
         return [
-            'accesssince' => integer_filter::class,
-            'enrolments' => integer_filter::class,
-            'groups' => integer_filter::class,
-            'keywords' => string_filter::class,
-            'roles' => integer_filter::class,
-            'status' => integer_filter::class,
+            'name' => string_filter::class,
         ];
     }
 }

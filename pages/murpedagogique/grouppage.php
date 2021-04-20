@@ -23,6 +23,7 @@
  */
 
 use theme_imtpn\mur_pedagogique;
+use theme_imtpn\output\group_info;
 
 require_once('../../../../config.php');
 
@@ -41,6 +42,9 @@ $course = $DB->get_record('course', array('id' => $group->courseid), '*', MUST_E
 $context = context_course::instance($course->id, MUST_EXIST);
 
 $cm = \theme_imtpn\mur_pedagogique::get_cm();
+if (!$cm) {
+    print_error('cmshouldbedefined', 'theme_imtpn');
+}
 require_course_login($course, true, $cm);
 global $PAGE, $OUTPUT;
 $currenturl = new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $groupid));
@@ -77,17 +81,16 @@ if (!$isingroup && has_capability('theme/imtpn:canselfjoingroup', $context)) {
 $vaultfactory = \mod_forum\local\container::get_vault_factory();
 $forumvault = $vaultfactory->get_forum_vault();
 $forum = $forumvault->get_from_course_module_id($cm->id);
-$discussions = mod_forum_get_discussion_summaries($forum, $USER, $groupid, $sortorder, $pageno, $pagesize);
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading($group->name);
 
 // Display single group information if requested in the URL.
 $grouprenderer = $PAGE->get_renderer('core_group');
-$groupdetailpage = new \core_group\output\group_details($groupid);
+$groupinfo = new group_info($groupid, $forum);
 
-echo $grouprenderer->group_details($groupdetailpage);
-echo $OUTPUT->box(get_string('groupmessagescount', 'theme_imtpn', count($discussions)));
+echo $OUTPUT->render($groupinfo);
+
 
 if (!$isingroup) {
     $rulesgroups = get_config('theme_imtpn', 'murpedagogrouprules');

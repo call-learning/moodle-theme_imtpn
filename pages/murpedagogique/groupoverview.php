@@ -22,6 +22,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core_table\local\filter\filter;
+use core_table\local\filter\integer_filter;
+use core_table\local\filter\string_filter;
 use theme_imtpn\local\utils;
 use theme_imtpn\mur_pedagogique;
 
@@ -71,56 +74,6 @@ $strdescription = get_string('description');
 // This is lots of data so allow this script more resources.
 raise_memory_limit(MEMORY_EXTRA);
 
-// Get all groupings and sort them by formatted name.
-$groupings = $DB->get_records('groupings', array('courseid' => $courseid), 'name');
-foreach ($groupings as $gid => $grouping) {
-    $groupings[$gid]->formattedname = format_string($grouping->name, true, array('context' => $context));
-}
-core_collator::asort_objects_by_property($groupings, 'formattedname');
-$members = array();
-foreach ($groupings as $grouping) {
-    $members[$grouping->id] = array();
-}
-// Groups not in a grouping.
-$members[OVERVIEW_GROUPING_GROUP_NO_GROUPING] = array();
-
-// Get all groups.
-$groups = $DB->get_records('groups', array('courseid' => $courseid), 'name');
-
-$params = array('courseid' => $courseid);
-
-list($sort, $sortparams) = users_order_by_sql('u');
-
-$extrafields = get_extra_user_fields($context);
-$extrafields[] = 'picture';
-$extrafields[] = 'imagealt';
-$allnames = 'u.id, ' . user_picture::fields('u', $extrafields);
-
-$sql = "SELECT g.id AS groupid, gg.groupingid, u.id AS userid, $allnames, u.idnumber, u.username
-          FROM {groups} g
-               LEFT JOIN {groupings_groups} gg ON g.id = gg.groupid
-               LEFT JOIN {groups_members} gm ON g.id = gm.groupid
-               LEFT JOIN {user} u ON gm.userid = u.id
-         WHERE g.courseid = :courseid
-      ORDER BY g.name, $sort";
-
-$rs = $DB->get_recordset_sql($sql, array_merge($params, $sortparams));
-foreach ($rs as $row) {
-    $user = username_load_fields_from_object((object) [], $row, null,
-        array_merge(['id' => 'userid', 'username', 'idnumber'], $extrafields));
-
-    if (!$row->groupingid) {
-        $row->groupingid = OVERVIEW_GROUPING_GROUP_NO_GROUPING;
-    }
-    if (!array_key_exists($row->groupid, $members[$row->groupingid])) {
-        $members[$row->groupingid][$row->groupid] = array();
-    }
-    if (!empty($user->id)) {
-        $members[$row->groupingid][$row->groupid][] = $user;
-    }
-}
-$rs->close();
-
 navigation_node::override_active_url($currenturl);
 $PAGE->navbar->add(get_string('overview', 'group'));
 
@@ -134,59 +87,44 @@ $PAGE->navbar->add(get_string('murpedagogique', 'theme_imtpn'),
     new moodle_url('/theme/imtpn/pages/murpedagogique/index.php'));
 $PAGE->navbar->add(get_string('allgroups', 'theme_imtpn'),
     $currenturl);
-echo $OUTPUT->header();
 
+// The form.
+require_once($CFG->libdir.'/formslib.php');
+
+$form = new class() extends moodleform {
+    protected function definition() {
+        $mform = $this->_form;
+        $mform->addElement('text', 'groupname', get_string('groupname', 'theme_imtpn'));
+        $mform->setType('groupname', PARAM_TEXT);
+        $buttonarray = [];
+        $buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('search'));
+        $buttonarray[] = $mform->createElement('cancel', 'cancelbutton', get_string('clear'));
+        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        $mform->closeHeaderBefore('buttonar');
+    }
+};
+$groupname = '';
+if ($form->is_cancelled()) {
+    $groupname = "";
+} else {
+    if ($data = $form->get_data()) {
+        $groupname = $data->groupname;
+    }
+}
+$filterset = new \theme_imtpn\table\groups_filterset();
+$filterset->add_filter(new integer_filter('courseid', filter::JOINTYPE_DEFAULT, [(int)$course->id]));
+if (!empty($groupname)) {
+    $filterset->add_filter(new string_filter('name', filter::JOINTYPE_DEFAULT, [$groupname]));
+}
+
+
+/* @var core_renderer $OUTPUT */
+echo $OUTPUT->header();
+$form->display();
 // Print overview.
 echo $OUTPUT->heading(format_string($course->shortname, true, array('context' => $context)) . ' ' . $stroverview, 3);
-
-// Print table.
-$printed = false;
-$hoverevents = array();
-foreach ($members as $gpgid => $groupdata) {
-    $table = new html_table();
-    $table->head = array(get_string('groupscount', 'group', count($groupdata)), get_string('groupmembers', 'group'),
-        get_string('usercount', 'group'));
-    $table->size = array('20%', '70%', '10%');
-    $table->align = array('left', 'left', 'center');
-    $table->width = '90%';
-    $table->data = array();
-    foreach ($groupdata as $gpid => $users) {
-        $line = array();
-        $name = mur_pedagogique::get_group_link($groups[$gpid],$courseid, true);
-        $description =
-            file_rewrite_pluginfile_urls($groups[$gpid]->description, 'pluginfile.php', $context->id, 'group', 'description',
-                $gpid);
-        $options = new stdClass;
-        $options->noclean = true;
-        $options->overflowdiv = true;
-        $jsdescription = trim(format_text($description, $groups[$gpid]->descriptionformat, $options));
-        if (empty($jsdescription)) {
-            $line[] = $name;
-        } else {
-            $line[] = html_writer::tag('span', $name, array('class' => 'group_hoverdescription', 'data-groupid' => $gpid));
-            $hoverevents[$gpid] = get_string('descriptiona', null, $jsdescription);
-        }
-        $viewfullnames = has_capability('moodle/site:viewfullnames', $context);
-        $fullnames = array();
-        foreach ($users as $user) {
-            /* @var $OUTPUT core_renderer core renderer */
-            $fullnames[] = $OUTPUT->user_picture($user, ['includefullname' => true]);
-        }
-        $line[] = implode(', ', $fullnames);
-        $line[] = count($users);
-        $table->data[] = $line;
-    }
-    if ($gpgid > 0) {
-        echo $OUTPUT->heading($groupings[$gpgid]->formattedname, 3);
-        $description =
-            file_rewrite_pluginfile_urls($groupings[$gpgid]->description, 'pluginfile.php', $context->id, 'grouping', 'description',
-                $gpgid);
-        $options = new stdClass;
-        $options->overflowdiv = true;
-        echo $OUTPUT->box(format_text($description, $groupings[$gpgid]->descriptionformat, $options),
-            'generalbox boxwidthnarrow boxaligncenter');
-    }
-    echo html_writer::table($table);
-    $printed = true;
-}
+$grouptable = new \theme_imtpn\table\groups(html_writer::random_id());
+$grouptable->set_filterset($filterset);
+$grouptable->out(20, true);
 echo $OUTPUT->footer();
+

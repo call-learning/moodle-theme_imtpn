@@ -115,12 +115,10 @@ class utils {
         if (!$loggedin) {
             $page->add_body_class('notloggedin');
         }
-        try {
-            $murpedaggocm = mur_pedagogique::get_cm();
+        $murpedaggocm = mur_pedagogique::get_cm();
+        $murpedaggocontext = null;
+        if ($murpedaggocm) {
             $murpedaggocontext = \context_module::instance($murpedaggocm->id);
-        } catch(\moodle_exception $e) {
-            $murpedaggocm = null;
-            $murpedaggocontext = null;
         }
         $isonmurpedago = !empty($murpedaggocm) && !empty($page->cm->context) &&
                 $page->cm->context->is_child_of($murpedaggocontext, true);

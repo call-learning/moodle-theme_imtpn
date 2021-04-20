@@ -72,7 +72,6 @@ class mur_pedagogique {
      * Get CM
      *
      * @return false|mixed|\stdClass
-     * @throws \dml_exception
      */
     public static function get_cm() {
         global $DB;
@@ -81,7 +80,7 @@ class mur_pedagogique {
             $murpedagoidnumber = get_config('theme_imtpn', 'murpedagoidnumber');
             $murpedagogiquecm = $DB->get_record('course_modules', array('idnumber' => $murpedagoidnumber));
             if (empty($murpedagogiquecm)) {
-                throw new \moodle_exception('Unable to find the Mur pedagogique. Please check global settings.');
+                return null;
             }
         }
         return $murpedagogiquecm;
@@ -334,9 +333,20 @@ class mur_pedagogique {
         $content  = $withpicture ? html_writer::img($pictureurl, $groupname, ['title' => $groupname])
             : html_writer::span($groupname);
         return html_writer::link(
-            new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $group->id)),
+            static::get_group_page_url($group),
             $content
         );
+    }
+
+    /**
+     * Get group page URL.
+     *
+     * @param object $group
+     * @return moodle_url
+     * @throws \moodle_exception
+     */
+    public static function get_group_page_url(object $group) {
+        return new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $group->id));
     }
 
 }
