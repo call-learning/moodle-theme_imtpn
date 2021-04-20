@@ -40,7 +40,7 @@ $header = "$SITE->shortname: $pagetitle";
 $PAGE->set_blocks_editing_capability('theme/imtpn:editcataloguethemes');
 
 // Start setting up the page.
-$baseurl = new moodle_url('/theme/imtpn/themescat.php');
+$baseurl = new moodle_url('/theme/imtpn/pages/themescat.php');
 $PAGE->set_context($context);
 $PAGE->set_url($baseurl);
 $PAGE->set_pagelayout("standard");
