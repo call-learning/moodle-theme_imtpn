@@ -104,32 +104,4 @@ class utils {
      */
     const IMAGE_SIZE_TYPE_XL = 'xl';
 
-    /**
-     * Set additional CSS to page
-     *
-     * @param \moodle_page $page
-     * @throws coding_exception
-     */
-    public static function set_additional_page_classes(&$page) {
-        $loggedin = isloggedin() && !isguestuser();
-        if (!$loggedin) {
-            $page->add_body_class('notloggedin');
-        }
-        $murpedaggocm = mur_pedagogique::get_cm();
-        $murpedaggocontext = null;
-        if ($murpedaggocm) {
-            $murpedaggocontext = \context_module::instance($murpedaggocm->id);
-        }
-        $isonmurpedago = !empty($murpedaggocm) && !empty($page->cm->context) &&
-                $page->cm->context->is_child_of($murpedaggocontext, true);
-        if ($isonmurpedago ) {
-            $page->add_body_class('mur-pedagogique'); // We make sure a generic class is set to
-            // apply custom CSS.
-            $page->add_body_class('path-mod-forum'); // Make sure the usual classes apply.
-            // Also if child context, we need to make sure we adjust the breadcrumb.
-            if ($page->cm->context->is_child_of($murpedaggocontext, true)) {
-                $page->navbar->ignore_active();
-            }
-        }
-    }
 }

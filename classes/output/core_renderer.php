@@ -431,17 +431,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      * Uses bootstrap compatible html.
      */
     public function navbar() {
-        global $PAGE;
-        $navbar = $this->page->navbar;
-        $cm = \theme_imtpn\mur_pedagogique::get_cm();
-        if ($cm && (
-                $PAGE->context->instanceid == $cm->id ||
-                in_array($cm->id, $PAGE->context->get_parent_context_ids()))
-        ) {
-            $navbar->ignore_active(true);
-            $navbar->add(get_string('murpedagogique', 'theme_imtpn'),
-                new moodle_url('/theme/imtpn/pages/murpedagogique/index.php'));
-        }
+        $navbar = mur_pedagogique::fix_navbar($this->page->navbar);
         return $this->render_from_template('core/navbar', $navbar);
     }
 

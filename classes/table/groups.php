@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace theme_imtpn\table;
 
 use context;
+use core_renderer;
 use core_table\dynamic as dynamic_table;
 use core_table\local\filter\filterset;
 use moodle_url;
@@ -127,6 +128,7 @@ class groups extends \table_sql implements dynamic_table {
         );
     }
 
+    const MEMBER_DISPLAY_LIMIT = 5;
     public function col_members($row) {
         global $OUTPUT;
         $extrafields = get_extra_user_fields($this->get_context());
@@ -135,17 +137,24 @@ class groups extends \table_sql implements dynamic_table {
         $allnames = 'u.id, ' . user_picture::fields('u', $extrafields);
         $members = groups_get_members($row->groupid, $allnames);
         $html = '';
-        // TODO: create a template.
+        $additionalmessage = '';
+        if (count($members) > self::MEMBER_DISPLAY_LIMIT) {
+            $members = array_slice($members, 0, self::MEMBER_DISPLAY_LIMIT);
+            $additionalmessage  = \html_writer::span(get_string('andmore','theme_imtpn'),'andmore');
+        }
         foreach ($members as $user) {
             /* @var $OUTPUT core_renderer core renderer */
             $html .= \html_writer::span($OUTPUT->user_picture($user, ['includefullname' => false]));
         }
-        return $html;
+        return $html .  $additionalmessage;
     }
 
     public function col_grouplink($row) {
         $group = groups_get_group($row->groupid, '*', MUST_EXIST);
-        return mur_pedagogique::get_group_link($group,$this->courseid, false);
+        return \html_writer::link(
+                mur_pedagogique::get_group_page_url($group),
+                \html_writer::span('', 'fa fa-arrow-circle-o-right fa-2x')
+            );
     }
 
     /**

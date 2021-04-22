@@ -23,6 +23,7 @@
  */
 
 use theme_imtpn\local\utils;
+use theme_imtpn\mur_pedagogique;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -70,5 +71,5 @@ function reset_mur_pedago_blocks() {
  * @param $page
  */
 function theme_imtpn_page_init($page) {
-    utils::set_additional_page_classes($page);
+    mur_pedagogique::set_additional_page_classes($page);
 }

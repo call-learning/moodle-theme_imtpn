@@ -24,6 +24,7 @@
 
 namespace theme_imtpn;
 
+use coding_exception;
 use html_writer;
 use mod_forum\local\container;
 use cm_info;
@@ -276,7 +277,6 @@ class mur_pedagogique {
             $displaymode = FORUM_MODE_NESTED;
         }
 
-
         if (empty($cm->visible) && !has_capability('moodle/course:viewhiddenactivities', $forum->get_context())) {
             redirect(
                 $backurl,
@@ -330,7 +330,7 @@ class mur_pedagogique {
     public static function get_group_link(object $group, $courseid, $withpicture = false) {
         $pictureurl = get_group_picture_url($group, $courseid, false, false);
         $groupname = s($group->name);
-        $content  = $withpicture ? html_writer::img($pictureurl, $groupname, ['title' => $groupname])
+        $content = $withpicture ? html_writer::img($pictureurl, $groupname, ['title' => $groupname])
             : html_writer::span($groupname);
         return html_writer::link(
             static::get_group_page_url($group),
@@ -347,6 +347,60 @@ class mur_pedagogique {
      */
     public static function get_group_page_url(object $group) {
         return new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $group->id));
+    }
+
+    /**
+     * Set additional CSS to page
+     *
+     * @param \moodle_page $page
+     * @throws coding_exception
+     */
+    public static function set_additional_page_classes(&$page) {
+        $loggedin = isloggedin() && !isguestuser();
+        if (!$loggedin) {
+            $page->add_body_class('notloggedin');
+        }
+        $murpedaggocm = mur_pedagogique::get_cm();
+        $murpedaggocontext = null;
+        if ($murpedaggocm) {
+            $murpedaggocontext = \context_module::instance($murpedaggocm->id);
+        }
+        $isonmurpedago = !empty($murpedaggocm) && !empty($page->cm->context) &&
+            $page->cm->context->is_child_of($murpedaggocontext, true);
+        if ($isonmurpedago) {
+            $page->add_body_class('mur-pedagogique'); // We make sure a generic class is set to
+            // apply custom CSS.
+            $page->add_body_class('path-mod-forum'); // Make sure the usual classes apply.
+            // Also if child context, we need to make sure we adjust the breadcrumb.
+            if ($page->cm->context->is_child_of($murpedaggocontext, true)) {
+                $page->navbar->ignore_active();
+            }
+        }
+    }
+
+    public static function fix_navbar($navbar) {
+        global $PAGE;
+
+        $cm = \theme_imtpn\mur_pedagogique::get_cm();
+        // Check first if we are on the module page.
+        $isoncm = !empty($cm) && (
+                $PAGE->context->instanceid == $cm->id ||
+                in_array($cm->id, $PAGE->context->get_parent_context_ids()));
+        $isoncourse = !empty($cm)
+            && ($PAGE->context->contextlevel === CONTEXT_COURSE &&
+                $PAGE->context->get_course_context()
+                && $PAGE->context->get_course_context()->instanceid == $cm->course);
+        if ($isoncm || $isoncourse) {
+            if ($navbar->has_items()) {
+                // We reset the navbar if items were already there.
+                $navbar = new \navbar($PAGE);
+            }
+            $navbar->ignore_active(true);
+            $navbar->add(get_string('murpedagogique', 'theme_imtpn'),
+                new moodle_url('/theme/imtpn/pages/murpedagogique/index.php'));
+        }
+
+        return $navbar;
     }
 
 }

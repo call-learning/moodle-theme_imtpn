@@ -65,9 +65,12 @@ $PAGE->add_body_class('path-mod-forum'); // Make sure the usual classes apply.
 $PAGE->set_other_editing_capability('moodle/course:manageactivities');
 $mygroups = groups_get_user_groups($course->id);
 $isingroup = false;
-foreach ($mygroups as $mygroup) {
-    if ($mygroup[0] == $groupid) {
-        $isingroup = true;
+foreach ($mygroups as $mygroupings) {
+    foreach($mygroupings as $mygroup) {
+        if ($mygroup == $groupid) {
+            $isingroup = true;
+            break;
+        }
     }
 }
 

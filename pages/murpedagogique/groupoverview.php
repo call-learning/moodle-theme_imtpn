@@ -92,15 +92,22 @@ $PAGE->navbar->add(get_string('allgroups', 'theme_imtpn'),
 require_once($CFG->libdir.'/formslib.php');
 
 $form = new class() extends moodleform {
+    public function __construct($action=null, $customdata=null, $method='post', $target='', $attributes=null, $editable=true,
+        $ajaxformdata=null) {
+        parent::__construct($action, $customdata, $method, $target,['class'=>'groupoverview-search-form d-flex'] , $editable,$ajaxformdata);
+    }
     protected function definition() {
         $mform = $this->_form;
-        $mform->addElement('text', 'groupname', get_string('groupname', 'theme_imtpn'));
+        $mform->addElement(
+            'text', 'groupname', get_string('groupname', 'theme_imtpn'),
+            ['class'=>'flex-grow-1']
+        );
         $mform->setType('groupname', PARAM_TEXT);
-        $buttonarray = [];
-        $buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('search'));
-        $buttonarray[] = $mform->createElement('cancel', 'cancelbutton', get_string('clear'));
-        $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
-        $mform->closeHeaderBefore('buttonar');
+
+        $mform->addElement('submit', 'submitbutton', get_string('search'));
+        $mform->addElement('cancel', 'cancelbutton', get_string('clear'));
+        //$mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+        //$mform->closeHeaderBefore('buttonar');
     }
 };
 $groupname = '';
