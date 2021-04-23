@@ -39,6 +39,17 @@
     overflow: hidden;
     text-align: center;
   }
+  .link-go-to-content {
+    .btn-primary:not(:disabled):hover,
+    .btn-primary:not(:disabled):active:focus,
+    .btn-primary:focus,
+    {
+      color: $primary;
+      background-color: transparent;
+      box-shadow: initial;
+      outline: initial;
+    }
+  }
 }
 
 #page-local-resourcelibrary-index .dashboard-card-deck .dashboard-card .dashboard-card-img {

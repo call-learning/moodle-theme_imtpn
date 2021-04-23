@@ -69,10 +69,11 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      * @return bool|false|\moodle_url
      */
     public function get_logo_url($maxwidth = null, $maxheight = 200) {
-        $logourl = new \moodle_url("/theme/imtpn/pix/logos/logo-imt-dark.png");
+        $path = $this->get_current_theme_base_url();
+        $logourl = new \moodle_url("{$path}/pix/logos/logo-imt-dark.png");
         if (!isloggedin() || isguestuser()) {
             // If we are not logged in, the logo should be white instead.
-            $logourl = new \moodle_url("/theme/imtpn/pix/logos/logo-imt-white.png");
+            $logourl = new \moodle_url("{$path}/pix/logos/logo-imt-white.png");
         }
         return $logourl;
     }
@@ -90,15 +91,23 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      * @return bool|false|\moodle_url
      */
     public function get_compact_logo_url($maxwidth = 100, $maxheight = 100) {
-        $compactlogourl = new \moodle_url("/theme/imtpn/pix/logos/logo-imt-dark.png");
+        $path = $this->get_current_theme_base_url();
+        $compactlogourl = new \moodle_url("{$path}/pix/logos/logo-imt-dark.png");
         if (!isloggedin() || isguestuser()) {
             // If we are not logged in, the logo should be white instead.
-            $compactlogourl = new \moodle_url("/theme/imtpn/pix/logos/logo-imt-white.png");
+            $compactlogourl = new \moodle_url("{$path}/pix/logos/logo-imt-white.png");
         }
 
         return $compactlogourl;
     }
 
+    public function get_current_theme_base_url() {
+        // TODO: support theme dir setting.
+        if (empty($this->page->theme->name)) {
+            return "/theme/imtpn";
+        }
+        return "/theme/{$this->page->theme->name}";
+    }
     /**
      * Should we display the logo ?
      *

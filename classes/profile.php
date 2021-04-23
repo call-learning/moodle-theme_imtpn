@@ -29,6 +29,7 @@ use context_helper;
 use context_system;
 use context_user;
 use core_tag_tag;
+use core_user;
 use core_user\output\myprofile\category;
 use core_user\output\myprofile\node;
 use core_user\output\myprofile\tree;

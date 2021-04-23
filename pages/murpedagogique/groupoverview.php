@@ -94,20 +94,19 @@ require_once($CFG->libdir.'/formslib.php');
 $form = new class() extends moodleform {
     public function __construct($action=null, $customdata=null, $method='post', $target='', $attributes=null, $editable=true,
         $ajaxformdata=null) {
-        parent::__construct($action, $customdata, $method, $target,['class'=>'groupoverview-search-form d-flex'] , $editable,$ajaxformdata);
+        parent::__construct($action, $customdata, $method, $target,['class'=>'groupoverview-search-form container d-flex'] , $editable,$ajaxformdata);
     }
     protected function definition() {
         $mform = $this->_form;
         $mform->addElement(
             'text', 'groupname', get_string('groupname', 'theme_imtpn'),
-            ['class'=>'flex-grow-1']
+            ['class'=>'container']
         );
         $mform->setType('groupname', PARAM_TEXT);
 
         $mform->addElement('submit', 'submitbutton', get_string('search'));
-        $mform->addElement('cancel', 'cancelbutton', get_string('clear'));
-        //$mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
-        //$mform->closeHeaderBefore('buttonar');
+        $mform->addElement('cancel', 'cancelbutton', get_string('clear'),
+        ['class'=>'mr-auto']);
     }
 };
 $groupname = '';
@@ -127,7 +126,9 @@ if (!empty($groupname)) {
 
 /* @var core_renderer $OUTPUT */
 echo $OUTPUT->header();
+echo $OUTPUT->box_start('py-5');
 $form->display();
+echo $OUTPUT->box_end();
 // Print overview.
 echo $OUTPUT->heading(format_string($course->shortname, true, array('context' => $context)) . ' ' . $stroverview, 3);
 $grouptable = new \theme_imtpn\table\groups(html_writer::random_id());
