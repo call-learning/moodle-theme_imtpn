@@ -10,7 +10,7 @@ footer.footer {
     position: relative;
     overflow: hidden;
 
-    color: $app-gray-2;
+    color: $secondary;
 
     .footer__triangle-1 {
         position: absolute;
@@ -21,7 +21,7 @@ footer.footer {
         height: 0;
         border-style: solid;
         border-width: 300px 300px 0 0;
-        border-color: $app-blue-1 transparent transparent transparent;
+        border-color: $primary transparent transparent transparent;
     }
 
     .footer__triangle-2 {
@@ -33,7 +33,7 @@ footer.footer {
         height: 0;
         border-style: solid;
         border-width: 390px 0 0 390px;
-        border-color: transparent transparent transparent $app-gray-1;
+        border-color: transparent transparent transparent $primary;
     }
 
     .footer__triangle-3 {
@@ -45,7 +45,7 @@ footer.footer {
         height: 0;
         border-style: solid;
         border-width: 0 0 292px 292px;
-        border-color: transparent transparent $app-blue-2 transparent;
+        border-color: transparent transparent $secondary transparent;
     }
 
     .imtpn-container {

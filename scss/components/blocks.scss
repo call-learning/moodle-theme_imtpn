@@ -32,8 +32,8 @@
 
       a {
         padding: 15px;
-        color: $app-blue-1;
-        border: 1px solid $app-blue-1;
+        color: $primary;
+        border: 1px solid $primary;
         width: 210px;
         font-size: 17px;
         text-align: center;
@@ -54,7 +54,7 @@
 
 .db-inspiration {
   .fa {
-    color: $app-blue-1;
+    color: $primary;
   }
 }
 // Remove card border for all blocks.

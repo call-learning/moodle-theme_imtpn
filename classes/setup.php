@@ -301,19 +301,19 @@ class setup {
                     "text" => '<p>Que voulez-vous faire aujourd’hui ?</p>
 <div class="d-flex flex-row flex-wrap flex-md-nowrap justify-content-center align-items-stretch my-4">
     <a>
-	<img src="/theme/imtpn/pix/icons/book.svg" alt="">
+	    <img src="/theme/imtpn/pix/icons/book.svg" alt=""/>
         <div>Créer un nouveau cours</div>
     </a>
     <a>
-        <img src="/theme/imtpn/pix/icons/hand-leaf.svg" alt="">
+        <img src="/theme/imtpn/pix/icons/hand-leaf.svg" alt=""/>
         <div>Partager une ressource</div>
     </a>
     <a href="/theme/imtpn/pages/themescat.php">
-        <img src="/theme/imtpn/pix/icons/globe-glass.svg" alt="">
+        <img src="/theme/imtpn/pix/icons/globe-glass.svg" alt=""/>
         <div>Explorer le catalogue</div>
     </a>
     <a>
-        <img src="/theme/imtpn/pix/icons/bubbles.svg" alt="">
+        <img src="/theme/imtpn/pix/icons/bubbles.svg" alt=""/>
         <div>Echanger avec mes collègues</div>
     </a>
 </div>'],
