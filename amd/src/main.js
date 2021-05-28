@@ -17,20 +17,17 @@
  * A javascript module
  *
  */
-
-import $ from 'jquery';
-
 export const init = () => {
-  $(document).ready(function () {
-    $('#language-trigger-selection').click(function () {
-      $('#language-list').toggleClass('-active');
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll('#language-trigger-selection').onclick(() => {
+                const item = document.querySelector('#language-list');
+                item.classList.toggle('-active');
+            }
+        );
+        document.querySelectorAll('#mask-language-choice, .language-list .language-choice').onclick(() => {
+                const item = document.querySelector('#language-list');
+                item.classList.remove('-active');
+            }
+        );
     });
-    $('#mask-language-choice').click(function () {
-      $('#language-list').removeClass('-active');
-    });
-
-    $('.language-list .language-choice').click(function () {
-      $('#language-list').removeClass('-active');
-    });
-  });
 };
