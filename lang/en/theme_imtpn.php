@@ -23,63 +23,59 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
-$string['viewallgroups'] = 'Parcourir les groupes existants';
-$string['allgroups'] = 'Tous les groupes';
+$string['addnewgroup'] = 'Add new Group';
+$string['allgroups'] = 'All Groups';
 $string['andmore'] = 'and more...';
-$string['catalogue'] = 'Catalogue';
-$string['userinfos'] = 'Infos';
-$string['murpedagogrouprules'] = 'Rules displayed on each group for participants.';
-$string['murpedagogrouprules_desc'] = 'Rules displayed on each group for participants.';
-$string['pluginname'] = 'Theme IMT Pédagothèque Numérique';
+$string['cannotjoin'] = 'You have not been able to join the group {$a}, are you registered in the course ?';
+$string['catalogue'] = 'Catalog';
 $string['configtitle'] = 'Theme IMT Pédagothèque Numérique';
-$string['region-content'] = 'Content';
-$string['region-side-pre'] = 'Right';
-$string['defaultfpslogan'] = 'Bienvenue sur la<br>Pédagothèque Numérique de l\'IMT';
-$string['footer'] = 'Footer';
-$string['footercontent'] = 'Footer content';
+$string['createcourse'] = 'Create a course';
+$string['defaultfpslogan'] = 'Welcome to<br>"Pédagothèque Numérique" from IMT';
+$string['editgroup'] = 'Edit group';
 $string['footercontent_desc'] = 'Footer content description';
-$string['joingroup'] = 'Rejoindre le groupe';
-$string['groupjoined'] = 'Félicitations ! Vous avez rejoint le groupe {$a}.';
-$string['groupmessagescount'] = '{$a} messages';
-$string['cannotjoin'] = 'Vous n\'avez pas pu joindre le groupe {$a}, êtes vous inscrit dans le cours ?';
-$string['legal_mention'] = 'Les illustrations de ce site sont intégralement ou en partie issues
- des banques Freepik et Unsplash, proposant des contenus libres et gratuits.';
-$string['footer_message'] = 'Accédez à la Plateforme Numérique de l’IMT n’importe où grâce à l’application Moodle
+$string['footercontent'] = 'Footer content';
+$string['footer'] = 'Footer';
+$string['footer_message'] = 'Access the "Pédagothèque Numérique" from anywhere
     <a href="#">
           <img src="/theme/imtpn/pix/logos/logo-moodle.png" alt="moodle">
     </a>';
-$string['loginext_title'] = 'Vous êtes externe ?';
-$string['loginext_desc'] = 'Sélectionnez votre école pour vous connecter avec votre compte.
-Si vous n’avez pas de compte, vous pouvez en <a href="/login/signup.php">créer un ici.</a>';
-
-$string['loginidp_title'] = 'Vous êtes membres d’une école de l’IMT ?';
-$string['logidp_desc'] = 'Voici la liste des écoles auxquelles vous pouvez vous connecter.';
+$string['groupjoined'] = 'Congratulation ! You have joined the group {$a}.';
+$string['groupmessagescount'] = '{$a} messages';
+$string['groupname'] = 'Group name';
 $string['groups:groupname'] = 'Name';
 $string['groups:members'] = 'Members';
 $string['groups:postcount'] = '# Posts';
-$string['groupname'] = 'Group name';
+$string['joingroup'] = 'Join group';
+$string['legal_mention'] = 'Illustration are or in part from Freepik et Unsplash, offering free to use content.';
+$string['logidp_desc'] = 'Here is a list of organisation you can connect to.';
+$string['loginext_desc'] = 'If you do not have any account <a href="/login/signup.php">create one here.</a>';
+$string['loginext_title'] = 'You are an external user ?';
+$string['loginidp_title'] = 'You are a member of IMT ?';
+$string['murpedagoenabled_desc'] = 'Enable "Mur pedagogique"';
+$string['murpedagoenabled'] = 'Enable "Mur pedagogique"';
 $string['murpedagogique'] = 'Mur pédagogique';
+$string['murpedagogrouprules_desc'] = 'Rules displayed on each group for participants.';
+$string['murpedagogrouprules'] = 'Rules displayed on each group for participants.';
+$string['murpedagoidnumber_desc'] = 'Mur pédagogique (idnumber) : unique id for the forum activity containing
+the mur pédagogique';
 $string['murpedagoidnumber'] = 'Mur pédagogique (idnumber)';
-$string['murpedagoidnumber_desc'] = 'Mur pédagogique (idnumber) : identifiant unique pour l\'activité forum contenant
-le mur pédagogique';
-
-$string['murpedagoenabled'] = 'Enable mur pedagogique';
-$string['murpedagoenabled_desc'] = 'Enable mur pedagogique';
-
-$string['themescat:title'] = 'Catalogue par thème';
-$string['createcourse'] = 'Créer un cours';
-$string['viewcatalog'] = 'Voir le catalogue';
-$string['populargroups'] = 'Groupes populaires';
 $string['othersettings'] = 'Other settings';
-$string['profilebgimage'] = 'Profile background image';
+$string['pluginname'] = 'Theme IMT Pédagothèque Numérique';
+$string['populargroups'] = 'Popular groups';
 $string['profilebgimage_desc'] = 'Profile background image';
-$string['simplifiedprofilepage'] = 'Simplified profile page';
-$string['simplifiedprofilepage_desc'] = 'Should we remove unnecessary elements from the profile page to streamline it ?';
-$string['profilepage'] = 'Profile page';
-$string['profilecomponentsexclusion'] = 'Profile component exclusion';
+$string['profilebgimage'] = 'Profile background image';
 $string['profilecomponentsexclusion_desc'] = 'Remove components from the profile page to streamline it ? A comma
 separated list of components, such as mod, report';
-$string['profilemodulesexclusion'] = 'Profile module exclusion';
+$string['profilecomponentsexclusion'] = 'Profile component exclusion';
 $string['profilemodulesexclusion_desc'] = 'Remove modules from the profile page to streamline it ? A comma separated values of
 names, such as mod_forum.';
+$string['profilemodulesexclusion'] = 'Profile module exclusion';
+$string['profilepage'] = 'Profile page';
+$string['region-content'] = 'Content';
+$string['region-side-pre'] = 'Right';
+$string['simplifiedprofilepage_desc'] = 'Should we remove unnecessary elements from the profile page to streamline it ?';
+$string['simplifiedprofilepage'] = 'Simplified profile page';
+$string['themescat:title'] = 'Catalog by themes';
+$string['userinfos'] = 'Infos';
+$string['viewallgroups'] = 'View all groups';
+$string['viewcatalog'] = 'View catalog';

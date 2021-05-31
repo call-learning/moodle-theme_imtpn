@@ -73,13 +73,20 @@ foreach ($mygroups as $mygroupings) {
         }
     }
 }
-
+$buttons = '';
 if (!$isingroup && has_capability('theme/imtpn:canselfjoingroup', $context)) {
     $joingroup = $OUTPUT->single_button(
         new moodle_url('/theme/imtpn/pages/murpedagogique/joingroup.php', array('groupid' => $groupid)),
         get_string('joingroup', 'theme_imtpn'));
-    $PAGE->set_button($joingroup);
+    $buttons .= $joingroup;
 }
+if (has_capability('moodle/course:managegroups', $context)) {
+    $editgroup = $OUTPUT->single_button(
+        new moodle_url('/theme/imtpn/pages/murpedagogique/groupaddedit.php', array('id' => $groupid)),
+        get_string('editgroup', 'theme_imtpn'));
+    $buttons .= $editgroup;
+}
+$PAGE->set_button($buttons);
 
 $vaultfactory = \mod_forum\local\container::get_vault_factory();
 $forumvault = $vaultfactory->get_forum_vault();

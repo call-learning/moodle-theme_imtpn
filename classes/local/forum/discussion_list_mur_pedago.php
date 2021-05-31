@@ -181,7 +181,7 @@ class discussion_list_mur_pedago {
                         $courseid = $discussionentries[$post->discussionid]->get_course_id();
                         if (!empty($groupid)) {
                             if ($groupid === -1) {
-                                $post->subject .= html_writer::span('&nbsp; '.get_string('nogroup'));
+                                $post->subject .= html_writer::span('&nbsp; '.get_string('nogroup', 'group'));
                             } else {
                                 if (empty($groups[$groupid])) {
                                     $group = groups_get_group($groupid);

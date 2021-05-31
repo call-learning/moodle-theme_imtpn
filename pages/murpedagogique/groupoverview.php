@@ -88,6 +88,14 @@ $PAGE->navbar->add(get_string('murpedagogique', 'theme_imtpn'),
 $PAGE->navbar->add(get_string('allgroups', 'theme_imtpn'),
     $currenturl);
 
+// Add create new group if can do.
+
+if (has_capability('moodle/course:managegroups', $context)) {
+    $addnewgroup = $OUTPUT->single_button(
+        new moodle_url('/group/group.php', array('courseid' => $courseid)),
+        get_string('addnewgroup', 'theme_imtpn'));
+    $PAGE->set_button($addnewgroup);
+}
 // The form.
 require_once($CFG->libdir.'/formslib.php');
 
