@@ -52,7 +52,7 @@ class mur_pedagogique {
             $cm = static::get_cm();
             if ($cm) {
                 $cminfo = cm_info::create($cm, $userid);
-                $hasaccess = $cminfo->uservisible;
+                $hasaccess = \core_availability\info_module::is_user_visible($cminfo->id, $userid) || is_siteadmin($userid);
             }
         } catch (\moodle_exception $e) {
             debugging($e->getMessage());

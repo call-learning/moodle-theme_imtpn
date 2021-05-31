@@ -21,6 +21,9 @@
  * @copyright 2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use theme_imtpn\mur_pedagogique;
+
 require_once('../../../../config.php');
 $managerfactory = mod_forum\local\container::get_manager_factory();
 $legacydatamapperfactory = mod_forum\local\container::get_legacy_data_mapper_factory();
@@ -42,26 +45,26 @@ $sortorder = optional_param('o', null, PARAM_INT);
 if (empty($forum)) {
 
     if (empty($forumid)) {
-        $cm = \theme_imtpn\mur_pedagogique::get_cm();
+        $cm = mur_pedagogique::get_cm();
         if ($cm) {
             $forum = $forumvault->get_from_course_module_id($cm->id);
         }
         if (empty($forum)) {
-            throw new \moodle_exception('Unable to find forum with cmid ' . $cm->id);
+            throw new moodle_exception('Unable to find forum with cmid ' . $cm->id);
         }
     } else {
         $forum = $forumvault->get_from_id($forumid);
         if (empty($forum)) {
-            throw new \moodle_exception('Unable to find forum with id ' . $forumid);
+            throw new moodle_exception('Unable to find forum with id ' . $forumid);
         }
     }
 }
 $course = $forum->get_course_record();
 $coursemodule = $forum->get_course_module_record();
-$cm = \cm_info::create($coursemodule);
+$cm = cm_info::create($coursemodule);
 require_course_login($course, true, $cm);
 
-\theme_imtpn\mur_pedagogique::display_wall($forum,
+mur_pedagogique::display_wall($forum,
     $mode,
     $search,
     $sortorder,

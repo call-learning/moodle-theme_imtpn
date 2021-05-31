@@ -26,10 +26,15 @@ declare(strict_types=1);
 namespace theme_imtpn\table;
 
 use context;
+use context_course;
 use core_renderer;
 use core_table\dynamic as dynamic_table;
 use core_table\local\filter\filterset;
+use dml_exception;
+use html_writer;
 use moodle_url;
+use stdClass;
+use table_sql;
 use theme_imtpn\mur_pedagogique;
 use user_picture;
 
@@ -46,16 +51,16 @@ require_once($CFG->libdir . '/tablelib.php');
  * @copyright 2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class groups extends \table_sql implements dynamic_table {
+class groups extends table_sql implements dynamic_table {
+    const MEMBER_DISPLAY_LIMIT = 5;
     /**
      * @var int $courseid The course id
      */
     protected $courseid;
     /**
-     * @var \stdClass $course The course details.
+     * @var stdClass $course The course details.
      */
     protected $course;
-
     /**
      * @var  context $context The course context.
      */
@@ -63,13 +68,13 @@ class groups extends \table_sql implements dynamic_table {
 
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
-        $this->sql = new \stdClass();
+        $this->sql = new stdClass();
         $cols = [
-            'groupimage'=> '',
+            'groupimage' => '',
             'groupname' => get_string('groups:groupname', 'theme_imtpn'),
-            'members'=> get_string('groups:members', 'theme_imtpn'),
-            'postcount'=> get_string('groups:postcount', 'theme_imtpn'),
-            'grouplink'=> ''
+            'members' => get_string('groups:members', 'theme_imtpn'),
+            'postcount' => get_string('groups:postcount', 'theme_imtpn'),
+            'grouplink' => ''
         ];
 
         $this->define_columns(array_keys($cols));
@@ -97,14 +102,14 @@ class groups extends \table_sql implements dynamic_table {
      * Set filters and build table structure.
      *
      * @param filterset $filterset The filterset object to get the filters from.
-     * @throws \dml_exception
+     * @throws dml_exception
      */
     public function set_filterset(filterset $filterset): void {
         global $DB;
         // Get the context.
         $this->courseid = $filterset->get_filter('courseid')->current();
         $this->course = get_course($this->courseid);
-        $this->context = \context_course::instance($this->courseid, MUST_EXIST);
+        $this->context = context_course::instance($this->courseid, MUST_EXIST);
 
         // Process the filterset.
         parent::set_filterset($filterset);
@@ -121,14 +126,25 @@ class groups extends \table_sql implements dynamic_table {
     public function col_name($row) {
         return format_string($row->groupname, true, ['context' => $this->get_context()]);
     }
+
+    /**
+     * Get the context of the current table.
+     *
+     * Note: This function should not be called until after the filterset has been provided.
+     *
+     * @return context
+     */
+    public function get_context(): context {
+        return $this->context;
+    }
+
     public function col_groupimage($row) {
         $group = groups_get_group($row->groupid, '*', MUST_EXIST);
-        return \html_writer::img(get_group_picture_url($group, $this->courseid, true),
+        return html_writer::img(get_group_picture_url($group, $this->courseid, true),
             $row->groupname
         );
     }
 
-    const MEMBER_DISPLAY_LIMIT = 5;
     public function col_members($row) {
         global $OUTPUT;
         $extrafields = get_extra_user_fields($this->get_context());
@@ -140,21 +156,21 @@ class groups extends \table_sql implements dynamic_table {
         $additionalmessage = '';
         if (count($members) > self::MEMBER_DISPLAY_LIMIT) {
             $members = array_slice($members, 0, self::MEMBER_DISPLAY_LIMIT);
-            $additionalmessage  = \html_writer::span(get_string('andmore','theme_imtpn'),'andmore');
+            $additionalmessage = html_writer::span(get_string('andmore', 'theme_imtpn'), 'andmore');
         }
         foreach ($members as $user) {
             /* @var $OUTPUT core_renderer core renderer */
-            $html .= \html_writer::span($OUTPUT->user_picture($user, ['includefullname' => false]));
+            $html .= html_writer::span($OUTPUT->user_picture($user, ['includefullname' => false]));
         }
-        return $html .  $additionalmessage;
+        return $html . $additionalmessage;
     }
 
     public function col_grouplink($row) {
         $group = groups_get_group($row->groupid, '*', MUST_EXIST);
-        return \html_writer::link(
-                mur_pedagogique::get_group_page_url($group),
-                \html_writer::span('', 'fa fa-arrow-circle-o-right fa-2x')
-            );
+        return html_writer::link(
+            mur_pedagogique::get_group_page_url($group),
+            html_writer::span('', 'fa fa-arrow-circle-o-right fa-2x')
+        );
     }
 
     /**
@@ -162,16 +178,5 @@ class groups extends \table_sql implements dynamic_table {
      */
     public function guess_base_url(): void {
         $this->baseurl = new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php');
-    }
-
-    /**
-     * Get the context of the current table.
-     *
-     * Note: This function should not be called until after the filterset has been provided.
-     *
-     * @return context
-     */
-    public function get_context(): context {
-        return $this->context;
     }
 }

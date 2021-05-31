@@ -27,6 +27,8 @@ use core_table\local\filter\integer_filter;
 use core_table\local\filter\string_filter;
 use theme_imtpn\local\utils;
 use theme_imtpn\mur_pedagogique;
+use theme_imtpn\table\groups;
+use theme_imtpn\table\groups_filterset;
 
 require_once('../../../../config.php');
 global $CFG, $PAGE, $DB, $OUTPUT;
@@ -97,24 +99,27 @@ if (has_capability('moodle/course:managegroups', $context)) {
     $PAGE->set_button($addnewgroup);
 }
 // The form.
-require_once($CFG->libdir.'/formslib.php');
+require_once($CFG->libdir . '/formslib.php');
 
 $form = new class() extends moodleform {
-    public function __construct($action=null, $customdata=null, $method='post', $target='', $attributes=null, $editable=true,
-        $ajaxformdata=null) {
-        parent::__construct($action, $customdata, $method, $target,['class'=>'groupoverview-search-form container d-flex'] , $editable,$ajaxformdata);
+    public function __construct($action = null, $customdata = null, $method = 'post', $target = '', $attributes = null,
+        $editable = true,
+        $ajaxformdata = null) {
+        parent::__construct($action, $customdata, $method, $target, ['class' => 'groupoverview-search-form container d-flex'],
+            $editable, $ajaxformdata);
     }
+
     protected function definition() {
         $mform = $this->_form;
         $mform->addElement(
             'text', 'groupname', get_string('groupname', 'theme_imtpn'),
-            ['class'=>'container']
+            ['class' => 'container']
         );
         $mform->setType('groupname', PARAM_TEXT);
 
         $mform->addElement('submit', 'submitbutton', get_string('search'));
         $mform->addElement('cancel', 'cancelbutton', get_string('clear'),
-        ['class'=>'mr-auto']);
+            ['class' => 'mr-auto']);
     }
 };
 $groupname = '';
@@ -125,12 +130,11 @@ if ($form->is_cancelled()) {
         $groupname = $data->groupname;
     }
 }
-$filterset = new \theme_imtpn\table\groups_filterset();
-$filterset->add_filter(new integer_filter('courseid', filter::JOINTYPE_DEFAULT, [(int)$course->id]));
+$filterset = new groups_filterset();
+$filterset->add_filter(new integer_filter('courseid', filter::JOINTYPE_DEFAULT, [(int) $course->id]));
 if (!empty($groupname)) {
     $filterset->add_filter(new string_filter('name', filter::JOINTYPE_DEFAULT, [$groupname]));
 }
-
 
 /* @var core_renderer $OUTPUT */
 echo $OUTPUT->header();
@@ -139,7 +143,7 @@ $form->display();
 echo $OUTPUT->box_end();
 // Print overview.
 echo $OUTPUT->heading(format_string($course->shortname, true, array('context' => $context)) . ' ' . $stroverview, 3);
-$grouptable = new \theme_imtpn\table\groups(html_writer::random_id());
+$grouptable = new groups(html_writer::random_id());
 $grouptable->set_filterset($filterset);
 $grouptable->out(20, true);
 echo $OUTPUT->footer();

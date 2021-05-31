@@ -72,11 +72,12 @@ class profile {
             }
 
         }
-            $profileimagedef .= '
+        $profileimagedef .= '
             }
         }';
         return $profileimagedef;
     }
+
     /**
      * Parse all callbacks and builds the tree.
      *

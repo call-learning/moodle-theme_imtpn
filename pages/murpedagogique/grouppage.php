@@ -22,6 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_forum\local\container;
 use theme_imtpn\mur_pedagogique;
 use theme_imtpn\output\group_info;
 
@@ -41,7 +42,7 @@ $group = groups_get_group($groupid);
 $course = $DB->get_record('course', array('id' => $group->courseid), '*', MUST_EXIST);
 $context = context_course::instance($course->id, MUST_EXIST);
 
-$cm = \theme_imtpn\mur_pedagogique::get_cm();
+$cm = mur_pedagogique::get_cm();
 if (!$cm) {
     print_error('cmshouldbedefined', 'theme_imtpn');
 }
@@ -66,7 +67,7 @@ $PAGE->set_other_editing_capability('moodle/course:manageactivities');
 $mygroups = groups_get_user_groups($course->id);
 $isingroup = false;
 foreach ($mygroups as $mygroupings) {
-    foreach($mygroupings as $mygroup) {
+    foreach ($mygroupings as $mygroup) {
         if ($mygroup == $groupid) {
             $isingroup = true;
             break;
@@ -88,7 +89,7 @@ if (has_capability('moodle/course:managegroups', $context)) {
 }
 $PAGE->set_button($buttons);
 
-$vaultfactory = \mod_forum\local\container::get_vault_factory();
+$vaultfactory = container::get_vault_factory();
 $forumvault = $vaultfactory->get_forum_vault();
 $forum = $forumvault->get_from_course_module_id($cm->id);
 
@@ -100,7 +101,6 @@ $grouprenderer = $PAGE->get_renderer('core_group');
 $groupinfo = new group_info($groupid, $forum);
 
 echo $OUTPUT->render($groupinfo);
-
 
 if (!$isingroup) {
     $rulesgroups = get_config('theme_imtpn', 'murpedagogrouprules');

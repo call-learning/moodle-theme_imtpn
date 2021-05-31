@@ -25,6 +25,8 @@
 namespace theme_imtpn\local\forum;
 
 use cm_info;
+use context_course;
+use context_module;
 use core\output\notification;
 use html_writer;
 use mod_forum\grades\forum_gradeitem;
@@ -37,6 +39,10 @@ use mod_forum\local\factories\url as url_factory;
 use mod_forum\local\factories\vault as vault_factory;
 use mod_forum\local\managers\capability as capability_manager;
 use mod_forum\local\vaults\discussion_list as discussion_list_vault;
+use mod_forum\subscriptions;
+use mod_forum_post_form;
+use moodle_url;
+use paging_bar;
 use renderer_base;
 use stdClass;
 use theme_imtpn\local\utils;
@@ -122,7 +128,8 @@ class discussion_list_mur_pedago {
         $this->template = 'theme_imtpn/murpedago_discussion_list';
 
         $postprocessfortemplate =
-            function($discussions, $user, $forum) use ($capabilitymanager,
+            function($discussions, $user, $forum) use (
+                $capabilitymanager,
                 $builderfactory,
                 $vaultfactory,
                 $legacydatamapperfactory,
@@ -132,10 +139,10 @@ class discussion_list_mur_pedago {
                 $discussionentries = [];
                 $postentries = [];
                 $postvault = $vaultfactory->get_post_vault();
-                $orderpostsby ='created ASC';
+                $orderpostsby = 'created ASC';
                 foreach ($discussions as $discussion) {
                     $discussionentries[$discussion->get_discussion()->get_id()] = $discussion->get_discussion();
-                    $firstpost  = $discussion->get_first_post();
+                    $firstpost = $discussion->get_first_post();
                     $replies = $postvault->get_replies_to_post($user, $firstpost,
                         $capabilitymanager->can_view_any_private_reply($user), $orderpostsby);
                     $postentries = array_merge($postentries, [$firstpost], $replies);
@@ -167,9 +174,11 @@ class discussion_list_mur_pedago {
                     $discussionunreadscount = [];
                 }
 
-                array_walk($exportedposts['posts'], function($post) use ($discussionrepliescount,
+                array_walk($exportedposts['posts'], function($post) use (
+                    $discussionrepliescount,
                     $discussionunreadscount,
-                    $discussionentries) {
+                    $discussionentries
+                ) {
                     $post->discussionrepliescount = $discussionrepliescount[$post->discussionid] ?? 0;
                     $post->discussionunreadscount = $discussionunreadscount[$post->discussionid] ?? 0;
                     // TODO: Find a better solution due to language differences when defining the singular and plural form.
@@ -181,7 +190,7 @@ class discussion_list_mur_pedago {
                         $courseid = $discussionentries[$post->discussionid]->get_course_id();
                         if (!empty($groupid)) {
                             if ($groupid === -1) {
-                                $post->subject .= html_writer::span('&nbsp; '.get_string('nogroup', 'group'));
+                                $post->subject .= html_writer::span('&nbsp; ' . get_string('nogroup', 'group'));
                             } else {
                                 if (empty($groups[$groupid])) {
                                     $group = groups_get_group($groupid);
@@ -342,12 +351,12 @@ class discussion_list_mur_pedago {
             $exportedposts = ($this->postprocessfortemplate) ($discussions, $user, $forum);
         }
 
-        $baseurl = new \moodle_url($PAGE->url, array('o' => $sortorder));
+        $baseurl = new moodle_url($PAGE->url, array('o' => $sortorder));
 
         $forumview = array_merge(
             $forumview,
             [
-                'pagination' => $this->renderer->render(new \paging_bar($alldiscussionscount, $pageno, $pagesize, $baseurl, 'p')),
+                'pagination' => $this->renderer->render(new paging_bar($alldiscussionscount, $pageno, $pagesize, $baseurl, 'p')),
             ],
             $exportedposts
         );
@@ -356,65 +365,6 @@ class discussion_list_mur_pedago {
         $forumview['firstgradeduserid'] = $firstdiscussion->get_latest_post_author()->get_id();
 
         return $this->renderer->render_from_template($this->template, $forumview);
-    }
-
-    /**
-     * Get the mod_forum_post_form. This is the default boiler plate from mod_forum/post_form.php with the inpage flag caveat
-     *
-     * @param stdClass $user The user the form is being generated for
-     * @param \cm_info $cm
-     * @param int $groupid The groupid if any
-     *
-     * @return string The rendered html
-     */
-    private function get_discussion_form(stdClass $user, \cm_info $cm, ?int $groupid) {
-        $forum = $this->forum;
-        $forumrecord = $this->legacydatamapperfactory->get_forum_data_mapper()->to_legacy_object($forum);
-        $modcontext = \context_module::instance($cm->id);
-        $coursecontext = \context_course::instance($forum->get_course_id());
-        $post = (object) [
-            'course' => $forum->get_course_id(),
-            'forum' => $forum->get_id(),
-            'discussion' => 0,           // Ie discussion # not defined yet.
-            'parent' => 0,
-            'subject' => '',
-            'userid' => $user->id,
-            'message' => '',
-            'messageformat' => editors_get_preferred_format(),
-            'messagetrust' => 0,
-            'groupid' => $groupid,
-        ];
-        $thresholdwarning = forum_check_throttling($forumrecord, $cm);
-
-        $formparams = array(
-            'course' => $forum->get_course_record(),
-            'cm' => $cm,
-            'coursecontext' => $coursecontext,
-            'modcontext' => $modcontext,
-            'forum' => $forumrecord,
-            'post' => $post,
-            'subscribe' => \mod_forum\subscriptions::is_subscribed($user->id, $forumrecord,
-                null, $cm),
-            'thresholdwarning' => $thresholdwarning,
-            'inpagereply' => true,
-            'edit' => 0
-        );
-        $posturl = new \moodle_url('/mod/forum/post.php');
-        $mformpost = new \mod_forum_post_form($posturl, $formparams, 'post', '', array('id' => 'mformforum'));
-        $discussionsubscribe = \mod_forum\subscriptions::get_user_default_subscription($forumrecord, $coursecontext, $cm, null);
-
-        $params = array('reply' => 0, 'forum' => $forumrecord->id, 'edit' => 0) +
-            (isset($post->groupid) ? array('groupid' => $post->groupid) : array()) +
-            array(
-                'userid' => $post->userid,
-                'parent' => $post->parent,
-                'discussion' => $post->discussion,
-                'course' => $forum->get_course_id(),
-                'discussionsubscribe' => $discussionsubscribe
-            );
-        $mformpost->set_data($params);
-
-        return $mformpost->render();
     }
 
     /**
@@ -489,18 +439,18 @@ class discussion_list_mur_pedago {
                 if (!$capabilitymanager->can_post_to_my_groups($user)) {
                     $notifications[] = (new notification(
                         get_string('cannotadddiscussiongroup', 'mod_forum'),
-                        \core\output\notification::NOTIFY_WARNING
+                        notification::NOTIFY_WARNING
                     ))->set_show_closebutton();
                 } else {
                     $notifications[] = (new notification(
                         get_string('cannotadddiscussionall', 'mod_forum'),
-                        \core\output\notification::NOTIFY_WARNING
+                        notification::NOTIFY_WARNING
                     ))->set_show_closebutton();
                 }
             } else if (!$capabilitymanager->can_access_group($user, $groupid)) {
                 $notifications[] = (new notification(
                     get_string('cannotadddiscussion', 'mod_forum'),
-                    \core\output\notification::NOTIFY_WARNING
+                    notification::NOTIFY_WARNING
                 ))->set_show_closebutton();
             }
         }
@@ -522,6 +472,65 @@ class discussion_list_mur_pedago {
         return array_map(function($notification) {
             return $notification->export_for_template($this->renderer);
         }, $notifications);
+    }
+
+    /**
+     * Get the mod_forum_post_form. This is the default boiler plate from mod_forum/post_form.php with the inpage flag caveat
+     *
+     * @param stdClass $user The user the form is being generated for
+     * @param cm_info $cm
+     * @param int $groupid The groupid if any
+     *
+     * @return string The rendered html
+     */
+    private function get_discussion_form(stdClass $user, cm_info $cm, ?int $groupid) {
+        $forum = $this->forum;
+        $forumrecord = $this->legacydatamapperfactory->get_forum_data_mapper()->to_legacy_object($forum);
+        $modcontext = context_module::instance($cm->id);
+        $coursecontext = context_course::instance($forum->get_course_id());
+        $post = (object) [
+            'course' => $forum->get_course_id(),
+            'forum' => $forum->get_id(),
+            'discussion' => 0,           // Ie discussion # not defined yet.
+            'parent' => 0,
+            'subject' => '',
+            'userid' => $user->id,
+            'message' => '',
+            'messageformat' => editors_get_preferred_format(),
+            'messagetrust' => 0,
+            'groupid' => $groupid,
+        ];
+        $thresholdwarning = forum_check_throttling($forumrecord, $cm);
+
+        $formparams = array(
+            'course' => $forum->get_course_record(),
+            'cm' => $cm,
+            'coursecontext' => $coursecontext,
+            'modcontext' => $modcontext,
+            'forum' => $forumrecord,
+            'post' => $post,
+            'subscribe' => subscriptions::is_subscribed($user->id, $forumrecord,
+                null, $cm),
+            'thresholdwarning' => $thresholdwarning,
+            'inpagereply' => true,
+            'edit' => 0
+        );
+        $posturl = new moodle_url('/mod/forum/post.php');
+        $mformpost = new mod_forum_post_form($posturl, $formparams, 'post', '', array('id' => 'mformforum'));
+        $discussionsubscribe = subscriptions::get_user_default_subscription($forumrecord, $coursecontext, $cm, null);
+
+        $params = array('reply' => 0, 'forum' => $forumrecord->id, 'edit' => 0) +
+            (isset($post->groupid) ? array('groupid' => $post->groupid) : array()) +
+            array(
+                'userid' => $post->userid,
+                'parent' => $post->parent,
+                'discussion' => $post->discussion,
+                'course' => $forum->get_course_id(),
+                'discussionsubscribe' => $discussionsubscribe
+            );
+        $mformpost->set_data($params);
+
+        return $mformpost->render();
     }
 
 }

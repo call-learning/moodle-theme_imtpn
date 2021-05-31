@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * Create group OR edit group settings.
  *
@@ -27,14 +26,14 @@
 
 require_once('../../../../config.php');
 global $CFG, $PAGE, $DB, $OUTPUT;
-require_once($CFG->dirroot.'/group/lib.php');
-require_once($CFG->dirroot.'/group/group_form.php');
+require_once($CFG->dirroot . '/group/lib.php');
+require_once($CFG->dirroot . '/group/group_form.php');
 
 /// get url variables
 $courseid = optional_param('courseid', 0, PARAM_INT);
-$id       = optional_param('id', 0, PARAM_INT);
-$delete   = optional_param('delete', 0, PARAM_BOOL);
-$confirm  = optional_param('confirm', 0, PARAM_BOOL);
+$id = optional_param('id', 0, PARAM_INT);
+$delete = optional_param('delete', 0, PARAM_BOOL);
+$confirm = optional_param('confirm', 0, PARAM_BOOL);
 
 // This script used to support group delete, but that has been moved. In case
 // anyone still links to it, let's redirect to the new script.
@@ -43,9 +42,8 @@ if ($delete) {
     redirect(new moodle_url('/group/delete.php', array('courseid' => $courseid, 'groups' => $id)));
 }
 
-
 if ($id) {
-    if (!$group = $DB->get_record('groups', array('id'=>$id))) {
+    if (!$group = $DB->get_record('groups', array('id' => $id))) {
         print_error('invalidgroupid');
     }
     if (empty($courseid)) {
@@ -55,12 +53,12 @@ if ($id) {
         print_error('invalidcourseid');
     }
 
-    if (!$course = $DB->get_record('course', array('id'=>$courseid))) {
+    if (!$course = $DB->get_record('course', array('id' => $courseid))) {
         print_error('invalidcourseid');
     }
 
 } else {
-    if (!$course = $DB->get_record('course', array('id'=>$courseid))) {
+    if (!$course = $DB->get_record('course', array('id' => $courseid))) {
         print_error('invalidcourseid');
     }
     $group = new stdClass();
@@ -68,9 +66,9 @@ if ($id) {
 }
 
 if ($id !== 0) {
-    $PAGE->set_url('/theme/imtpn/pages/murpedagogique/groupaddedit.php', array('id'=>$id));
+    $PAGE->set_url('/theme/imtpn/pages/murpedagogique/groupaddedit.php', array('id' => $id));
 } else {
-    $PAGE->set_url('/theme/imtpn/pages/murpedagogique/groupaddedit.php', array('courseid'=>$courseid));
+    $PAGE->set_url('/theme/imtpn/pages/murpedagogique/groupaddedit.php', array('courseid' => $courseid));
 }
 
 require_login($course);
@@ -79,14 +77,16 @@ require_capability('moodle/course:managegroups', $context);
 
 $strgroups = get_string('groups');
 $PAGE->set_title($strgroups);
-$PAGE->set_heading($course->fullname . ': '.$strgroups);
+$PAGE->set_heading($course->fullname . ': ' . $strgroups);
 $PAGE->set_pagelayout('admin');
 navigation_node::override_active_url(new moodle_url('/group/index.php', array('id' => $course->id)));
 
-$returnurl = $CFG->wwwroot.'/theme/imtpn/pages/murpedagogique/groupoverview.php?id='.$course->id.'&group='.$id;
+$returnurl = $CFG->wwwroot . '/theme/imtpn/pages/murpedagogique/groupoverview.php?id=' . $course->id . '&group=' . $id;
 
 // Prepare the description editor: We do support files for group descriptions
-$editoroptions = array('maxfiles'=>EDITOR_UNLIMITED_FILES, 'maxbytes'=>$course->maxbytes, 'trust'=>false, 'context'=>$context, 'noclean'=>true);
+$editoroptions =
+    array('maxfiles' => EDITOR_UNLIMITED_FILES, 'maxbytes' => $course->maxbytes, 'trust' => false, 'context' => $context,
+        'noclean' => true);
 if (!empty($group->id)) {
     $editoroptions['subdirs'] = file_area_contains_subdirs($context, 'group', 'description', $group->id);
     $group = file_prepare_standard_editor($group, 'description', $editoroptions, $context, 'group', 'description', $group->id);
@@ -96,13 +96,13 @@ if (!empty($group->id)) {
 }
 
 /// First create the form
-$editform = new group_form(null, array('editoroptions'=>$editoroptions));
+$editform = new group_form(null, array('editoroptions' => $editoroptions));
 $editform->set_data($group);
 
 if ($editform->is_cancelled()) {
     redirect($returnurl);
 
-} elseif ($data = $editform->get_data()) {
+} else if ($data = $editform->get_data()) {
     if (!has_capability('moodle/course:changeidnumber', $context)) {
         // Remove the idnumber if the user doesn't have permission to modify it
         unset($data->idnumber);
@@ -112,7 +112,7 @@ if ($editform->is_cancelled()) {
         groups_update_group($data, $editform, $editoroptions);
     } else {
         $id = groups_create_group($data, $editform, $editoroptions);
-        $returnurl = $CFG->wwwroot.'/theme/imtpn/pages/murpedagogique/grouppage.php?group='.$id;
+        $returnurl = $CFG->wwwroot . '/theme/imtpn/pages/murpedagogique/grouppage.php?group=' . $id;
     }
 
     redirect($returnurl);
@@ -127,7 +127,7 @@ if ($id) {
     $strheading = get_string('creategroup', 'group');
 }
 
-$PAGE->navbar->add($strgroups, new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php', array('id'=>$courseid)));
+$PAGE->navbar->add($strgroups, new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php', array('id' => $courseid)));
 $PAGE->navbar->add($strheading);
 
 /// Print header

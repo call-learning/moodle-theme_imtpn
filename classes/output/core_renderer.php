@@ -135,7 +135,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         if ($loggedin) {
             $this->add_if_not_exist($menu, new moodle_url('/my'), get_string('mymoodle', 'my'));
         }
-        if (mur_pedagogique::has_access($USER->id)) {
+        if (isloggedin() && !isguestuser() && mur_pedagogique::has_access($USER->id)) {
             $menu->add(get_string('murpedagogique', 'theme_imtpn'), mur_pedagogique::get_url());
         }
         if (!empty($CFG->enableresourcelibrary)) {
