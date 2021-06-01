@@ -34,14 +34,15 @@
     {{^additionalinfo.isloggedin}}
     <div class="footer__text">
         {{#str}}footer_message, theme_imtpn{{/str}}
-    {{#additionalinfo.footercontent}} {{{ additionalinfo.footercontent }}} {{/additionalinfo.footercontent}}
+        {{#additionalinfo.footercontent}} {{{ additionalinfo.footercontent }}} {{/additionalinfo.footercontent}}
     </div>
     {{/additionalinfo.isloggedin}}
     <div class="footer__links">
         {{{ output.standard_footer_html }}}
+        {{{ output.login_info }}}
     </div>
     <div class="footer__mention">
-      {{#str}}legal_mention, theme_imtpn{{/str}}
+        {{#str}}legal_mention, theme_imtpn{{/str}}
     </div>
 
     {{{ output.standard_end_of_body_html }}}

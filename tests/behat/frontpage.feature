@@ -37,32 +37,7 @@ Feature: Front page blocks
     And I should see "Access the \"Pédagothèque Numérique\" from anywhere" in the "#page-footer" "css_element"
     And I should see "Log in"
 
-
-  Scenario: As a logged in user I should see the mur pedagogique link if I am registered in the course
-    Given I log in as "student1"
-    Then I should see "Catalog" in the ".fixed-top.navbar" "css_element"
-    Then I should see "Mur pédagogique" in the ".fixed-top.navbar" "css_element"
-
-  Scenario: As an admin I should see the mur pedagogique link if I am registered in the course
-    Given I log in as "admin"
-    Then I should see "Catalog" in the ".fixed-top.navbar" "css_element"
-    Then I should see "Mur pédagogique" in the ".fixed-top.navbar" "css_element"
-
-  Scenario: As a logged in user I should not see the mur pedagogique link if I am registered in the course
-    Given I log in as "student2"
-    Then I should see "Catalog" in the ".fixed-top.navbar" "css_element"
-    Then I should not see "Mur pédagogique" in the ".fixed-top.navbar" "css_element"
-    # TODO Fix the following step
-    # And I log out
-
-  Scenario: When the mur pedagogique is disabled I should not see the menu
-    Given the following config values are set as admin:
-      | murpedagoidnumber | MUR_PEDAGOGIQUE | theme_imtpn |
-      | murpedagoenabled  | 0               | theme_imtpn |
-    Then I log in as "student1"
-    Then I should not see "Mur pédagogique" in the ".fixed-top.navbar" "css_element"
-
   Scenario: I should be able to login from the main Log in Button
     Given I am on site homepage
     When I click on ".header__button a" "css_element"
-    And I should see "Acceptance test site: Log in to the site"
+    Then I should not see "Log in" in the ".fixed-top.navbar" "css_element"
