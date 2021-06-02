@@ -40,8 +40,15 @@ $capabilities = array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => array(
-            'manager' => CAP_ALLOW,
-            'student' => CAP_ALLOW
+            'user' => CAP_ALLOW,
+        )
+    ),
+    'theme/imtpn:mpaviewallgroups' => array(
+        'riskbitmask' => RISK_SPAM | RISK_XSS,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => array(
+            'user' => CAP_ALLOW,
         )
     ),
 );

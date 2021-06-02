@@ -4,6 +4,16 @@ IMTP Boost Based theme
 This is a theme for the "Pédagothèque Numérique" for IMT.
 
 
+Installation
+==
+
+A rajouter dans config.php, si on veut que le mur pédagogique marche correctement:
+    
+    $CFG->customscripts = dirname(__FILE__) . '/theme/imtpn/customscripts/';
+
+Pour les tests behat:
+    
+    $CFG->behat_extraallowedsettings = ['customscripts'];
 
 Logos
 ==
@@ -20,12 +30,9 @@ Images are mostly coming from:
 Login and Shibolleth
 ==
 
-Si le module d'authentification authsettingshibboleth est activé, on va
-piocher sur la page de login les informations relatives à chaque fournisseur
-d'identité (à partir du setting: auth_shibboleth | organization_selection).
-
-On peut récupérer les informations dans les champs description de chaque URL 
-donnée (https://wiki.shibboleth.net/confluence/display/SP3/UIInfoMetadataFilter)
+Si le module d'authentification authsettingshibboleth est activé, on va afficher une image qui correspond
+à celle chargée dans le plugin d'authentification et on l'affiche en grand format.
 
 Templates
 ==
+

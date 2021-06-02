@@ -41,10 +41,10 @@ if (!has_capability('theme/imtpn:canselfjoingroup', $context)) {
 $PAGE->set_url(new moodle_url('/theme/imtpn/pages/murpedagogique/joingroup.php', array('groupid' => $groupid)));
 $PAGE->set_title("$course->shortname: " . get_string('groups'));
 $PAGE->navbar->ignore_active();
-$PAGE->navbar->add(get_string('murpedagogique', 'theme_imtpn'),
-    new moodle_url('/theme/imtpn/murpedagogique/index.php'));
 $PAGE->navbar->add(get_string('groups'),
-    new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php', array('id' => $course->id)));
+    new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php', array('id' => $course->id)),
+    navbar::TYPE_CUSTOM, null, 'allgroups'
+);
 
 echo $OUTPUT->header();
 if (groups_add_member($groupid, $USER->id, 'theme_imtpn')) {

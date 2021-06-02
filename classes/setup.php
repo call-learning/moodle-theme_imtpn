@@ -106,6 +106,7 @@ class setup {
             $pageforum->set_cm($cm);
             $pageforum->set_pagelayout('incourse');
             $pagemurpedago->set_pagetype('theme-imtpn-pages-murpedagogique-index');
+            self::setup_page_blocks($pagemurpedago, self::MUR_PEDAGO_BLOCK_DEFINITION, $regionname = 'side-pre');
             $pagegroupoverview = new moodle_page();
             $pagegroupoverview->set_pagelayout('standard');
             $pagegroupoverview->set_pagetype('group-overview');

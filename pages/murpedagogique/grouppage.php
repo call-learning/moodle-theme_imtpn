@@ -57,10 +57,9 @@ $PAGE->set_pagetype('group-page');
 $PAGE->set_subpage($groupid);
 $PAGE->add_body_class('path-user');// So we can style it independently.
 $PAGE->navbar->ignore_active();
-$PAGE->navbar->add(get_string('murpedagogique', 'theme_imtpn'),
-    new moodle_url('/theme/imtpn/pages/murpedagogique/index.php'));
+$allgroupsurl = new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php', array('id' => $course->id));
 $PAGE->navbar->add(get_string('allgroups', 'theme_imtpn'),
-    new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php', array('id' => $course->id)));
+    $allgroupsurl, navbar::TYPE_CUSTOM, null, 'allgroups');
 $PAGE->navbar->add($group->name, $currenturl);
 $PAGE->add_body_class('path-mod-forum'); // Make sure the usual classes apply.
 $PAGE->set_other_editing_capability('moodle/course:manageactivities');

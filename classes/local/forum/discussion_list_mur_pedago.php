@@ -195,7 +195,6 @@ class discussion_list_mur_pedago {
                                 if (empty($groups[$groupid])) {
                                     $group = groups_get_group($groupid);
                                     $groups[$groupid] = $group;
-                                } else if ($groupid == -1) {
                                 }
                                 $post->subject .= html_writer::span('&nbsp;')
                                     . mur_pedagogique::get_group_link($groups[$groupid], $courseid, false);
@@ -512,7 +511,7 @@ class discussion_list_mur_pedago {
             'subscribe' => subscriptions::is_subscribed($user->id, $forumrecord,
                 null, $cm),
             'thresholdwarning' => $thresholdwarning,
-            'inpagereply' => true,
+            'inpagereply' => false,
             'edit' => 0
         );
         $posturl = new moodle_url('/mod/forum/post.php');

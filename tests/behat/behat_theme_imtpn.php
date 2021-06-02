@@ -15,23 +15,36 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Theme plugin version definition.
+ * Steps definitions related with the imtpn theme.
+ *
  *
  * @package   theme_imtpn
+ * @category  test
  * @copyright 2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+// NOTE: no MOODLE_INTERNAL test here, this file may be required by behat before including /config.php.
 
-$plugin->version   = 2021011909; /* This is the version number to increment when changes needing an update are made */
-$plugin->requires  = 2019111800;
-$plugin->release   = '0.1.0';
-$plugin->maturity  = MATURITY_ALPHA;
-$plugin->component = 'theme_imtpn';
-$plugin->dependencies = [
-    'theme_boost' => ANY_VERSION,
-    'theme_clboost' => '2020092300',
-    'block_rss_thumbnails' => ANY_VERSION,
-    'block_forum_feed' => ANY_VERSION
-];
+require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
+
+use Behat\Gherkin\Node\TableNode as TableNode;
+/**
+ * Imtpn theme steps definitions.
+ *
+ * @package   theme_imtpn
+ * @category  test
+ * @copyright 2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class behat_theme_imtpn extends behat_base {
+
+    /**
+     * Make sure that the blocks for the mur pedagogique are set to what they need to be
+     *
+     * @Given /^I reset the murpedagogique blocks$/
+     */
+    public function i_reset_the_murpedagogique_blocks() {
+        \theme_imtpn\setup::setup_murpedago_blocks();
+    }
+}

@@ -16,6 +16,7 @@ Feature: Front page blocks
       | user     | course | role           |
       | teacher1 | C1     | editingteacher |
       | student1 | C1     | student        |
+    # The forum should be in group mode = 1.
     And the following "activities" exist:
       | activity | name            | intro           | type    | course | idnumber        |
       | forum    | Mur pedagogique | Mur pedagogique | general | C1     | MUR_PEDAGOGIQUE |

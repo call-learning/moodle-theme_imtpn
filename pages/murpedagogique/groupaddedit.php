@@ -112,7 +112,7 @@ if ($editform->is_cancelled()) {
         groups_update_group($data, $editform, $editoroptions);
     } else {
         $id = groups_create_group($data, $editform, $editoroptions);
-        $returnurl = $CFG->wwwroot . '/theme/imtpn/pages/murpedagogique/grouppage.php?group=' . $id;
+        $returnurl = new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $id));
     }
 
     redirect($returnurl);
@@ -127,7 +127,10 @@ if ($id) {
     $strheading = get_string('creategroup', 'group');
 }
 
-$PAGE->navbar->add($strgroups, new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php', array('id' => $courseid)));
+$PAGE->navbar->add($strgroups,
+    new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php', array('id' => $courseid)),
+    navbar::TYPE_CUSTOM, null, 'allgroups'
+);
 $PAGE->navbar->add($strheading);
 
 /// Print header

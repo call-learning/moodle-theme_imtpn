@@ -96,7 +96,7 @@ class group_info implements renderable, templatable {
                 $url = new moodle_url('/group/group.php', ['id' => $this->group->id, 'courseid' => $this->group->courseid]);
                 $data->editurl = $url->out(false);
             }
-            $data->discussioncount = count(mod_forum_get_discussion_summaries($this->forum, $USER, $this->groupide, 0));
+            $data->discussioncount = count(mod_forum_get_discussion_summaries($this->forum, $USER, $this->group->id, 0));
 
             return $data;
         } else {

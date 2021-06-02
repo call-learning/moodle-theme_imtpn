@@ -169,7 +169,8 @@ class groups extends table_sql implements dynamic_table {
         $group = groups_get_group($row->groupid, '*', MUST_EXIST);
         return html_writer::link(
             mur_pedagogique::get_group_page_url($group),
-            html_writer::span('', 'fa fa-arrow-circle-o-right fa-2x')
+            html_writer::span('', 'fa fa-arrow-circle-o-right fa-2x'),
+            ['class' => 'murpedago-group-link']
         );
     }
 

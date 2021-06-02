@@ -19,11 +19,13 @@
 }}
 <nav class="fixed-top navbar  {{# additionalinfo.isloggedin }} navbar-light {{/additionalinfo.isloggedin}}  {{^ additionalinfo.isloggedin }} navbar-dark {{/additionalinfo.isloggedin}} navbar-expand moodle-has-zindex" aria-label="{{#str}}sitemenubar, admin{{/str}}">
     {{# additionalinfo.hasnavdrawer }}
+        {{# additionalinfo.isloggedin }}
     <div data-region="drawer-toggle" class="d-inline-block">
         <button aria-expanded="{{#navdraweropen}}true{{/navdraweropen}}{{^navdraweropen}}false{{/navdraweropen}}" aria-controls="nav-drawer" type="button"
                 class="btn nav-link mr-auto ml-auto btn-light bg-gray" data-action="toggle-drawer" data-side="left" data-preference="drawer-open-nav">{{#pix}}i/menubars{{/pix}}
             <span class="sr-only">{{#str}}sidepanel, core{{/str}}</span></button>
     </div>
+        {{/ additionalinfo.isloggedin }}
     {{/ additionalinfo.hasnavdrawer}}
     {{^ additionalinfo.isloggedin }}
         <div class="imtpn-container">

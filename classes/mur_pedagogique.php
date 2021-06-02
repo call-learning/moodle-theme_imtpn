@@ -29,6 +29,7 @@ use html_writer;
 use mod_forum\local\container;
 use cm_info;
 use moodle_url;
+use navbar;
 use theme_imtpn\local\forum\discussion_list_mur_pedago;
 
 defined('MOODLE_INTERNAL') || die();
@@ -153,9 +154,6 @@ class mur_pedagogique {
         $PAGE->set_heading($course->fullname);
         $PAGE->set_pagelayout('incourse');
         $PAGE->set_cm($cm);
-        $PAGE->navbar->ignore_active();
-        $PAGE->navbar->add(get_string('murpedagogique', 'theme_imtpn'),
-            new moodle_url('/theme/imtpn/pages/murpedagogique/index.php'));
 
         $viewallgroups = $OUTPUT->single_button(
             new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php'),
@@ -334,7 +332,8 @@ class mur_pedagogique {
             : html_writer::span($groupname);
         return html_writer::link(
             static::get_group_page_url($group),
-            $content
+            $content,
+            ['class'=>'mpedago-group-link']
         );
     }
 
@@ -372,12 +371,19 @@ class mur_pedagogique {
             // apply custom CSS.
             $page->add_body_class('path-mod-forum'); // Make sure the usual classes apply.
             // Also if child context, we need to make sure we adjust the breadcrumb.
-            if ($page->cm->context->is_child_of($murpedaggocontext, true)) {
-                $page->navbar->ignore_active();
-            }
+            // The has_item() check is to fix an issue in navigation lib (has_items()) which
+            // issues a warning in behat mode.
+            //if ($page->cm->context->is_child_of($murpedaggocontext, true) && $page->navbar->has_items()) {
+            //    $page->navbar->ignore_active();
+            //}
         }
     }
 
+    /**
+     * @param navbar $navbar
+     * @return mixed|\navbar
+     * @throws coding_exception
+     */
     public static function fix_navbar($navbar) {
         global $PAGE;
 
@@ -391,15 +397,26 @@ class mur_pedagogique {
                 $PAGE->context->get_course_context()
                 && $PAGE->context->get_course_context()->instanceid == $cm->course);
         if ($isoncm || $isoncourse) {
-            if ($navbar->has_items()) {
-                // We reset the navbar if items were already there.
-                $navbar = new \navbar($PAGE);
+            $allitems = [];
+            foreach ($navbar->get_items() as $index => $item) {
+                if ( ($item->parent && $item->parent->type == navbar::TYPE_ACTIVITY )
+                    || ($item->isactive && $item->type != navbar::TYPE_ACTIVITY)
+                    || $item->key == 'allgroups'
+                ) {
+                    // Working around the shortcomings of the navbar API.
+                    $allitems[] = $item;
+                }
             }
+            $navbar = new navbar($PAGE);
             $navbar->ignore_active(true);
             $navbar->add(get_string('murpedagogique', 'theme_imtpn'),
-                new moodle_url('/theme/imtpn/pages/murpedagogique/index.php'));
-        }
+                new moodle_url('/theme/imtpn/pages/murpedagogique/index.php') );
 
+            foreach ($allitems as $item) {
+                $navbar->add($item->text, $item->action, $item->type, $item->shorttext, $item->key, $item->icon);
+            }
+
+        }
         return $navbar;
     }
 

@@ -23,6 +23,7 @@
  */
 
 use mod_forum\grades\forum_gradeitem;
+
 $vaultfactory = mod_forum\local\container::get_vault_factory();
 $forumvault = $vaultfactory->get_forum_vault();
 
@@ -57,12 +58,13 @@ global $PAGE;
 // Go to the mur pedagogique page if it is the right forum and user is not editing (if not
 // it will go to the normal forum page)
 if (!empty($cm) && ($cm->id === $forum->get_course_module_record()->id)) {
+    global $CFG;
     $PAGE->set_cm($cm);
+
+    if (!empty($groupid)) {
+        redirect(new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $groupid)));
+    }
     if (!$PAGE->user_is_editing()) {
-        global $CFG;
-        if (!empty($groupid)) {
-            redirect(new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $groupid)));
-        }
         \theme_imtpn\mur_pedagogique::display_wall($forum,
             FORUM_MODE_NESTED,
             $search,

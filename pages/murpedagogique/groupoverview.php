@@ -61,7 +61,7 @@ $PAGE->set_url($currenturl);
 require_course_login($course, true, $cm);
 
 $context = context_course::instance($courseid);
-require_capability('moodle/site:accessallgroups', $context);
+require_capability('theme/imtpn:mpaviewallgroups', $context);
 
 $strgroups = get_string('allgroups', 'theme_imtpn');
 $strparticipants = get_string('participants');
@@ -85,16 +85,14 @@ $PAGE->set_heading($course->fullname);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_pagetype('group-overview');
 $PAGE->navbar->ignore_active();
-$PAGE->navbar->add(get_string('murpedagogique', 'theme_imtpn'),
-    new moodle_url('/theme/imtpn/pages/murpedagogique/index.php'));
 $PAGE->navbar->add(get_string('allgroups', 'theme_imtpn'),
-    $currenturl);
+    $currenturl, navbar::TYPE_CUSTOM, null, 'allgroups');
 
 // Add create new group if can do.
 
 if (has_capability('moodle/course:managegroups', $context)) {
     $addnewgroup = $OUTPUT->single_button(
-        new moodle_url('/group/group.php', array('courseid' => $courseid)),
+        new moodle_url('/theme/imtpn/pages/murpedagogique/groupaddedit.php', array('courseid' => $courseid)),
         get_string('addnewgroup', 'theme_imtpn'));
     $PAGE->set_button($addnewgroup);
 }
