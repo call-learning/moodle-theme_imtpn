@@ -97,8 +97,6 @@ class profile {
 
         require_once($CFG->libdir . "/myprofilelib.php");
 
-        $simplified = get_config('theme_imtpn', 'simplifiedprofilepage');
-
         self::core_myprofile_navigation($tree, $user, $iscurrentuser, $course);
 
         // Core components.
@@ -169,7 +167,7 @@ class profile {
                 return !in_array("{$component}_{$module}", $excludedmodules);
             }
         }
-        return false;
+        return !$simplified;
     }
 
     /**
