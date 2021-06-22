@@ -74,23 +74,10 @@ class group_info implements renderable, templatable {
         global $USER;
         if (!empty($this->group->description) || (!empty($this->group->picture) && empty($this->group->hidepicture))) {
             $context = context_course::instance($this->group->courseid);
-            $description = file_rewrite_pluginfile_urls($this->group->description,
-                'pluginfile.php',
-                $context->id,
-                'group',
-                'description',
-                $this->group->id);
-
-            $descriptionformat = $this->group->descriptionformat ?? FORMAT_MOODLE;
-            $options = [
-                'overflowdiv' => true,
-                'context'     => $context
-            ];
-
             $data = new stdClass();
             $data->name = format_string($this->group->name, true, ['context' => $context]);
-            $data->pictureurl = get_group_picture_url($this->group, $this->group->courseid, true);
-            $data->description = format_text($description, $descriptionformat, $options);
+            $data->pictureurl = static::get_group_picture_url($this->group, $this->group->courseid, true);
+            $data->description = static::get_group_description($this->group);
 
             if (has_capability('moodle/course:managegroups', $context)) {
                 $url = new moodle_url('/group/group.php', ['id' => $this->group->id, 'courseid' => $this->group->courseid]);
@@ -103,4 +90,64 @@ class group_info implements renderable, templatable {
             return;
         }
     }
+
+    /**
+     * Get group description
+     *
+     * Patch to the usual procedure in order to retrieve the files without the need
+     * to grant access to specific users.
+     */
+    public static function get_group_description($group) {
+        $context = context_course::instance($group->courseid);
+        $description = file_rewrite_pluginfile_urls($group->description,
+            'pluginfile.php',
+            $context->id,
+            'theme_imtpn',
+            'groupdescription',
+            $group->id);
+
+        $descriptionformat = $group->descriptionformat ?? FORMAT_MOODLE;
+        $options = [
+            'overflowdiv' => true,
+            'context'     => $context
+        ];
+        return format_text($description, $descriptionformat, $options);
+    }
+
+    /**
+     * Override of the homonymous function in weblib.
+     *
+     * Here we want to display picture even if the user cannot manage groups.
+     *
+     * @param $group
+     * @param $courseid
+     * @param false $large
+     * @param false $includetoken
+     * @return moodle_url|void
+     */
+    public static function get_group_picture_url($group, $courseid, $large = false, $includetoken = false) {
+        $context = context_course::instance($courseid);
+
+        // If there is no picture, do nothing.
+        if (!$group->picture) {
+            return;
+        }
+
+        // If picture is hidden, only show to those with course:managegroups.
+        if ($group->hidepicture) {
+            return;
+        }
+
+        if ($large) {
+            $file = 'f1';
+        } else {
+            $file = 'f2';
+        }
+
+        $grouppictureurl = moodle_url::make_pluginfile_url(
+            $context->id, 'theme_imtpn', 'groupicon', $group->id, '/', $file, false, $includetoken);
+        $grouppictureurl->param('rev', $group->picture);
+        return $grouppictureurl;
+    }
+
 }

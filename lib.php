@@ -41,6 +41,52 @@ defined('MOODLE_INTERNAL') || die();
  * @throws coding_exception
  */
 function theme_imtpn_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
+    $cmmpda = mur_pedagogique::get_cm();
+    // Patch for groups so any user can see the icon + description.
+    if (($filearea == 'groupicon' || $filearea == 'groupdescription') && $context->contextlevel == CONTEXT_COURSE
+        && $cmmpda->course == $context->get_course_context()->instanceid) {
+        global $DB;
+        $fs = get_file_storage();
+
+        require_course_login($course, true, null, false);
+
+        $groupid = (int) array_shift($args);
+
+        $group = $DB->get_record('groups', array('id' => $groupid, 'courseid' => $course->id), '*', MUST_EXIST);
+
+        if ($filearea === 'groupdescription') {
+
+            require_login($course);
+
+            $filename = array_pop($args);
+            $filepath = $args ? '/' . implode('/', $args) . '/' : '/';
+            if (!$file = $fs->get_file($context->id, 'group', 'description', $group->id, $filepath, $filename) or
+                $file->is_directory()) {
+                send_file_not_found();
+            }
+
+            \core\session\manager::write_close(); // Unlock session during file serving.
+            send_stored_file($file, 60 * 60, 0, $forcedownload, $options);
+
+        } else if ($filearea === 'groupicon') {
+            $filename = array_pop($args);
+
+            if ($filename !== 'f1' and $filename !== 'f2') {
+                send_file_not_found();
+            }
+            if (!$file = $fs->get_file($context->id, 'group', 'icon', $group->id, '/', $filename . '.png')) {
+                if (!$file = $fs->get_file($context->id, 'group', 'icon', $group->id, '/', $filename . '.jpg')) {
+                    send_file_not_found();
+                }
+            }
+
+            \core\session\manager::write_close(); // Unlock session during file serving.
+            send_stored_file($file, 60 * 60, 0, false, $options);
+
+        } else {
+            send_file_not_found();
+        }
+    }
     return theme_clboost\local\utils::generic_pluginfile('imtpn', $course, $cm, $context, $filearea, $args, $forcedownload,
         $options);
 }

@@ -36,6 +36,7 @@ use moodle_url;
 use stdClass;
 use table_sql;
 use theme_imtpn\mur_pedagogique;
+use theme_imtpn\output\group_info;
 use user_picture;
 
 defined('MOODLE_INTERNAL') || die;
@@ -140,7 +141,7 @@ class groups extends table_sql implements dynamic_table {
 
     public function col_groupimage($row) {
         $group = groups_get_group($row->groupid, '*', MUST_EXIST);
-        return html_writer::img(get_group_picture_url($group, $this->courseid, true),
+        return html_writer::img(group_info::get_group_picture_url($group, $this->courseid, true),
             $row->groupname
         );
     }
