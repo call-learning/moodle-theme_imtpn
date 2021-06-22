@@ -92,9 +92,9 @@ class groups extends table_sql implements dynamic_table {
             $forumcondition = " WHERE d.forum = {$cm->instance}";
         }
         $this->sql->fields = "g.id AS groupid,g.name AS groupname, COALESCE(dc.count,0) as postcount";
-        $this->sql->from = " {groups} g 
-            LEFT JOIN (SELECT COUNT(*) count, d.groupid FROM {forum_discussions} d 
-            LEFT JOIN {forum_posts} p ON p.discussion = d.id $forumcondition  GROUP BY d.groupid) dc ON g.id = dc.groupid ";
+        $this->sql->from = " {groups} g "
+            . "LEFT JOIN (SELECT COUNT(*) count, d.groupid FROM {forum_discussions} d "
+            . "LEFT JOIN {forum_posts} p ON p.discussion = d.id $forumcondition  GROUP BY d.groupid) dc ON g.id = dc.groupid ";
         $this->sql->where = "g.courseid = :courseid";
         $this->sql->params = [];
     }
@@ -118,12 +118,27 @@ class groups extends table_sql implements dynamic_table {
         if ($filterset->has_filter('name')) {
             $groupname = $filterset->get_filter('name')->current();
             if (!empty($groupname)) {
-                $this->sql->where .= ' AND ' . $DB->sql_like('g.name', ':groupname', false, false);
-                $this->sql->params['groupname'] = "%{$groupname}%";
+                $allaccents = explode(',', self::ACCENTUATED_CHARACTERS);
+                $normalisedgroupname = str_replace($allaccents, '_', $groupname);
+                // We replace the accentuated character by _ so postgresql can work with accentuated chars.
+                $this->sql->where .= ' AND ' . $DB->sql_like('g.name', ':groupname', false);
+                $this->sql->params['groupname'] = "%{$normalisedgroupname}%";
             }
         }
     }
 
+    /**
+     * Accentuated characters.
+     */
+    const ACCENTUATED_CHARACTERS = "a,e,i,o,u,ç,æ,œ,á,é,í,ó,ú,à,è,ì,ò,ù,ä,ë,ï,ö,ü,ÿ,â,ê,î,ô,û,å,ø,Ø,Å,Á,À,Â,Ä,È,É,Ê,Ë,Í,Î,Ï" .
+    ",Ì,Ò,Ó,Ô,Ö,Ú,Ù,Û,Ü,Ÿ,Ç,Æ,Œ";
+
+    /**
+     * Column name
+     *
+     * @param $row
+     * @return string
+     */
     public function col_name($row) {
         return format_string($row->groupname, true, ['context' => $this->get_context()]);
     }
