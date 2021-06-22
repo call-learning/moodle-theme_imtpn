@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 $string['addnewgroup'] = 'Ajouter un nouveau groupe';
 $string['allgroups'] = 'Tous les groupes';
-$string['andmore'] = 'and more...';
+$string['andmore'] = 'et plus...';
 $string['cannotjoin'] = 'Vous n\'avez pas pu joindre le groupe {$a}, êtes vous inscrit dans le cours ?';
 $string['catalogue'] = 'Catalogue';
 $string['configtitle'] = 'Theme IMT Pédagothèque Numérique';
