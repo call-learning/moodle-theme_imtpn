@@ -148,7 +148,20 @@ class mur_pedagogique {
         } else {
             $displaymode = FORUM_MODE_NESTED;
         }
-
+        // Toggle the editing state and switches.
+        if ($PAGE->user_allowed_editing()) {
+            $edit = optional_param('edit', null, PARAM_BOOL);    // Turn editing on and off.
+            if ($edit !== null) {             // Editing state was specified.
+                $USER->editing = $edit;       // Change editing state.
+            }
+            if (!empty($USER->editing)) {
+                $edit = 1;
+            } else {
+                $edit = 0;
+            }
+        } else {
+            $USER->editing = $edit = 0;
+        }
         $PAGE->set_context($forum->get_context());
         $PAGE->set_title($forum->get_name());
         $PAGE->add_body_class('forumtype-' . $forum->get_type());
@@ -156,10 +169,12 @@ class mur_pedagogique {
         $PAGE->set_pagelayout('incourse');
         $PAGE->set_cm($cm);
 
+        $currentbuttons = $PAGE->button;
+        $currentbuttons .= $OUTPUT->edit_button($url);
         $viewallgroups = $OUTPUT->single_button(
             new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php'),
             get_string('viewallgroups', 'theme_imtpn'));
-        $PAGE->set_button($viewallgroups);
+        $PAGE->set_button($currentbuttons  . $viewallgroups);
 
         if ($istypesingle && $displaymode == FORUM_MODE_NESTED_V2) {
             $PAGE->add_body_class('nested-v2-display-mode reset-style');

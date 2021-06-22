@@ -31,7 +31,7 @@ use theme_imtpn\table\groups;
 use theme_imtpn\table\groups_filterset;
 
 require_once('../../../../config.php');
-global $CFG, $PAGE, $DB, $OUTPUT;
+global $CFG, $PAGE, $DB, $OUTPUT, $USER;
 require_once($CFG->libdir . '/filelib.php');
 
 define('OVERVIEW_NO_GROUP', -1); // The fake group for users not in a group.
@@ -88,14 +88,34 @@ $PAGE->navbar->ignore_active();
 $PAGE->navbar->add(get_string('allgroups', 'theme_imtpn'),
     $currenturl, navbar::TYPE_CUSTOM, null, 'allgroups');
 
+
+// Toggle the editing state and switches.
+if ($PAGE->user_allowed_editing()) {
+    $edit = optional_param('edit', null, PARAM_BOOL);    // Turn editing on and off.
+    if ($edit !== null) {             // Editing state was specified.
+        $USER->editing = $edit;       // Change editing state.
+    }
+    if (!empty($USER->editing)) {
+        $edit = 1;
+    } else {
+        $edit = 0;
+    }
+} else {
+    $USER->editing = $edit = 0;
+}
+
 // Add create new group if can do.
+
+$currentbuttons = $PAGE->button;
+$currentbuttons .= $OUTPUT->edit_button($currenturl);
 
 if (has_capability('moodle/course:managegroups', $context)) {
     $addnewgroup = $OUTPUT->single_button(
         new moodle_url('/theme/imtpn/pages/murpedagogique/groupaddedit.php', array('courseid' => $courseid)),
         get_string('addnewgroup', 'theme_imtpn'));
-    $PAGE->set_button($addnewgroup);
+    $currentbuttons .= $addnewgroup;
 }
+$PAGE->set_button($currentbuttons);
 // The form.
 require_once($CFG->libdir . '/formslib.php');
 

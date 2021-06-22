@@ -61,23 +61,23 @@ if ($PAGE->user_allowed_editing()) {
     } else {
         $edit = 0;
     }
-    // Add button for editing page.
-    $params['edit'] = !$edit;
-    $url = new moodle_url($baseurl, $params);
-    $editactionstring = !$edit ? get_string('turneditingon') : get_string('turneditingoff');
-    $editbutton = $OUTPUT->single_button($url, $editactionstring);
 } else {
     $USER->editing = $edit = 0;
 }
+$currentbuttons = $PAGE->button;
+
 $url = new moodle_url("$CFG->wwwroot/local/resourcelibrary/index.php");
 $button = new single_button($url, get_string('viewcatalog', 'theme_imtpn'), 'post', true);
-$viewcatalog = $OUTPUT->render($button);
+$currentbuttons .= $OUTPUT->render($button);
 
 $url = new moodle_url("$CFG->wwwroot/course/edit.php", array('category' =>
     core_course_category::get_default()->id, 'returnto' => $baseurl->out()));
 $button = new single_button($url, get_string('createcourse', 'theme_imtpn'), 'post', true);
-$createacourse = $OUTPUT->render($button);
-$PAGE->set_button($viewcatalog . $createacourse . $editbutton);
+$currentbuttons .= $OUTPUT->render($button);
+
+$currentbuttons .= $OUTPUT->edit_button($baseurl);
+
+$PAGE->set_button($currentbuttons);
 
 $PAGE->blocks->set_default_region('content');
 
