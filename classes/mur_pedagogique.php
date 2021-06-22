@@ -31,6 +31,7 @@ use cm_info;
 use moodle_url;
 use navbar;
 use theme_imtpn\local\forum\discussion_list_mur_pedago;
+use theme_imtpn\output\group_info;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -333,7 +334,7 @@ class mur_pedagogique {
         return html_writer::link(
             static::get_group_page_url($group),
             $content,
-            ['class'=>'mpedago-group-link']
+            ['class' => 'mpedago-group-link']
         );
     }
 
@@ -381,10 +382,11 @@ class mur_pedagogique {
 
     /**
      * @param navbar $navbar
+     * @param \moodle_page $page
      * @return mixed|\navbar
      * @throws coding_exception
      */
-    public static function fix_navbar($navbar) {
+    public static function fix_navbar($navbar, $page) {
         global $PAGE;
 
         $cm = \theme_imtpn\mur_pedagogique::get_cm();
@@ -399,7 +401,7 @@ class mur_pedagogique {
         if ($isoncm || $isoncourse) {
             $allitems = [];
             foreach ($navbar->get_items() as $index => $item) {
-                if ( ($item->parent && $item->parent->type == navbar::TYPE_ACTIVITY )
+                if (($item->parent && $item->parent->type == navbar::TYPE_ACTIVITY)
                     || ($item->isactive && $item->type != navbar::TYPE_ACTIVITY)
                     || $item->key == 'allgroups'
                 ) {
@@ -410,7 +412,19 @@ class mur_pedagogique {
             $navbar = new navbar($PAGE);
             $navbar->ignore_active(true);
             $navbar->add(get_string('murpedagogique', 'theme_imtpn'),
-                new moodle_url('/theme/imtpn/pages/murpedagogique/index.php') );
+                new moodle_url('/theme/imtpn/pages/murpedagogique/index.php'));
+
+            // Special navigation for Participant pages.
+            if ($page->docspath == 'enrol/users') {
+                $groupid = optional_param('group', 0, PARAM_INT);
+                if ($groupid) {
+                    $group = groups_get_group($groupid, '*', MUST_EXIST);
+                    $groupname = group_info::get_group_name($group);
+                    $navbar->add($groupname,
+                        new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $groupid))
+                    );
+                }
+            }
 
             foreach ($allitems as $item) {
                 $navbar->add($item->text, $item->action, $item->type, $item->shorttext, $item->key, $item->icon);

@@ -75,7 +75,7 @@ class group_info implements renderable, templatable {
         if (!empty($this->group->description) || (!empty($this->group->picture) && empty($this->group->hidepicture))) {
             $context = context_course::instance($this->group->courseid);
             $data = new stdClass();
-            $data->name = format_string($this->group->name, true, ['context' => $context]);
+            $data->name = self::get_group_name($this->group);
             $data->pictureurl = static::get_group_picture_url($this->group, $this->group->courseid, true);
             $data->description = static::get_group_description($this->group);
 
@@ -91,6 +91,15 @@ class group_info implements renderable, templatable {
         }
     }
 
+    /**
+     * Get group name
+     * @param $group
+     * @return string
+     */
+    public static function get_group_name($group) {
+        $context = context_course::instance($group->courseid);
+        return format_string($group->name, true, ['context' => $context]);
+    }
     /**
      * Get group description
      *

@@ -440,7 +440,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      * Uses bootstrap compatible html.
      */
     public function navbar() {
-        $navbar = mur_pedagogique::fix_navbar($this->page->navbar);
+        $navbar = mur_pedagogique::fix_navbar($this->page->navbar, $this->page);
         return $this->render_from_template('core/navbar', $navbar);
     }
 
