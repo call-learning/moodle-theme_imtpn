@@ -2,6 +2,13 @@ body {
   .navbar.navbar-light {
     background-color: white;
   }
+  @include media-breakpoint-down(sm) {
+    .navbar {
+      .navbar__logo {
+        max-width: 100px;
+      }
+    }
+  }
 }
 body.notloggedin {
   .navbar {
@@ -45,7 +52,7 @@ body.notloggedin {
     @include media-breakpoint-up(sm) {
       position: fixed;
       width: 100%;
-      top: 0;
+      top: 0px;
       z-index: $zindex-fixed - 1
     }
 
@@ -171,7 +178,6 @@ body.notloggedin {
     }
   }
 }
-
 #page-site-index.notloggedin {
   #page {
     @include media-breakpoint-up(sm) {

@@ -10,7 +10,15 @@
     }
 }
 .groupoverview-search-form {
-    .form-group {
-        margin-left: auto;
+    input[name='groupname'] {
+        width: 100%;
     }
+    @include media-breakpoint-down(md) {
+        flex-wrap: wrap;
+        .form-group.fitem {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+
 }

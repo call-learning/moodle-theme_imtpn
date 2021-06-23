@@ -172,7 +172,7 @@ class groups extends table_sql implements dynamic_table {
     public function col_groupimage($row) {
         $group = groups_get_group($row->groupid, '*', MUST_EXIST);
         return html_writer::img(group_info::get_group_picture_url($group, $this->courseid, true),
-            $row->groupname
+            $row->groupname,array('class'=>'d-none d-lg-table-cell')
         );
     }
 

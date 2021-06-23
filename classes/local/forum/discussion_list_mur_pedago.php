@@ -290,11 +290,13 @@ class discussion_list_mur_pedago {
 
         $forum = $this->forum;
         $course = $forum->get_course_record();
+        // Fetch the current currentgroupid.
+        $currentgroupid = groups_get_activity_group($cm, true) ?: null;
 
         $forumexporter = $this->exporterfactory->get_forum_exporter(
             $user,
             $this->forum,
-            $groupid
+            $currentgroupid
         );
 
         $pagesize = $this->get_page_size($pagesize);
@@ -303,11 +305,13 @@ class discussion_list_mur_pedago {
         // Get all forum discussion summaries.
         $discussions = mod_forum_get_discussion_summaries($forum, $user, $groupid, $sortorder, $pageno, $pagesize);
 
-        // Then filter by group as the previous method returns all groups tagged as -1 also.
-        $discussions = array_filter($discussions, function($disc) use ($groupid) {
-            return is_array($groupid) ? in_array($disc->get_discussion()->get_group_id(), $groupid) :
-                $disc->get_discussion()->get_group_id() == $groupid;
-        });
+        if ($groupid) {
+            // Then filter by group as the previous method returns all groups tagged as -1 also.
+            $discussions = array_filter($discussions, function($disc) use ($groupid) {
+                return is_array($groupid) ? in_array($disc->get_discussion()->get_group_id(), $groupid) :
+                    $disc->get_discussion()->get_group_id() == $groupid;
+            });
+        }
         // Count all forum discussion posts.
         $alldiscussionscount = count($discussions);
 
@@ -331,7 +335,7 @@ class discussion_list_mur_pedago {
             'hasanyactions' => $hasanyactions,
             'groupchangemenu' => '', // No group change menu here.
             'hasmore' => ($alldiscussionscount > $pagesize),
-            'notifications' => $this->get_notifications($user, $groupid),
+            'notifications' => $this->get_notifications($user, $currentgroupid),
             'settings' => [
                 'excludetext' => true,
                 'togglemoreicon' => true,
@@ -343,7 +347,7 @@ class discussion_list_mur_pedago {
         ];
 
         if ($forumview['forum']['capabilities']['create']) {
-            $forumview['newdiscussionhtml'] = $this->get_discussion_form($user, $cm, $groupid);
+            $forumview['newdiscussionhtml'] = $this->get_discussion_form($user, $cm, $currentgroupid);
         }
 
         if (!$discussions) {

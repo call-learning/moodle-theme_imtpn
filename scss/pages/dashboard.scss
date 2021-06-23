@@ -5,11 +5,12 @@
     section {
       width: 100%;
     }
-    section.block_calendar_upcoming,
-    section.block_forum_feed
-    {
-      flex: 0 0 50%;
-      width: 50%;
+    @include media-breakpoint-up(lg) {
+      section.block_calendar_upcoming,
+      section.block_forum_feed {
+        flex: 0 0 50%;
+        width: 50%;
+      }
     }
   }
 

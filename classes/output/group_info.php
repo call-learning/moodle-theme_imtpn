@@ -74,13 +74,13 @@ class group_info implements renderable, templatable {
      */
     public function export_for_template(renderer_base $output) {
         global $USER;
+        $data = new stdClass();
         if (!empty($this->group->description) || (!empty($this->group->picture) && empty($this->group->hidepicture))) {
             $context = context_course::instance($this->group->courseid);
             $data = new stdClass();
             $data->name = self::get_group_name($this->group);
             $data->pictureurl = static::get_group_picture_url($this->group, $this->group->courseid, true);
             $data->description = static::get_group_description($this->group);
-
             if (has_capability('moodle/course:managegroups', $context)) {
                 $url = new moodle_url('/group/group.php', ['id' => $this->group->id, 'courseid' => $this->group->courseid]);
                 $data->editurl = $url->out(false);
@@ -92,11 +92,8 @@ class group_info implements renderable, templatable {
                 return $disc->get_discussion()->get_group_id() == $currentgroupid;
             });
             $data->discussioncount = count($alldiscussions);
-
-            return $data;
-        } else {
-            return;
         }
+        return $data;
     }
 
     /**

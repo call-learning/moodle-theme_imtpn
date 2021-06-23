@@ -231,16 +231,13 @@ class mur_pedagogique {
             echo $OUTPUT->box(format_module_intro('forum', $forumrecord, $cm->id), 'generalbox', 'murpedago-intro');
         }
 
-        // Fetch the current groupid.
-        $groupid = groups_get_activity_group($cm, true) ?: null;
-
         $discussionsrenderer = new discussion_list_mur_pedago(
             $forum,
             $PAGE->get_renderer('mod_forum')
         );
 
-        // Blog forums always show discussions newest first.
-        echo $discussionsrenderer->render($USER, $cm, $groupid, $discussionlistvault::SORTORDER_CREATED_DESC,
+        // Blog forums always show discussions (all groups) newest first.
+        echo $discussionsrenderer->render($USER, $cm, null, $discussionlistvault::SORTORDER_CREATED_DESC,
             $pageno, $pagesize, FORUM_MODE_NESTED_V2);
 
         if (!$CFG->forum_usermarksread && forum_tp_is_tracked($forumrecord, $USER)) {
@@ -432,13 +429,17 @@ class mur_pedagogique {
             // Special navigation for Participant pages.
             if ($page->docspath == 'enrol/users') {
                 $groupid = optional_param('group', 0, PARAM_INT);
-                if ($groupid) {
-                    $group = groups_get_group($groupid, '*', MUST_EXIST);
-                    $groupname = group_info::get_group_name($group);
-                    $navbar->add($groupname,
-                        new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $groupid))
-                    );
-                }
+                static::navbar_add_groupname($navbar, $groupid);
+            }
+            // Special navigation for discussion pages.
+            if ($page->pagetype == 'mod-forum-discuss') {
+                // A bit of a hack here.
+                $d      = required_param('d', PARAM_INT); // Discussion ID
+                $vaultfactory = \mod_forum\local\container::get_vault_factory();
+                $discussionvault = $vaultfactory->get_discussion_vault();
+                $discussion = $discussionvault->get_from_id($d);
+                $groupid  = $discussion->get_group_id();
+                static::navbar_add_groupname($navbar, $groupid);
             }
 
             foreach ($allitems as $item) {
@@ -447,6 +448,24 @@ class mur_pedagogique {
 
         }
         return $navbar;
+    }
+
+    /**
+     * Add group name
+     *
+     * @param $navbar
+     * @param $groupid
+     * @throws \dml_exception
+     * @throws \moodle_exception
+     */
+    protected static function navbar_add_groupname(&$navbar, $groupid) {
+        if ($groupid && $groupid > 0) {
+            $group = groups_get_group($groupid, '*', MUST_EXIST);
+            $groupname = group_info::get_group_name($group);
+            $navbar->add($groupname,
+                new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $groupid))
+            );
+        }
     }
 
 }
