@@ -23,6 +23,7 @@
  * @copyright 2020 - CALL Learning - Laurent David <laurent@call-learning.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace theme_imtpn\output;
 defined('MOODLE_INTERNAL') || die();
 
@@ -37,6 +38,7 @@ use moodle_url;
  * Group details page class.
  *
  *  * Very similar to group details
+ *
  * @package   theme_imtpn
  * @copyright 2020 - CALL Learning - Laurent David <laurent@call-learning.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -83,7 +85,13 @@ class group_info implements renderable, templatable {
                 $url = new moodle_url('/group/group.php', ['id' => $this->group->id, 'courseid' => $this->group->courseid]);
                 $data->editurl = $url->out(false);
             }
-            $data->discussioncount = count(mod_forum_get_discussion_summaries($this->forum, $USER, $this->group->id, 0));
+            $currentgroupid = $this->group->id;
+            $alldiscussions = mod_forum_get_discussion_summaries($this->forum, $USER, $currentgroupid, 0);
+
+            $alldiscussions = array_filter($alldiscussions, function($disc) use ($currentgroupid) {
+                return $disc->get_discussion()->get_group_id() == $currentgroupid;
+            });
+            $data->discussioncount = count($alldiscussions);
 
             return $data;
         } else {
@@ -93,6 +101,7 @@ class group_info implements renderable, templatable {
 
     /**
      * Get group name
+     *
      * @param $group
      * @return string
      */
@@ -100,6 +109,7 @@ class group_info implements renderable, templatable {
         $context = context_course::instance($group->courseid);
         return format_string($group->name, true, ['context' => $context]);
     }
+
     /**
      * Get group description
      *
@@ -118,7 +128,7 @@ class group_info implements renderable, templatable {
         $descriptionformat = $group->descriptionformat ?? FORMAT_MOODLE;
         $options = [
             'overflowdiv' => true,
-            'context'     => $context
+            'context' => $context
         ];
         return format_text($description, $descriptionformat, $options);
     }

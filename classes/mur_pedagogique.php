@@ -255,13 +255,13 @@ class mur_pedagogique {
     }
 
     /**
-     * @param $forumid
-     * @param $groupid
-     * @param $mode
-     * @param $search
-     * @param $sortorder
-     * @param $pageno
-     * @param $pagesize
+     * @param int $forumid
+     * @param int|array $groupid
+     * @param int $mode
+     * @param string $search
+     * @param int $sortorder
+     * @param int $pageno
+     * @param int $pagesize
      * @throws \coding_exception
      * @throws \moodle_exception
      */
