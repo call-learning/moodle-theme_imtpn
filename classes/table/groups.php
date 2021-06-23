@@ -118,13 +118,28 @@ class groups extends table_sql implements dynamic_table {
         if ($filterset->has_filter('name')) {
             $groupname = $filterset->get_filter('name')->current();
             if (!empty($groupname)) {
-                $allaccents = explode(',', self::ACCENTUATED_CHARACTERS);
-                $normalisedgroupname = str_replace($allaccents, '_', $groupname);
-                // We replace the accentuated character by _ so postgresql can work with accentuated chars.
-                $this->sql->where .= ' AND ' . $DB->sql_like('g.name', ':groupname', false);
-                $this->sql->params['groupname'] = "%{$normalisedgroupname}%";
+                list($where, $params) = static::filter_by_groupname($groupname);
+                $this->sql->where .= $where;
+                $this->sql->params = array_merge($this->sql->params, $params);
             }
         }
+    }
+
+    /**
+     * Filter by group name
+     *
+     * @param $groupname
+     */
+    public static function filter_by_groupname($groupname) {
+        global $DB;
+        $where = "";
+        $params = [];
+        $allaccents = explode(',', self::ACCENTUATED_CHARACTERS);
+        $normalisedgroupname = str_replace($allaccents, '_', $groupname);
+        // We replace the accentuated character by _ so postgresql can work with accentuated chars.
+        $where .= ' AND ' . $DB->sql_like('g.name', ':groupname', false);
+        $params['groupname'] = "%{$normalisedgroupname}%";
+        return [$where, $params];
     }
 
     /**
