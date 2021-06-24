@@ -4,3 +4,19 @@
 #page-header .card {
     border: none;
 }
+// Not enough contrast on the tabs.
+.format-onetopic ul.nav-tabs li a .tab_content.dimmed .sectionname {
+    color: $gray-700;
+}
+
+#page-my-index .db-action-block {
+    width: 100%;
+    border-color: $primary;
+    border-width: 1px;
+    color: $primary;
+}
+
+// Fix button secondary contrast.
+a:not([href]).btn-secondary {
+    color: white;
+}

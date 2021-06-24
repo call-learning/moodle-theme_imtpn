@@ -19,6 +19,9 @@
     font-size: 1.5em;
     text-align: center;
   }
+  .sfield-accroche {
+    text-align: center;
+  }
 }
 
 .syllabus-head {
@@ -27,6 +30,9 @@
   }
 
   .sfield-content {
+    @include media-breakpoint-up(md) {
+      white-space: nowrap;
+    }
     p {
       display: none; // Moodle always insert an empty paragraph in text area content.
     }
@@ -77,6 +83,10 @@
   max-width: 440px;
   margin-left: 30px;
   flex-shrink: 0;
+  @include media-breakpoint-up(md) {
+    box-shadow: 0 2px 14px -4px rgb(0 0 0 / 25%);
+    padding: 1.5em;
+  }
 
   @include media-breakpoint-down(lg) {
     width: 300px;
@@ -84,11 +94,19 @@
 
   @include media-breakpoint-down(md) {
     width: 100%;
-    margin-left: 0;
+    margin-left: auto;
+    margin-bottom: 1em;
   }
 
   .list-group-item {
     border: 0;
     padding: 0;
+  }
+}
+
+.syllabus-action {
+  form legend.ftoggler {
+    padding-left: initial;
+    color: $imt-darkgrey;
   }
 }
