@@ -108,6 +108,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         }
         return "/theme/{$this->page->theme->name}";
     }
+
     /**
      * Should we display the logo ?
      *
@@ -444,4 +445,24 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         return $this->render_from_template('core/navbar', $navbar);
     }
 
+    /**
+     * Allow for additional user menu in navigation bar in case we have no boost navbar.
+     *
+     * @param $opts stdClass $returnobj navigation information object (see @user_get_user_navigation_info)
+     * @param $course
+     */
+    protected function additional_user_menus_nonavbar(&$opts, $course) {
+
+        list($urltext, $url) = \local_resourcelibrary\locallib\utils::get_catalog_url();
+        $opts->navitems[] = (object) [
+            'itemtype' => 'link',
+            'url' => $url,
+            'title' => $urltext,
+            'titleidentifier' => 'resourcelibrary',
+            'pix' => 'i/course'
+        ];
+
+        // Add $opts->navitems[] here.
+        // Nothing for now.
+    }
 }

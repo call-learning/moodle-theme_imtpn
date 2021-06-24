@@ -84,7 +84,7 @@
   margin-left: 30px;
   flex-shrink: 0;
   @include media-breakpoint-up(md) {
-    box-shadow: 0 2px 14px -4px rgb(0 0 0 / 25%);
+    box-shadow: 5px 5px 10px 0px rgb(0 0 0 / 25%);
     padding: 1.5em;
   }
 

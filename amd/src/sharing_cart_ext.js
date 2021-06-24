@@ -20,11 +20,14 @@
 
 import $ from 'jquery';
 import config from 'core/config';
+import {addIconToContainerWithPromise} from 'core/loadingicon';
 
 export const init = () => {
     document.addEventListener('resource_library_card_rendered', () => {
         const addToBasketCB = (event) => {
             if ($) {
+                // Create a spinning icon on the card.
+                const iconPromise = addIconToContainerWithPromise(event.currentTarget);
                 const courseid = document.querySelector('.local-resourcelibrary.block-cards').dataset.parentId;
                 $.post(config.wwwroot + '/blocks/sharing_cart/rest.php', {
                     "action": "backup",
@@ -32,16 +35,17 @@ export const init = () => {
                     "userdata": false,
                     "sesskey": config.sesskey,
                     "courseid": courseid
-                    }).then(() => {
+                }).then(() => {
                     $.post(config.wwwroot + '/blocks/sharing_cart/rest.php',
                         {
                             "action": "render_tree",
-                            "courseid" : courseid
+                            "courseid": courseid
                         },
-                        function(response) {
+                        function (response) {
                             $('.block_sharing_cart .tree').replaceWith($(response));
                             $.init_item_tree();
                         }, "html");
+                    iconPromise.resolve();
                 });
             }
         };

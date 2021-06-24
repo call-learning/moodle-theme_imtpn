@@ -79,7 +79,18 @@ class setup {
 
         $oldpage = $PAGE;
         $PAGE = $page;
-        static::setup_page_blocks($page, self::DASHBOARD_BLOCK_DEFINITION);
+        $dashboarddef = self::DASHBOARD_BLOCK_DEFINITION;
+        $murpedagocm = mur_pedagogique::get_cm();
+        if ($murpedagocm) {
+            $forumid = $murpedagocm->instance;
+            $dashboarddef = array_map(function($b) use ($forumid) {
+                if ($b['blockname'] == 'forum_feed') {
+                    $b['configdata']['forumid'] = $forumid;
+                }
+                return $b;
+            }, self::DASHBOARD_BLOCK_DEFINITION);
+        }
+        static::setup_page_blocks($page, $dashboarddef);
         my_reset_page_for_all_users();
         // Note here: this will only define capabilities for the default page. If we
         // want the dashboard to work as expected we also need to set forcedefaultmymoodle to true.
@@ -92,8 +103,37 @@ class setup {
         $PAGE = $page;
         static::setup_page_blocks($page, self::HOMEPAGE_BLOCK_DEFINITION);
         $PAGE = $oldpage;
+
+        // Setup sharing cart
+        if ($DB->record_exists('block', array('name' => 'sharing_cart'))) {
+            // Setup Ressource library activities.
+            $page = new moodle_page();
+            $page->set_pagetype('resource-library-activities');
+            $page->set_docs_path('');
+            $page->set_context(context_system::instance());
+            $PAGE = $page;
+            static::setup_page_blocks($page, array(
+                    array(
+                        'blockname' => 'sharing_cart',
+                        'showinsubcontexts' => '1',
+                        'defaultregion' => 'side-right',
+                        'defaultweight' => '0',
+                        'configdata' => [],
+                        'capabilities' => array()
+                    ),
+                )
+            );
+            $PAGE = $oldpage;
+
+        }
     }
 
+    /**
+     * Setup block for mur pedagogique
+     *
+     * @throws \coding_exception
+     * @throws \dml_exception
+     */
     public static function setup_murpedago_blocks() {
         $cm = mur_pedagogique::get_cm();
         if ($cm) {
@@ -325,7 +365,7 @@ class setup {
             'showinsubcontexts' => '0',
             'defaultregion' => 'content',
             'defaultweight' => '1',
-            'configdata' => array('title' => 'Les news du mur pédagogique', 'maxtextlength' => 75),
+            'configdata' => array('title' => 'Les news du mur pédagogique', 'maxtextlength' => 75, 'maxfeed' => 5),
             'capabilities' => array()
         ),
         array(
