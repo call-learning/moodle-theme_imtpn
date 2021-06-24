@@ -25,7 +25,7 @@
  */
 
 require_once(__DIR__ . '/../../../config.php');
-global $SITE, $CFG, $PAGE, $USER, $OUTPUT;
+global $SITE, $CFG, $DB, $PAGE, $USER, $OUTPUT;
 
 $pageid = optional_param('id', null, PARAM_INT);
 $pageidnumber = optional_param('p', null, PARAM_ALPHANUMEXT);
@@ -70,13 +70,23 @@ $url = new moodle_url("$CFG->wwwroot/local/resourcelibrary/index.php");
 $button = new single_button($url, get_string('viewcatalog', 'theme_imtpn'), 'post', true);
 $currentbuttons .= $OUTPUT->render($button);
 
-$url = new moodle_url("$CFG->wwwroot/course/edit.php", array('category' =>
-    core_course_category::get_default()->id, 'returnto' => $baseurl->out()));
-$button = new single_button($url, get_string('createcourse', 'theme_imtpn'), 'post', true);
-$currentbuttons .= $OUTPUT->render($button);
-
-$currentbuttons .= $OUTPUT->edit_button($baseurl);
-
+// Now check if user can either create a new course.
+$defaultcategoryid = core_course_category::get_default()->id;
+$category = $DB->get_record('course_categories', array('id' => $defaultcategoryid), '*');
+$cancreate = isloggedin();
+if ($category) {
+    $catcontext = context_coursecat::instance($category->id);
+    $cancreate = $cancreate && has_capability('moodle/course:create', $catcontext);
+    if ($cancreate) {
+        $createurl = new moodle_url("$CFG->wwwroot/course/edit.php", array('category' =>
+            $category->id, 'returnto' => $baseurl->out()));
+        $button = new single_button($createurl, get_string('createcourse', 'theme_imtpn'), 'post', true);
+        $currentbuttons .= $OUTPUT->render($button);
+    }
+}
+if (has_capability('theme/imtpn:editcataloguethemes', $context)) {
+    $currentbuttons .= $OUTPUT->edit_button($baseurl);
+}
 $PAGE->set_button($currentbuttons);
 
 $PAGE->blocks->set_default_region('content');
