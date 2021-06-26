@@ -1,19 +1,26 @@
-#region-main  {
+#region-main {
     border: none;
 }
+
 #page-header .card {
     border: none;
 }
+
 // Not enough contrast on the tabs.
 .format-onetopic ul.nav-tabs li a .tab_content.dimmed .sectionname {
     color: $gray-700;
 }
 
-#page-my-index .db-action-block {
-    width: 100%;
-    border-color: $primary;
-    border-width: 1px;
-    color: $primary;
+#page-my-index {
+    .db-action-block {
+        width: 100%;
+        border-color: $primary;
+        border-width: 1px;
+        color: $primary;
+    }
+    #page-header .card {
+        background-color: transparent;
+    }
 }
 
 // Fix button secondary contrast.
