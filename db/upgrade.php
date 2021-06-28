@@ -44,5 +44,9 @@ function xmldb_theme_imtpn_upgrade($oldversion) {
         theme_imtpn\setup::install_update();
         upgrade_plugin_savepoint(true, 2021011914, 'theme', 'imtpn');
     }
+    if ($oldversion < 2021011915) {
+        theme_imtpn\setup::install_update();
+        upgrade_plugin_savepoint(true, 2021011915, 'theme', 'imtpn');
+    }
     return true;
 }

@@ -175,6 +175,7 @@ class mur_pedagogique {
         $PAGE->set_heading($course->fullname);
         $PAGE->set_pagelayout('incourse');
         $PAGE->set_cm($cm);
+        $PAGE->set_pagetype('mod-forum-view');
 
         $currentbuttons = $PAGE->button;
         $currentbuttons .= $OUTPUT->edit_button($url);
