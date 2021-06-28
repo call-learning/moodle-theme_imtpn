@@ -201,7 +201,6 @@ if (isloggedin() && !isguestuser($user) && !is_mnet_remote_user($user)) {
         $url = new moodle_url('/user/editadvanced.php', array('id' => $user->id, 'course' => $courseid,
             'returnto' => 'profile'));
         $sbutton = new single_button($url, get_string('editmyprofile'), 'post', true);
-        $button = $OUTPUT->single_button($url, get_string('editmyprofile'), ['primary' => false]);
         $button = $OUTPUT->render($sbutton);
         $PAGE->set_button($PAGE->button . $button);
     } else if ((has_capability('moodle/user:editprofile', $usercontext) && !is_siteadmin($user))
