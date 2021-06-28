@@ -31,12 +31,9 @@
         <div class="footer__triangle-3"></div>
     {{/additionalinfo.isloggedin}}
     <div class="imtpn-container">
-    {{^additionalinfo.isloggedin}}
     <div class="footer__text">
-        {{#str}}footer_message, theme_imtpn{{/str}}
         {{#additionalinfo.footercontent}} {{{ additionalinfo.footercontent }}} {{/additionalinfo.footercontent}}
     </div>
-    {{/additionalinfo.isloggedin}}
     <div class="footer__links">
         {{{ output.standard_footer_html }}}
         {{{ output.login_info }}}
