@@ -17,7 +17,7 @@
 /**
  * Discussion list renderer.
  *
- * @package    mod_forum
+ * @package    theme_imtpn
  * @copyright  2019 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -45,7 +45,6 @@ use moodle_url;
 use paging_bar;
 use renderer_base;
 use stdClass;
-use theme_imtpn\local\utils;
 use theme_imtpn\mur_pedagogique;
 
 defined('MOODLE_INTERNAL') || die();
@@ -53,7 +52,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * The discussion list renderer.
  *
- * @package    mod_forum
+ * @package    theme_imtpn
  * @copyright  2019 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -107,7 +106,6 @@ class discussion_list_mur_pedago {
      *
      * @param forum_entity $forum The forum entity to be rendered
      * @param renderer_base $renderer The renderer used to render the view
-     * @param string $template
      * @param notification[] $notifications A list of any notifications to be displayed within the page
      */
     public function __construct(
@@ -184,7 +182,7 @@ class discussion_list_mur_pedago {
                     // TODO: Find a better solution due to language differences when defining the singular and plural form.
                     $post->isreplyplural = $post->discussionrepliescount != 1 ? true : false;
                     $post->isunreadplural = $post->discussionunreadscount != 1 ? true : false;
-                    $groups = []; // Cache the group names;
+                    $groups = []; // Cache the group names.
                     if (!empty($discussionentries[$post->discussionid])) {
                         $groupid = $discussionentries[$post->discussionid]->get_group_id();
                         $courseid = $discussionentries[$post->discussionid]->get_course_id();

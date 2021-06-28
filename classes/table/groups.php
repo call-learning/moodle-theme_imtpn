@@ -53,7 +53,15 @@ require_once($CFG->libdir . '/tablelib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class groups extends table_sql implements dynamic_table {
+    /**
+     * Display limit for members (5 by default)
+     */
     const MEMBER_DISPLAY_LIMIT = 5;
+    /**
+     * Accentuated characters.
+     */
+    const ACCENTUATED_CHARACTERS = "a,e,i,o,u,ç,æ,œ,á,é,í,ó,ú,à,è,ì,ò,ù,ä,ë,ï,ö,ü,ÿ,â,ê,î,ô,û,å,ø,Ø,Å,Á,À,Â,Ä,È,É,Ê,Ë,Í,Î,Ï" .
+    ",Ì,Ò,Ó,Ô,Ö,Ú,Ù,Û,Ü,Ÿ,Ç,Æ,Œ";
     /**
      * @var int $courseid The course id
      */
@@ -67,6 +75,12 @@ class groups extends table_sql implements dynamic_table {
      */
     protected $context;
 
+    /**
+     * groups constructor.
+     *
+     * @param string $uniqueid
+     * @throws \coding_exception
+     */
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         $this->sql = new stdClass();
@@ -128,7 +142,8 @@ class groups extends table_sql implements dynamic_table {
     /**
      * Filter by group name
      *
-     * @param $groupname
+     * @param string $groupname
+     * @return array
      */
     public static function filter_by_groupname($groupname) {
         global $DB;
@@ -143,15 +158,9 @@ class groups extends table_sql implements dynamic_table {
     }
 
     /**
-     * Accentuated characters.
-     */
-    const ACCENTUATED_CHARACTERS = "a,e,i,o,u,ç,æ,œ,á,é,í,ó,ú,à,è,ì,ò,ù,ä,ë,ï,ö,ü,ÿ,â,ê,î,ô,û,å,ø,Ø,Å,Á,À,Â,Ä,È,É,Ê,Ë,Í,Î,Ï" .
-    ",Ì,Ò,Ó,Ô,Ö,Ú,Ù,Û,Ü,Ÿ,Ç,Æ,Œ";
-
-    /**
      * Column name
      *
-     * @param $row
+     * @param object $row
      * @return string
      */
     public function col_name($row) {
@@ -169,13 +178,27 @@ class groups extends table_sql implements dynamic_table {
         return $this->context;
     }
 
+    /**
+     * Group image column
+     *
+     * @param object $row
+     * @return string
+     * @throws dml_exception
+     */
     public function col_groupimage($row) {
         $group = groups_get_group($row->groupid, '*', MUST_EXIST);
         return html_writer::img(group_info::get_group_picture_url($group, $this->courseid, true),
-            $row->groupname,array('class'=>'d-none d-lg-table-cell')
+            $row->groupname, array('class' => 'd-none d-lg-table-cell')
         );
     }
 
+    /**
+     * Members column
+     *
+     * @param object $row
+     * @return string
+     * @throws \coding_exception
+     */
     public function col_members($row) {
         global $OUTPUT;
         $extrafields = get_extra_user_fields($this->get_context());
@@ -196,6 +219,14 @@ class groups extends table_sql implements dynamic_table {
         return $html . $additionalmessage;
     }
 
+    /**
+     * Link to group column
+     *
+     * @param object $row
+     * @return string
+     * @throws \moodle_exception
+     * @throws dml_exception
+     */
     public function col_grouplink($row) {
         $group = groups_get_group($row->groupid, '*', MUST_EXIST);
         return html_writer::link(

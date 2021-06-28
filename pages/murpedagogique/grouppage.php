@@ -44,7 +44,7 @@ $context = context_course::instance($course->id, MUST_EXIST);
 
 $cm = mur_pedagogique::get_cm();
 if (!$cm) {
-    print_error('cmshouldbedefined', 'theme_imtpn');
+    throw new moodle_exception('cmshouldbedefined', 'theme_imtpn');
 }
 require_course_login($course, true, $cm);
 global $PAGE, $OUTPUT;

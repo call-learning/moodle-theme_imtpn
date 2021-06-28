@@ -24,17 +24,22 @@
 
 namespace theme_imtpn;
 
+use coding_exception;
 use context_course;
 use context_helper;
 use context_system;
 use context_user;
+use core\session\manager;
+use core_component;
 use core_tag_tag;
 use core_user;
 use core_user\output\myprofile\category;
 use core_user\output\myprofile\node;
 use core_user\output\myprofile\tree;
+use dml_exception;
 use html_writer;
 use moodle_url;
+use pix_icon;
 use stdClass;
 use theme_imtpn\local\utils;
 use theme_imtpn\output\courses_thumbnails;
@@ -44,10 +49,20 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Class mur_pedagogique
  *
- * @package theme_imtpn
+ * @package   theme_imtpn
+ * @copyright 2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class profile {
 
+    /**
+     * Inject CSS into the page
+     *
+     * @param string $themename
+     * @return string
+     * @throws coding_exception
+     * @throws dml_exception
+     */
     public static function inject_scss($themename) {
         $profileimageurl = utils::get_profile_page_image_url($themename);
         if (empty($profileimageurl)) {
@@ -86,8 +101,8 @@ class profile {
      * @param null $course Course object
      *
      * @return tree Fully build tree to be rendered on my profile page.
-     * @throws \coding_exception
-     * @throws \dml_exception
+     * @throws coding_exception
+     * @throws dml_exception
      */
     public static function build_tree($user, $iscurrentuser, $course = null) {
         global $CFG;
@@ -100,7 +115,7 @@ class profile {
         self::core_myprofile_navigation($tree, $user, $iscurrentuser, $course);
 
         // Core components.
-        $components = \core_component::get_core_subsystems();
+        $components = core_component::get_core_subsystems();
         foreach ($components as $component => $directory) {
             if (empty($directory)) {
                 continue;
@@ -138,39 +153,6 @@ class profile {
     }
 
     /**
-     * Return true if the component can be displayed
-     *
-     * @param string $component a name of a component of the profile page.
-     * @param null $module a module name (for subcomponents)
-     * @return bool
-     * @throws \dml_exception
-     */
-    protected static function check_display($component, $module = null) {
-        static $simplified = null, $excludedcomponents = null, $excludedmodules = null;
-        if (is_null($simplified)) {
-            $simplified = get_config('theme_imtpn', 'simplifiedprofilepage');
-        }
-        if (is_null($excludedcomponents)) {
-            $excludedcomponentscfg = get_config('theme_imtpn', 'profilecomponentsexclusion');
-            $excludedcomponents = array_map('trim',
-                explode(',', $excludedcomponentscfg ? $excludedcomponentscfg : ''));
-        }
-        if (is_null($excludedmodules)) {
-            $excludedmodulescfg = get_config('theme_imtpn', 'profilemodulessexclusion');
-            $excludedmodules = array_map('trim',
-                explode(',', $excludedmodulescfg ? $excludedmodulescfg : ''));
-        }
-        if ($simplified) {
-            if (empty($module)) {
-                return !in_array($component, $excludedcomponents);
-            } else {
-                return !in_array("{$component}_{$module}", $excludedmodules);
-            }
-        }
-        return !$simplified;
-    }
-
-    /**
      * Defines core nodes for my profile navigation tree.
      *
      * @param tree $tree Tree object
@@ -179,6 +161,9 @@ class profile {
      * @param stdClass $course course object
      *
      * @return bool
+     * @throws \moodle_exception
+     * @throws coding_exception
+     * @throws dml_exception
      */
     public static function core_myprofile_navigation(tree $tree, $user, $iscurrentuser, $course) {
         global $CFG, $USER, $DB, $PAGE, $OUTPUT;
@@ -230,7 +215,7 @@ class profile {
 
         // Login as ...
         if (!$user->deleted && !$iscurrentuser &&
-            !\core\session\manager::is_loggedinas() && has_capability('moodle/user:loginas',
+            !manager::is_loggedinas() && has_capability('moodle/user:loginas',
                 $courseorsystemcontext) && !is_siteadmin($user->id)) {
             $url = new moodle_url('/course/loginas.php',
                 array('id' => $courseid, 'user' => $user->id, 'sesskey' => sesskey()));
@@ -279,7 +264,7 @@ class profile {
             or (isset($identityfields['email']) and $canviewuseridentity)
         ) {
             $node = new node('contact', 'email', '', null, null,
-                obfuscate_mailto($user->email, ''), new \pix_icon('t/email', get_string('email')));
+                obfuscate_mailto($user->email, ''), new pix_icon('t/email', get_string('email')));
             $tree->add_node($node);
         }
 
@@ -292,7 +277,7 @@ class profile {
 
         if (!isset($hiddenfields['country']) && $user->country) {
             $node = new node('contact', 'country', '', null, null,
-                get_string($user->country, 'countries'), new \pix_icon('t/sendmessage', get_string('country')));
+                get_string($user->country, 'countries'), new pix_icon('t/sendmessage', get_string('country')));
             $tree->add_node($node);
         }
 
@@ -491,7 +476,7 @@ class profile {
             }
         }
 
-        // First access. (Why only for sites ?)
+        // First access. (Why only for sites ?).
         if (!isset($hiddenfields['firstaccess']) && empty($course)) {
             if ($user->firstaccess) {
                 $datestring = userdate($user->firstaccess) . "&nbsp; (" . format_time(time() - $user->firstaccess) . ")";
@@ -547,5 +532,38 @@ class profile {
                 $tree->add_node($node);
             }
         }
+    }
+
+    /**
+     * Return true if the component can be displayed
+     *
+     * @param string $component a name of a component of the profile page.
+     * @param null $module a module name (for subcomponents)
+     * @return bool
+     * @throws dml_exception
+     */
+    protected static function check_display($component, $module = null) {
+        static $simplified = null, $excludedcomponents = null, $excludedmodules = null;
+        if (is_null($simplified)) {
+            $simplified = get_config('theme_imtpn', 'simplifiedprofilepage');
+        }
+        if (is_null($excludedcomponents)) {
+            $excludedcomponentscfg = get_config('theme_imtpn', 'profilecomponentsexclusion');
+            $excludedcomponents = array_map('trim',
+                explode(',', $excludedcomponentscfg ? $excludedcomponentscfg : ''));
+        }
+        if (is_null($excludedmodules)) {
+            $excludedmodulescfg = get_config('theme_imtpn', 'profilemodulessexclusion');
+            $excludedmodules = array_map('trim',
+                explode(',', $excludedmodulescfg ? $excludedmodulescfg : ''));
+        }
+        if ($simplified) {
+            if (empty($module)) {
+                return !in_array($component, $excludedcomponents);
+            } else {
+                return !in_array("{$component}_{$module}", $excludedmodules);
+            }
+        }
+        return !$simplified;
     }
 }

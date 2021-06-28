@@ -19,14 +19,14 @@
  *
  * We modified it so it shows the syllabus instead.
  *
- * @package    core_enrol
+ * @package    theme_imtpn
  * @copyright  2010 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
+// phpcs:disable
+// @codingStandardsIgnoreStart
 $id = required_param('id', PARAM_INT);
 $returnurl = optional_param('returnurl', 0, PARAM_LOCALURL);
-
 if (!isloggedin()) {
     $referer = get_local_referer();
     if (empty($referer)) {

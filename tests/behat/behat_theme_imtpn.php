@@ -29,6 +29,8 @@
 require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
 
 use Behat\Gherkin\Node\TableNode as TableNode;
+use theme_imtpn\setup;
+
 /**
  * Imtpn theme steps definitions.
  *
@@ -45,6 +47,6 @@ class behat_theme_imtpn extends behat_base {
      * @Given /^I reset the murpedagogique blocks$/
      */
     public function i_reset_the_murpedagogique_blocks() {
-        \theme_imtpn\setup::setup_murpedago_blocks();
+        setup::setup_murpedago_blocks();
     }
 }

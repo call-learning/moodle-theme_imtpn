@@ -1,4 +1,4 @@
-@javascript @theme_imtpn
+@theme @javascript @theme_imtpn
 Feature: I check that the user profile has the right informaiton
   The user profile should have been modified to include only relevant information
 
@@ -18,7 +18,7 @@ Feature: I check that the user profile has the right informaiton
       | student1 | C1     | student        |
       | student2 | C2     | student        |
     Given the following config values are set as admin:
-      | simplifiedprofilepage      | 1                                                                  | theme_imtpn |
+      | simplifiedprofilepage      | 1                                                                     | theme_imtpn |
       | profilecomponentsexclusion | report,tool,gradereport,loginactivity,badges,blog,miscellaneous,notes | theme_imtpn |
 
   Scenario: As a teacher I should see my profiles with my courses

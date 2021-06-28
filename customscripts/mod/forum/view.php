@@ -17,13 +17,13 @@
 /**
  * Displays the list of discussions in a forum.
  *
- * @package   mod_forum
+ * @package   theme_imtpn
  * @copyright 2019 Andrew Nicols <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
+// phpcs:disable
+// @codingStandardsIgnoreStart
 use mod_forum\grades\forum_gradeitem;
-
 $vaultfactory = mod_forum\local\container::get_vault_factory();
 $forumvault = $vaultfactory->get_forum_vault();
 
@@ -37,7 +37,6 @@ $search = optional_param('search', '', PARAM_CLEAN);
 $pageno = optional_param('p', $pageno, PARAM_INT);
 $pagesize = optional_param('s', 0, PARAM_INT);
 $sortorder = optional_param('o', null, PARAM_INT);
-
 if (!$cmid && !$forumid) {
     print_error('missingparameter');
 }

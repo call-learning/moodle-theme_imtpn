@@ -26,14 +26,22 @@ namespace theme_imtpn\local;
 
 use moodle_url;
 
+/**
+ * Trait custom_menu_advanced_trait
+ *
+ * @package   theme_imtpn
+ * @copyright 2020 - CALL Learning - Laurent David <laurent@call-learning.fr>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 trait custom_menu_advanced_trait {
     /**
      * Adds a custom menu item as a child of this node given its properties.
      *
      * @param string $text
-     * @param moodle_url $url
-     * @param string $title
-     * @param int $sort
+     * @param moodle_url|null $url
+     * @param null $title
+     * @param null $sort
+     * @param null $iconclasses
      * @return custom_menu_item_advanced
      */
     public function add($text, moodle_url $url = null, $title = null, $sort = null, $iconclasses = null) {
@@ -46,6 +54,11 @@ trait custom_menu_advanced_trait {
         return $this->children[$key];
     }
 
+    /**
+     * Add icon to context for template
+     *
+     * @param object $context
+     */
     protected function add_icon_to_context(&$context) {
         if ($this->iconclasses) {
             $context->iconclasses = $this->iconclasses;

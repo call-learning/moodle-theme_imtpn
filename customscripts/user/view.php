@@ -17,16 +17,16 @@
 /**
  * Display profile for a particular user
  *
- * @package core_user
+ * @package theme_imtpn
  * @copyright 1999 Martin Dougiamas  http://dougiamas.com
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
+// phpcs:disable
+// @codingStandardsIgnoreStart
 require_once($CFG->dirroot.'/user/profile/lib.php');
 require_once($CFG->dirroot.'/user/lib.php');
 require_once($CFG->libdir . '/filelib.php');
 require_once($CFG->libdir . '/badgeslib.php');
-
 $id             = optional_param('id', 0, PARAM_INT); // User id.
 $courseid       = optional_param('course', SITEID, PARAM_INT); // course id (defaults to Site).
 $showallcourses = optional_param('showallcourses', 0, PARAM_INT);

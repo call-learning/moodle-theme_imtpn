@@ -1,4 +1,4 @@
-@javascript @theme_imtpn
+@theme @javascript @theme_imtpn
 Feature: Mur pedagogique test cases
   We can access the mur pedagogique and associated groups
 

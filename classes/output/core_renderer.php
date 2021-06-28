@@ -24,12 +24,18 @@
 
 namespace theme_imtpn\output;
 
+use coding_exception;
 use context_course;
 use context_header;
 use context_system;
+use core_message\api;
+use core_message\helper;
 use core_userfeedback;
 use custom_menu;
+use dml_exception;
 use html_writer;
+use local_resourcelibrary\locallib\utils;
+use moodle_exception;
 use moodle_url;
 use single_select;
 use stdClass;
@@ -48,6 +54,11 @@ defined('MOODLE_INTERNAL') || die;
 class core_renderer extends \theme_clboost\output\core_renderer {
 
     /**
+     * Size of the profile image
+     */
+    const PROFILE_IMAGE_SIZE = 150;
+
+    /**
      * Add more info that can then be used in the mustache template.
      *
      * For example {{# additionalinfo.isloggedin }} {{/ additionalinfo.isloggedin }}
@@ -61,53 +72,10 @@ class core_renderer extends \theme_clboost\output\core_renderer {
     }
 
     /**
-     * Get Logo URL
-     * If it has not been overriden by core_admin config, serve the logo in pix
-     *
-     * @param null $maxwidth
-     * @param int $maxheight
-     * @return bool|false|\moodle_url
-     */
-    public function get_logo_url($maxwidth = null, $maxheight = 200) {
-        $path = $this->get_current_theme_base_url();
-        $logourl = new \moodle_url("{$path}/pix/logos/logo-imt-dark.png");
-        if (!isloggedin() || isguestuser()) {
-            // If we are not logged in, the logo should be white instead.
-            $logourl = new \moodle_url("{$path}/pix/logos/logo-imt-white.png");
-        }
-        return $logourl;
-    }
-
-    /**
      * Get the compact logo URL.
      *
      * @return string
      */
-    /**
-     * Get the compact logo URL.
-     *
-     * @param int $maxwidth
-     * @param int $maxheight
-     * @return bool|false|\moodle_url
-     */
-    public function get_compact_logo_url($maxwidth = 100, $maxheight = 100) {
-        $path = $this->get_current_theme_base_url();
-        $compactlogourl = new \moodle_url("{$path}/pix/logos/logo-imt-dark.png");
-        if (!isloggedin() || isguestuser()) {
-            // If we are not logged in, the logo should be white instead.
-            $compactlogourl = new \moodle_url("{$path}/pix/logos/logo-imt-white.png");
-        }
-
-        return $compactlogourl;
-    }
-
-    public function get_current_theme_base_url() {
-        // TODO: support theme dir setting.
-        if (empty($this->page->theme->name)) {
-            return "/theme/imtpn";
-        }
-        return "/theme/{$this->page->theme->name}";
-    }
 
     /**
      * Should we display the logo ?
@@ -120,58 +88,45 @@ class core_renderer extends \theme_clboost\output\core_renderer {
     }
 
     /**
-     * Renders a custom menu object (located in outputcomponents.php)
+     * Get the compact logo URL.
      *
-     * The custom menu this method produces makes use of the YUI3 menunav widget
-     * and requires very specific html elements and classes.
-     *
-     * @staticvar int $menucount
-     * @param custom_menu $menu
-     * @return string
+     * @param int $maxwidth
+     * @param int $maxheight
+     * @return bool|false|moodle_url
      */
-    protected function render_custom_menu(custom_menu $menu) {
-        global $CFG, $USER;
-
-        $loggedin = isloggedin() && !isguestuser(); // Check if really logged in and not just as a guest.
-        if ($loggedin) {
-            $this->add_if_not_exist($menu, new moodle_url('/my'), get_string('mymoodle', 'my'));
-        }
-        if (isloggedin() && !isguestuser() && mur_pedagogique::has_access($USER->id)) {
-            $menu->add(get_string('murpedagogique', 'theme_imtpn'), mur_pedagogique::get_url());
-        }
-        if (!empty($CFG->enableresourcelibrary)) {
-            $this->add_if_not_exist($menu, new moodle_url('/theme/imtpn/pages/themescat.php'),
-                get_string('catalogue', 'theme_imtpn'), 'fa fa-star-o text-primary');
-        }
-        if (!$menu->has_children()) {
-            return '';
+    public function get_compact_logo_url($maxwidth = 100, $maxheight = 100) {
+        $path = $this->get_current_theme_base_url();
+        $compactlogourl = new moodle_url("{$path}/pix/logos/logo-imt-dark.png");
+        if (!isloggedin() || isguestuser()) {
+            // If we are not logged in, the logo should be white instead.
+            $compactlogourl = new moodle_url("{$path}/pix/logos/logo-imt-white.png");
         }
 
-        $content = '';
-        foreach ($menu->get_children() as $item) {
-            $context = $item->export_for_template($this);
-            $content .= $this->render_from_template('core/custom_menu_item', $context);
-        }
-
-        return $content;
+        return $compactlogourl;
     }
 
-    protected function add_if_not_exist(custom_menu_advanced $menu, moodle_url $url, $label, $class = '') {
-        foreach ($menu->get_children() as $child) {
-            if ($url->out_omit_querystring() == $child->get_url()->out_omit_querystring()) {
-                return;
-            }
+    /**
+     * Get current theme base url
+     *
+     * @return string
+     */
+    public function get_current_theme_base_url() {
+        // TODO: support theme dir setting.
+        if (empty($this->page->theme->name)) {
+            return "/theme/imtpn";
         }
-        $menu->add($label, $url, null, null, $class);
+        return "/theme/{$this->page->theme->name}";
     }
 
     /**
      * Lang menu renderer
      *
-     * {@link core_renderer::render_custom_menu()} instead.
+     * {@see core_renderer::render_custom_menu()} instead.
      *
      * @param string $custommenuitems - custom menuitems set by theme instead of global theme settings
      * @return string
+     * @throws coding_exception
+     * @throws moodle_exception
      */
     public function lang_menu($custommenuitems = '') {
         global $CFG;
@@ -219,10 +174,13 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      * and then configuring the custommenu config setting as described.
      *
      * Theme developers: DO NOT OVERRIDE! Please override function
-     * {@link core_renderer::render_custom_menu()} instead.
+     * {@see core_renderer::render_custom_menu()} instead.
      *
      * @param string $custommenuitems - custom menuitems set by theme instead of global theme settings
      * @return string
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws moodle_exception
      */
     public function custom_menu($custommenuitems = '') {
         global $CFG;
@@ -235,6 +193,62 @@ class core_renderer extends \theme_clboost\output\core_renderer {
     }
 
     /**
+     * Renders a custom menu object (located in outputcomponents.php)
+     *
+     * The custom menu this method produces makes use of the YUI3 menunav widget
+     * and requires very specific html elements and classes.
+     *
+     * @param custom_menu $menu
+     * @return string
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws moodle_exception
+     */
+    protected function render_custom_menu(custom_menu $menu) {
+        global $CFG, $USER;
+
+        $loggedin = isloggedin() && !isguestuser(); // Check if really logged in and not just as a guest.
+        if ($loggedin) {
+            $this->add_if_not_exist($menu, new moodle_url('/my'), get_string('mymoodle', 'my'));
+        }
+        if (isloggedin() && !isguestuser() && mur_pedagogique::has_access($USER->id)) {
+            $menu->add(get_string('murpedagogique', 'theme_imtpn'), mur_pedagogique::get_url());
+        }
+        if (!empty($CFG->enableresourcelibrary)) {
+            $this->add_if_not_exist($menu, new moodle_url('/theme/imtpn/pages/themescat.php'),
+                get_string('catalogue', 'theme_imtpn'), 'fa fa-star-o text-primary');
+        }
+        if (!$menu->has_children()) {
+            return '';
+        }
+
+        $content = '';
+        foreach ($menu->get_children() as $item) {
+            $context = $item->export_for_template($this);
+            $content .= $this->render_from_template('core/custom_menu_item', $context);
+        }
+
+        return $content;
+    }
+
+    /**
+     * Add if does not exist
+     *
+     * @param custom_menu_advanced $menu
+     * @param moodle_url $url
+     * @param string $label
+     * @param string $class
+     */
+    protected function add_if_not_exist(custom_menu_advanced $menu, moodle_url $url, $label, $class = '') {
+        foreach ($menu->get_children() as $child) {
+            if ($url->out_omit_querystring() == $child->get_url()->out_omit_querystring()) {
+                return;
+            }
+        }
+        $menu->add($label, $url, null, null, $class);
+    }
+
+    /**
      * The standard tags (typically performance information and validation links,
      * if we are in developer debug mode) that should be output in the footer area
      * of the page. Designed to be called in theme layout.php files.
@@ -242,6 +256,9 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      * Core change : output footer as a list instead of a just raw output.
      *
      * @return string HTML fragment.
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws moodle_exception
      */
     public function standard_footer_html() {
         global $CFG, $SCRIPT;
@@ -270,9 +287,9 @@ class core_renderer extends \theme_clboost\output\core_renderer {
             ); // IMTPN: output as a list.
         }
 
-        // This function is normally called from a layout.php file in {@link core_renderer::header()}
+        // This function is normally called from a layout.php file in {@see core_renderer::header()}
         // but some of the content won't be known until later, so we return a placeholder
-        // for now. This will be replaced with the real content in {@link core_renderer::footer()}.
+        // for now. This will be replaced with the real content in {@see core_renderer::footer()}.
         $output .= $this->unique_performance_info_token;
         if ($this->page->devicetypeinuse == 'legacy') {
             // The legacy theme is in use print the notification.
@@ -316,10 +333,8 @@ class core_renderer extends \theme_clboost\output\core_renderer {
                 urlencode(qualified_me()) . '">WCAG 1 (2,3) Check</a></li>
             </ul></div>'; // IMTPN: output as a list.
         }
-        return \html_writer::alist($list) . $output; // IMTPN: output as a list.
+        return html_writer::alist($list) . $output; // IMTPN: output as a list.
     }
-
-    const PROFILE_IMAGE_SIZE = 150;
 
     /**
      * Output context header.
@@ -330,9 +345,9 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      * @param null $headerinfo
      * @param int $headinglevel
      * @return string
-     * @throws \coding_exception
-     * @throws \dml_exception
-     * @throws \moodle_exception
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws moodle_exception
      */
     public function context_header($headerinfo = null, $headinglevel = 1) {
         global $DB, $USER, $CFG, $SITE;
@@ -399,13 +414,13 @@ class core_renderer extends \theme_clboost\output\core_renderer {
                             'title' => get_string('message', 'message'),
                             'url' => new moodle_url('/message/index.php', array('id' => $user->id)),
                             'image' => 'message',
-                            'linkattributes' => \core_message\helper::messageuser_link_params($user->id),
+                            'linkattributes' => helper::messageuser_link_params($user->id),
                             'page' => $this->page
                         )
                     );
 
                     if ($USER->id != $user->id) {
-                        $iscontact = \core_message\api::is_contact($USER->id, $user->id);
+                        $iscontact = api::is_contact($USER->id, $user->id);
                         $contacttitle = $iscontact ? 'removefromyourcontacts' : 'addtoyourcontacts';
                         $contacturlaction = $iscontact ? 'removecontact' : 'addcontact';
                         $contactimage = $iscontact ? 'removecontact' : 'addcontact';
@@ -419,7 +434,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
                                     'sesskey' => sesskey())
                             ),
                             'image' => $contactimage,
-                            'linkattributes' => \core_message\helper::togglecontact_link_params($user, $iscontact),
+                            'linkattributes' => helper::togglecontact_link_params($user, $iscontact),
                             'page' => $this->page
                         );
                     }
@@ -436,6 +451,24 @@ class core_renderer extends \theme_clboost\output\core_renderer {
     }
 
     /**
+     * Get Logo URL
+     * If it has not been overriden by core_admin config, serve the logo in pix
+     *
+     * @param null $maxwidth
+     * @param int $maxheight
+     * @return bool|false|moodle_url
+     */
+    public function get_logo_url($maxwidth = null, $maxheight = 200) {
+        $path = $this->get_current_theme_base_url();
+        $logourl = new moodle_url("{$path}/pix/logos/logo-imt-dark.png");
+        if (!isloggedin() || isguestuser()) {
+            // If we are not logged in, the logo should be white instead.
+            $logourl = new moodle_url("{$path}/pix/logos/logo-imt-white.png");
+        }
+        return $logourl;
+    }
+
+    /**
      * This renders the navbar : The change here is only in the mur pedagogique contexte.
      *
      * Uses bootstrap compatible html.
@@ -448,12 +481,12 @@ class core_renderer extends \theme_clboost\output\core_renderer {
     /**
      * Allow for additional user menu in navigation bar in case we have no boost navbar.
      *
-     * @param $opts stdClass $returnobj navigation information object (see @user_get_user_navigation_info)
-     * @param $course
+     * @param object $opts  navigation information object (see @user_get_user_navigation_info)
+     * @param object $course
      */
     protected function additional_user_menus_nonavbar(&$opts, $course) {
 
-        list($urltext, $url) = \local_resourcelibrary\locallib\utils::get_catalog_url();
+        list($urltext, $url) = utils::get_catalog_url();
         $opts->navitems[] = (object) [
             'itemtype' => 'link',
             'url' => $url,

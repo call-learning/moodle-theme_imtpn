@@ -69,7 +69,7 @@ $string['pluginname'] = 'Theme IMT Pédagothèque Numérique';
 $string['populargroups'] = 'Groupes populaires';
 $string['profilebgimage_desc'] = 'Image de fond pour page de profil';
 $string['profilebgimage'] = 'Image de fond pour page de profil';
-$string['profilecomponentsexclusion_desc'] = 'Enlever des composant de la page de profil pour la rendre moins complexe? Une liste 
+$string['profilecomponentsexclusion_desc'] = 'Enlever des composant de la page de profil pour la rendre moins complexe? Une liste
 séparée par une virgule de modules (mod, report...)';
 $string['profilecomponentsexclusion'] = 'Profile component exclusion';
 $string['profilemodulesexclusion_desc'] = 'Remove modules from the profile page to streamline it ? A comma separated values of

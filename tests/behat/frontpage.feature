@@ -1,4 +1,4 @@
-@javascript @theme_imtpn
+@theme @javascript @theme_imtpn
 Feature: Front page blocks
   The front page blocks are setup correctly with content
 

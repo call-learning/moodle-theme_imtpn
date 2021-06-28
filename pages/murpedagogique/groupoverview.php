@@ -44,14 +44,14 @@ $cm = mur_pedagogique::get_cm();
 if ($cm) {
     $PAGE->set_cm($cm);
 } else {
-    print_error('invalidcourse');
+    throw new moodle_exception('invalidcourse');
 }
 if (empty($courseid)) {
     $courseid = $cm->course;
 }
 
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-    print_error('invalidcourse');
+    throw new moodle_exception('invalidcourse');
 }
 
 $currenturl = new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php', array('id' => $courseid));
@@ -88,7 +88,6 @@ $PAGE->navbar->ignore_active();
 $PAGE->navbar->add(get_string('allgroups', 'theme_imtpn'),
     $currenturl, navbar::TYPE_CUSTOM, null, 'allgroups');
 
-
 // Toggle the editing state and switches.
 if ($PAGE->user_allowed_editing()) {
     $edit = optional_param('edit', null, PARAM_BOOL);    // Turn editing on and off.
@@ -116,30 +115,7 @@ if (has_capability('moodle/course:managegroups', $context)) {
     $currentbuttons .= $addnewgroup;
 }
 $PAGE->set_button($currentbuttons);
-// The form.
-require_once($CFG->libdir . '/formslib.php');
-
-$form = new class() extends moodleform {
-    public function __construct($action = null, $customdata = null, $method = 'post', $target = '', $attributes = null,
-        $editable = true,
-        $ajaxformdata = null) {
-        parent::__construct($action, $customdata, $method, $target, ['class' => 'groupoverview-search-form container d-flex'],
-            $editable, $ajaxformdata);
-    }
-
-    protected function definition() {
-        $mform = $this->_form;
-        $mform->addElement(
-            'text', 'groupname', get_string('groupname', 'theme_imtpn'),
-            ['class' => 'container']
-        );
-        $mform->setType('groupname', PARAM_TEXT);
-
-        $mform->addElement('submit', 'submitbutton', get_string('search'));
-        $mform->addElement('cancel', 'cancelbutton', get_string('clear'),
-            ['class' => 'mr-auto']);
-    }
-};
+$form = new \theme_imtpn\local\forms\groupoverview_form();
 $groupname = '';
 if ($form->is_cancelled()) {
     $groupname = "";

@@ -29,37 +29,30 @@ global $CFG, $PAGE, $DB, $OUTPUT;
 require_once($CFG->dirroot . '/group/lib.php');
 require_once($CFG->dirroot . '/group/group_form.php');
 
-/// get url variables
+// Get url variables.
 $courseid = optional_param('courseid', 0, PARAM_INT);
 $id = optional_param('id', 0, PARAM_INT);
 $delete = optional_param('delete', 0, PARAM_BOOL);
 $confirm = optional_param('confirm', 0, PARAM_BOOL);
 
-// This script used to support group delete, but that has been moved. In case
-// anyone still links to it, let's redirect to the new script.
-if ($delete) {
-    debugging('Deleting a group through group/group.php is deprecated and will be removed soon. Please use group/delete.php instead');
-    redirect(new moodle_url('/group/delete.php', array('courseid' => $courseid, 'groups' => $id)));
-}
-
 if ($id) {
     if (!$group = $DB->get_record('groups', array('id' => $id))) {
-        print_error('invalidgroupid');
+        throw new moodle_exception('invalidgroupid');
     }
     if (empty($courseid)) {
         $courseid = $group->courseid;
 
     } else if ($courseid != $group->courseid) {
-        print_error('invalidcourseid');
+        throw new moodle_exception('invalidcourseid');
     }
 
     if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-        print_error('invalidcourseid');
+        throw new moodle_exception('invalidcourseid');
     }
 
 } else {
     if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-        print_error('invalidcourseid');
+        throw new moodle_exception('invalidcourseid');
     }
     $group = new stdClass();
     $group->courseid = $course->id;
@@ -83,7 +76,7 @@ navigation_node::override_active_url(new moodle_url('/group/index.php', array('i
 
 $returnurl = $CFG->wwwroot . '/theme/imtpn/pages/murpedagogique/groupoverview.php?id=' . $course->id . '&group=' . $id;
 
-// Prepare the description editor: We do support files for group descriptions
+// Prepare the description editor: We do support files for group descriptions.
 $editoroptions =
     array('maxfiles' => EDITOR_UNLIMITED_FILES, 'maxbytes' => $course->maxbytes, 'trust' => false, 'context' => $context,
         'noclean' => true);
@@ -95,7 +88,7 @@ if (!empty($group->id)) {
     $group = file_prepare_standard_editor($group, 'description', $editoroptions, $context, 'group', 'description', null);
 }
 
-/// First create the form
+// First create the form.
 $editform = new group_form(null, array('editoroptions' => $editoroptions));
 $editform->set_data($group);
 
@@ -104,7 +97,7 @@ if ($editform->is_cancelled()) {
 
 } else if ($data = $editform->get_data()) {
     if (!has_capability('moodle/course:changeidnumber', $context)) {
-        // Remove the idnumber if the user doesn't have permission to modify it
+        // Remove the idnumber if the user doesn't have permission to modify it.
         unset($data->idnumber);
     }
 
@@ -133,7 +126,7 @@ $PAGE->navbar->add($strgroups,
 );
 $PAGE->navbar->add($strheading);
 
-/// Print header
+// Print header.
 echo $OUTPUT->header();
 echo '<div id="grouppicture">';
 if ($id) {

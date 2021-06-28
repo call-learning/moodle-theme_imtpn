@@ -29,14 +29,14 @@ require_once($CFG->dirroot . '/group/lib.php');
 $groupid = required_param('groupid', PARAM_INT);
 $group = groups_get_group($groupid);
 if (empty($group)) {
-    print_error('invalid');
+    throw new moodle_exception('invalid');
 }
 
 $course = $DB->get_record('course', array('id' => $group->courseid), '*', MUST_EXIST);
 $context = context_course::instance($course->id, MUST_EXIST);
 require_login($course->id);
 if (!has_capability('theme/imtpn:canselfjoingroup', $context)) {
-    print_error('selfjoinerror');
+    throw new moodle_exception('selfjoinerror');
 }
 $PAGE->set_url(new moodle_url('/theme/imtpn/pages/murpedagogique/joingroup.php', array('groupid' => $groupid)));
 $PAGE->set_title("$course->shortname: " . get_string('groups'));

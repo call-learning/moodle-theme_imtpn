@@ -27,6 +27,9 @@
 namespace theme_imtpn\output;
 defined('MOODLE_INTERNAL') || die();
 
+use coding_exception;
+use dml_exception;
+use moodle_exception;
 use renderable;
 use renderer_base;
 use stdClass;
@@ -57,7 +60,8 @@ class group_info implements renderable, templatable {
      * group_details constructor.
      *
      * @param int $groupid Group ID to show details of.
-     * @throws \dml_exception
+     * @param object $forum the forum
+     * @throws dml_exception
      */
     public function __construct($groupid, $forum) {
         $this->group = groups_get_group($groupid, '*', MUST_EXIST);
@@ -69,8 +73,8 @@ class group_info implements renderable, templatable {
      *
      * @param renderer_base $output
      * @return stdClass
-     * @throws \coding_exception
-     * @throws \moodle_exception
+     * @throws coding_exception
+     * @throws moodle_exception
      */
     public function export_for_template(renderer_base $output) {
         global $USER;
@@ -99,7 +103,7 @@ class group_info implements renderable, templatable {
     /**
      * Get group name
      *
-     * @param $group
+     * @param object $group
      * @return string
      */
     public static function get_group_name($group) {
@@ -108,35 +112,12 @@ class group_info implements renderable, templatable {
     }
 
     /**
-     * Get group description
-     *
-     * Patch to the usual procedure in order to retrieve the files without the need
-     * to grant access to specific users.
-     */
-    public static function get_group_description($group) {
-        $context = context_course::instance($group->courseid);
-        $description = file_rewrite_pluginfile_urls($group->description,
-            'pluginfile.php',
-            $context->id,
-            'theme_imtpn',
-            'groupdescription',
-            $group->id);
-
-        $descriptionformat = $group->descriptionformat ?? FORMAT_MOODLE;
-        $options = [
-            'overflowdiv' => true,
-            'context' => $context
-        ];
-        return format_text($description, $descriptionformat, $options);
-    }
-
-    /**
      * Override of the homonymous function in weblib.
      *
      * Here we want to display picture even if the user cannot manage groups.
      *
-     * @param $group
-     * @param $courseid
+     * @param object $group
+     * @param int $courseid
      * @param false $large
      * @param false $includetoken
      * @return moodle_url|void
@@ -164,6 +145,32 @@ class group_info implements renderable, templatable {
             $context->id, 'theme_imtpn', 'groupicon', $group->id, '/', $file, false, $includetoken);
         $grouppictureurl->param('rev', $group->picture);
         return $grouppictureurl;
+    }
+
+    /**
+     * Get group description
+     *
+     * Patch to the usual procedure in order to retrieve the files without the need
+     * to grant access to specific users.
+     *
+     * @param object $group
+     * @return string
+     */
+    public static function get_group_description($group) {
+        $context = context_course::instance($group->courseid);
+        $description = file_rewrite_pluginfile_urls($group->description,
+            'pluginfile.php',
+            $context->id,
+            'theme_imtpn',
+            'groupdescription',
+            $group->id);
+
+        $descriptionformat = $group->descriptionformat ?? FORMAT_MOODLE;
+        $options = [
+            'overflowdiv' => true,
+            'context' => $context
+        ];
+        return format_text($description, $descriptionformat, $options);
     }
 
 }

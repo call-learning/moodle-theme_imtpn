@@ -24,7 +24,10 @@
 
 namespace theme_imtpn\local;
 
+use admin_setting_configcheckbox;
+use admin_setting_confightmleditor;
 use admin_setting_configstoredfile;
+use admin_setting_configtext;
 use admin_settingpage;
 
 defined('MOODLE_INTERNAL') || die;
@@ -39,6 +42,41 @@ defined('MOODLE_INTERNAL') || die;
 class settings extends \theme_clboost\local\settings {
 
     /**
+     * Default content for Footer
+     */
+    const DEFAULT_FOOTER_CONTENT = '
+    <div class="footer__stores">
+        <a href="#">
+            <img src="/theme/imtpn/pix/logos/logo-appstore.png" alt="disponible sur app store">
+          </a>
+        <a href="#">
+            <img src="/theme/imtpn/pix/logos/logo-googleplay.png" alt="disponible sur google play">
+        </a>
+    </div>
+    ';
+    /**
+     * Default rules
+     */
+    const DEFAULT_RULES = "
+        <h3>Règles de participation</h3>
+        <p><strong>Respect</strong> : les utilisateurs doivent s’adresser aux autres utilisateurs, à la modération et à
+        l'administration du Mur pédagogique avec respect, en évitant les commentaires irritants, irrespectueux, faux ou pouvant
+        porter préjudice à un utilisateur ou une entité.</p>
+        <p><strong>Spams</strong> : tout message doit rester en lien avec la thématique du groupe et sans intention
+        promotionnelle ou commerciale.
+        <p><strong>Responsabilité des auteurs</strong>: les auteurs de messages sont seuls responsables de leur propos
+        et des contenus qu’ils y joignent. Ceux-ci ne sont, par ailleurs, pas nécessairement approuvés par
+        l’administration de la Pédagothèque numérique ou la Direction de l’IMT.</p>
+        <p><strong>Visibilité des messages</strong> : les messages ne sont visibles que par les utilisateurs
+        authentifiés sur la Pédagothèque numérique, membres du groupe concerné.L’équipe de modération se réserve le
+        droit de supprimer, avec ou sans avertissement, à sa discrétion, tout message qui ne respectent pas ces
+        règles. Si, en tant qu'utilisateur, vous jugez qu'une contribution ne respecte pas ces règles, merci de le signaler
+        à l’adresse pedagotheque@imt.fr.</p>
+        <p>Il est néanmoins possible que nous commettions des erreurs d’interprétation : si vous pensez qu’une contribution
+        a été supprimée par erreur, merci de le signaler à l’adresse pedagotheque@imt.fr.</p>
+    ";
+
+    /**
      * Additional settings
      *
      * This is intended to be overriden in the subtheme to add new pages for example.
@@ -50,7 +88,7 @@ class settings extends \theme_clboost\local\settings {
         $page = new admin_settingpage('footer',
             static::get_string('footer', 'theme_imtpn'));
 
-        $setting = new \admin_setting_confightmleditor('theme_imtpn/footercontent',
+        $setting = new admin_setting_confightmleditor('theme_imtpn/footercontent',
             static::get_string('footercontent', 'theme_imtpn'),
             static::get_string('footercontent_desc', 'theme_imtpn'),
             self::DEFAULT_FOOTER_CONTENT,
@@ -63,7 +101,7 @@ class settings extends \theme_clboost\local\settings {
         $page = new admin_settingpage('murpedago',
             static::get_string('murpedagogique', 'theme_imtpn'));
 
-        $setting = new \admin_setting_configtext('theme_imtpn/murpedagoidnumber',
+        $setting = new admin_setting_configtext('theme_imtpn/murpedagoidnumber',
             static::get_string('murpedagoidnumber', 'theme_imtpn'),
             static::get_string('murpedagoidnumber_desc', 'theme_imtpn'),
             'MUR_PEDAGOGIQUE',
@@ -71,14 +109,14 @@ class settings extends \theme_clboost\local\settings {
         $setting->set_updatedcallback('reset_mur_pedago_blocks');
         $page->add($setting);
 
-        $setting = new \admin_setting_configcheckbox('theme_imtpn/murpedagoenabled',
+        $setting = new admin_setting_configcheckbox('theme_imtpn/murpedagoenabled',
             static::get_string('murpedagoenabled', 'theme_imtpn'),
             static::get_string('murpedagoenabled_desc', 'theme_imtpn'),
             false);
         $setting->set_updatedcallback('reset_mur_pedago_blocks');
         $page->add($setting);
 
-        $setting = new \admin_setting_confightmleditor('theme_imtpn/murpedagogrouprules',
+        $setting = new admin_setting_confightmleditor('theme_imtpn/murpedagogrouprules',
             static::get_string('murpedagogrouprules', 'theme_imtpn'),
             static::get_string('murpedagogrouprules_desc', 'theme_imtpn'),
             self::DEFAULT_RULES,
@@ -91,19 +129,19 @@ class settings extends \theme_clboost\local\settings {
         $page = new admin_settingpage('profilepage',
             static::get_string('profilepage', 'theme_imtpn'));
 
-        $setting = new \admin_setting_configcheckbox('theme_imtpn/simplifiedprofilepage',
+        $setting = new admin_setting_configcheckbox('theme_imtpn/simplifiedprofilepage',
             static::get_string('simplifiedprofilepage', 'theme_imtpn'),
             static::get_string('simplifiedprofilepage_desc', 'theme_imtpn'),
             true);
         $page->add($setting);
 
-        $setting = new \admin_setting_configtext('theme_imtpn/profilecomponentsexclusion',
+        $setting = new admin_setting_configtext('theme_imtpn/profilecomponentsexclusion',
             static::get_string('profilecomponentsexclusion', 'theme_imtpn'),
             static::get_string('profilecomponentsexclusion_desc', 'theme_imtpn'),
             'report,tool,gradereport,loginactivity,badges,miscellaneous,notes');
         $page->add($setting);
 
-        $setting = new \admin_setting_configtext('theme_imtpn/profilemodulessexclusion',
+        $setting = new admin_setting_configtext('theme_imtpn/profilemodulessexclusion',
             static::get_string('profilemodulesexclusion', 'theme_imtpn'),
             static::get_string('profilemodulesexclusion_desc', 'theme_imtpn'),
             'tool_mobile,mod_forum');
@@ -124,33 +162,4 @@ class settings extends \theme_clboost\local\settings {
         $settings->add($page);
 
     }
-
-    const DEFAULT_FOOTER_CONTENT = '
-    <div class="footer__stores">
-        <a href="#">
-            <img src="/theme/imtpn/pix/logos/logo-appstore.png" alt="disponible sur app store">
-          </a>
-        <a href="#">
-            <img src="/theme/imtpn/pix/logos/logo-googleplay.png" alt="disponible sur google play">
-        </a>
-    </div>
-    ';
-    const DEFAULT_RULES = "
-        <h3>Règles de participation</h3>
-        <p><strong>Respect</strong> : les utilisateurs doivent s’adresser aux autres utilisateurs, à la modération et à
-        l'administration du Mur pédagogique avec respect, en évitant les commentaires irritants, irrespectueux, faux ou pouvant
-        porter préjudice à un utilisateur ou une entité.</p>
-        <p><strong>Spams</strong> : tout message doit rester en lien avec la thématique du groupe et sans intention
-        promotionnelle ou commerciale.
-        <p><strong>Responsabilité des auteurs</strong>: les auteurs de messages sont seuls responsables de leur propos
-        et des contenus qu’ils y joignent. Ceux-ci ne sont, par ailleurs, pas nécessairement approuvés par
-        l’administration de la Pédagothèque numérique ou la Direction de l’IMT.</p>
-        <p><strong>Visibilité des messages</strong> : les messages ne sont visibles que par les utilisateurs
-        authentifiés sur la Pédagothèque numérique, membres du groupe concerné.L’équipe de modération se réserve le
-        droit de supprimer, avec ou sans avertissement, à sa discrétion, tout message qui ne respectent pas ces
-        règles. Si, en tant qu'utilisateur, vous jugez qu'une contribution ne respecte pas ces règles, merci de le signaler
-        à l’adresse pedagotheque@imt.fr.</p>
-        <p>Il est néanmoins possible que nous commettions des erreurs d’interprétation : si vous pensez qu’une contribution
-        a été supprimée par erreur, merci de le signaler à l’adresse pedagotheque@imt.fr.</p>
-    ";
 }

@@ -19,14 +19,16 @@
  * Override this
  * @copyright 2006 The Open University, N.D.Freear AT open.ac.uk, J.White AT open.ac.uk
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @package   core_group
+ * @package   theme_imtpn
  */
+// phpcs:disable
+// @codingStandardsIgnoreStart
 require_once('lib.php');
 
 $courseid   = required_param('id', PARAM_INT);
 $cm = \theme_imtpn\mur_pedagogique::get_cm();
 if ($courseid == $cm->course) {
     $groupid = required_param('groupid', PARAM_INT);
-    redirect(new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid'=> $groupid)));
+    redirect(new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $groupid)));
     die();
 }

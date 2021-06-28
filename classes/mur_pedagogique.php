@@ -25,11 +25,18 @@
 namespace theme_imtpn;
 
 use coding_exception;
+use context_module;
+use core\output\notification;
+use core_availability\info_module;
+use dml_exception;
 use html_writer;
 use mod_forum\local\container;
 use cm_info;
+use moodle_exception;
+use moodle_page;
 use moodle_url;
 use navbar;
+use stdClass;
 use theme_imtpn\local\forum\discussion_list_mur_pedago;
 use theme_imtpn\output\group_info;
 
@@ -38,15 +45,19 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Class mur_pedagogique
  *
- * @package theme_imtpn
+ * @package   theme_imtpn
+ * @copyright 2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mur_pedagogique {
 
     /**
+     * Has user access to the mur pedagogique
+     *
      * @param int $userid
      * @return bool
-     * @throws \coding_exception
-     * @throws \dml_exception
+     * @throws coding_exception
+     * @throws dml_exception
      */
     public static function has_access($userid) {
         $hasaccess = false;
@@ -54,27 +65,18 @@ class mur_pedagogique {
             $cm = static::get_cm();
             if ($cm) {
                 $cminfo = cm_info::create($cm, $userid);
-                $hasaccess = \core_availability\info_module::is_user_visible($cminfo->id, $userid) || is_siteadmin($userid);
+                $hasaccess = info_module::is_user_visible($cminfo->id, $userid) || is_siteadmin($userid);
             }
-        } catch (\moodle_exception $e) {
+        } catch (moodle_exception $e) {
             debugging($e->getMessage());
         }
         return $hasaccess;
     }
 
     /**
-     * Get URL
-     *
-     * @return moodle_url
-     */
-    public static function get_url() {
-        return new moodle_url('/theme/imtpn/pages/murpedagogique/index.php');
-    }
-
-    /**
      * Get CM
      *
-     * @return false|mixed|\stdClass
+     * @return false|mixed|stdClass
      */
     public static function get_cm() {
         global $DB;
@@ -92,8 +94,8 @@ class mur_pedagogique {
     /**
      * Get CM
      *
-     * @return false|mixed|\stdClass
-     * @throws \dml_exception
+     * @return false|mixed|stdClass
+     * @throws dml_exception
      */
     public static function enabled() {
         global $DB;
@@ -101,20 +103,25 @@ class mur_pedagogique {
     }
 
     /**
+     * Get URL
+     *
+     * @return moodle_url
+     */
+    public static function get_url() {
+        return new moodle_url('/theme/imtpn/pages/murpedagogique/index.php');
+    }
+
+    /**
      * Display Wall
      *
-     * @param $forum
-     * @param $managerfactory
-     * @param $legacydatamapperfactory
-     * @param $discussionlistvault
-     * @param $postvault
-     * @param $mode
-     * @param $search
-     * @param $sortorder
-     * @param $pageno
-     * @param $pagesize
-     * @throws \coding_exception
-     * @throws \moodle_exception
+     * @param object $forum
+     * @param int $mode
+     * @param string $search
+     * @param string $sortorder
+     * @param int $pageno
+     * @param int $pagesize
+     * @throws coding_exception
+     * @throws moodle_exception
      */
     public static function display_wall($forum,
         $mode,
@@ -123,10 +130,10 @@ class mur_pedagogique {
         $pageno,
         $pagesize) {
         global $PAGE, $OUTPUT, $CFG, $SESSION, $USER;
-        $vaultfactory = \mod_forum\local\container::get_vault_factory();
+        $vaultfactory = container::get_vault_factory();
         $discussionlistvault = $vaultfactory->get_discussions_in_forum_vault();
-        $managerfactory = \mod_forum\local\container::get_manager_factory();
-        $legacydatamapperfactory = \mod_forum\local\container::get_legacy_data_mapper_factory();
+        $managerfactory = container::get_manager_factory();
+        $legacydatamapperfactory = container::get_legacy_data_mapper_factory();
         $urlfactory = container::get_url_factory();
         $capabilitymanager = $managerfactory->get_capability_manager($forum);
 
@@ -136,7 +143,7 @@ class mur_pedagogique {
 
         $course = $forum->get_course_record();
         $coursemodule = $forum->get_course_module_record();
-        $cm = \cm_info::create($coursemodule);
+        $cm = cm_info::create($coursemodule);
 
         require_course_login($course, true, $cm);
 
@@ -174,7 +181,7 @@ class mur_pedagogique {
         $viewallgroups = $OUTPUT->single_button(
             new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php'),
             get_string('viewallgroups', 'theme_imtpn'));
-        $PAGE->set_button($currentbuttons  . $viewallgroups);
+        $PAGE->set_button($currentbuttons . $viewallgroups);
 
         if ($istypesingle && $displaymode == FORUM_MODE_NESTED_V2) {
             $PAGE->add_body_class('nested-v2-display-mode reset-style');
@@ -187,7 +194,7 @@ class mur_pedagogique {
                 $backurl,
                 get_string('activityiscurrentlyhidden'),
                 null,
-                \core\output\notification::NOTIFY_WARNING
+                notification::NOTIFY_WARNING
             );
         }
 
@@ -196,7 +203,7 @@ class mur_pedagogique {
                 $backurl,
                 get_string('noviewdiscussionspermission', 'forum'),
                 null,
-                \core\output\notification::NOTIFY_WARNING
+                notification::NOTIFY_WARNING
             );
         }
 
@@ -252,15 +259,17 @@ class mur_pedagogique {
     }
 
     /**
-     * @param int $forumid
+     * Display all relevant posts
+     *
+     * @param object $forum
      * @param int|array $groupid
      * @param int $mode
      * @param string $search
      * @param int $sortorder
      * @param int $pageno
      * @param int $pagesize
-     * @throws \coding_exception
-     * @throws \moodle_exception
+     * @throws coding_exception
+     * @throws moodle_exception
      */
     public static function display_posts($forum,
         $groupid,
@@ -271,12 +280,12 @@ class mur_pedagogique {
         $pagesize) {
         global $PAGE, $CFG, $USER;
 
-        $managerfactory = \mod_forum\local\container::get_manager_factory();
-        $legacydatamapperfactory = \mod_forum\local\container::get_legacy_data_mapper_factory();
-        $vaultfactory = \mod_forum\local\container::get_vault_factory();
+        $managerfactory = container::get_manager_factory();
+        $legacydatamapperfactory = container::get_legacy_data_mapper_factory();
+        $vaultfactory = container::get_vault_factory();
         $discussionlistvault = $vaultfactory->get_discussions_in_forum_vault();
         $coursemodule = $forum->get_course_module_record();
-        $cm = \cm_info::create($coursemodule);
+        $cm = cm_info::create($coursemodule);
 
         $capabilitymanager = $managerfactory->get_capability_manager($forum);
 
@@ -293,7 +302,7 @@ class mur_pedagogique {
                 $backurl,
                 get_string('activityiscurrentlyhidden'),
                 null,
-                \core\output\notification::NOTIFY_WARNING
+                notification::NOTIFY_WARNING
             );
         }
 
@@ -302,7 +311,7 @@ class mur_pedagogique {
                 $backurl,
                 get_string('noviewdiscussionspermission', 'forum'),
                 null,
-                \core\output\notification::NOTIFY_WARNING
+                notification::NOTIFY_WARNING
             );
         }
 
@@ -333,10 +342,10 @@ class mur_pedagogique {
      * Display a group link with picture if needed.
      *
      * @param object $group
-     * @param $courseid
+     * @param int $courseid
      * @param false $withpicture
      * @return string
-     * @throws \moodle_exception
+     * @throws moodle_exception
      */
     public static function get_group_link(object $group, $courseid, $withpicture = false) {
         $pictureurl = get_group_picture_url($group, $courseid, false, false);
@@ -355,7 +364,7 @@ class mur_pedagogique {
      *
      * @param object $group
      * @return moodle_url
-     * @throws \moodle_exception
+     * @throws moodle_exception
      */
     public static function get_group_page_url(object $group) {
         return new moodle_url('/theme/imtpn/pages/murpedagogique/grouppage.php', array('groupid' => $group->id));
@@ -364,7 +373,7 @@ class mur_pedagogique {
     /**
      * Set additional CSS to page
      *
-     * @param \moodle_page $page
+     * @param moodle_page $page
      * @throws coding_exception
      */
     public static function set_additional_page_classes(&$page) {
@@ -372,10 +381,10 @@ class mur_pedagogique {
         if (!$loggedin) {
             $page->add_body_class('notloggedin');
         }
-        $murpedaggocm = mur_pedagogique::get_cm();
+        $murpedaggocm = self::get_cm();
         $murpedaggocontext = null;
         if ($murpedaggocm) {
-            $murpedaggocontext = \context_module::instance($murpedaggocm->id);
+            $murpedaggocontext = context_module::instance($murpedaggocm->id);
         }
         $isonmurpedago = !empty($murpedaggocm) && !empty($page->cm->context) &&
             $page->cm->context->is_child_of($murpedaggocontext, true);
@@ -383,25 +392,29 @@ class mur_pedagogique {
             $page->add_body_class('mur-pedagogique'); // We make sure a generic class is set to
             // apply custom CSS.
             $page->add_body_class('path-mod-forum'); // Make sure the usual classes apply.
-            // Also if child context, we need to make sure we adjust the breadcrumb.
-            // The has_item() check is to fix an issue in navigation lib (has_items()) which
-            // issues a warning in behat mode.
-            //if ($page->cm->context->is_child_of($murpedaggocontext, true) && $page->navbar->has_items()) {
-            //    $page->navbar->ignore_active();
-            //}
+            /*
+             *  Also if child context, we need to make sure we adjust the breadcrumb.
+             * The has_item() check is to fix an issue in navigation lib (has_items()) which
+             * issues a warning in behat mode.
+                    if ($page->cm->context->is_child_of($murpedaggocontext, true) && $page->navbar->has_items()) {
+                        $page->navbar->ignore_active();
+                    }
+            */
         }
     }
 
     /**
+     * Add relevant menu to navbar
+     *
      * @param navbar $navbar
-     * @param \moodle_page $page
-     * @return mixed|\navbar
+     * @param moodle_page $page
+     * @return mixed|navbar
      * @throws coding_exception
      */
     public static function fix_navbar($navbar, $page) {
         global $PAGE;
 
-        $cm = \theme_imtpn\mur_pedagogique::get_cm();
+        $cm = static::get_cm();
         // Check first if we are on the module page.
         $isoncm = !empty($cm) && (
                 $PAGE->context->instanceid == $cm->id ||
@@ -434,11 +447,11 @@ class mur_pedagogique {
             // Special navigation for discussion pages.
             if ($page->pagetype == 'mod-forum-discuss') {
                 // A bit of a hack here.
-                $d      = required_param('d', PARAM_INT); // Discussion ID
-                $vaultfactory = \mod_forum\local\container::get_vault_factory();
+                $d = required_param('d', PARAM_INT); // Discussion ID.
+                $vaultfactory = container::get_vault_factory();
                 $discussionvault = $vaultfactory->get_discussion_vault();
                 $discussion = $discussionvault->get_from_id($d);
-                $groupid  = $discussion->get_group_id();
+                $groupid = $discussion->get_group_id();
                 static::navbar_add_groupname($navbar, $groupid);
             }
 
@@ -453,10 +466,10 @@ class mur_pedagogique {
     /**
      * Add group name
      *
-     * @param $navbar
-     * @param $groupid
-     * @throws \dml_exception
-     * @throws \moodle_exception
+     * @param object $navbar
+     * @param int $groupid
+     * @throws dml_exception
+     * @throws moodle_exception
      */
     protected static function navbar_add_groupname(&$navbar, $groupid) {
         if ($groupid && $groupid > 0) {

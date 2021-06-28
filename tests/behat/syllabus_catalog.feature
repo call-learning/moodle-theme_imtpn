@@ -1,9 +1,8 @@
-@javascript @theme_imtpn @local_resourcelibrary
+@theme @javascript @theme_imtpn @local_resourcelibrary
 Feature: I check that the user profile has the right informaiton
   The user profile should have been modified to include only relevant information
 
   Background:
-
     Given the following "courses" exist:
       | shortname | fullname | summary          |
       | C1        | Course 1 | Course 1 summary |
@@ -35,18 +34,17 @@ Feature: I check that the user profile has the right informaiton
       | CF1            | BCBCBC | C2              |                  |          |
       | CF1            | ZXYZXZ | C3              |                  |          |
       | CM1            | ABCDEF | C1              | PAGE1            | page     |
+    And the following "users" exist:
+      | username | firstname | lastname | email                |
+      | teacher1 | Teacher   | 1        | teacher1@example.com |
+    And the following "course enrolments" exist:
+      | user     | course | role           |
+      | teacher1 | C1     | editingteacher |
 
   Scenario: As a teacher I should see my courses in the catalog
     And I log in as "teacher1"
     And I follow "Catalog"
-    And I follow "View catalog"
+    And I click on "View catalog" "button"
     And I should see "Course 1"
     And I should see "Course 2"
     And I should see "Course 3"
-
-  Scenario: As a teacher I should see my courses in the syllabus for the coures
-    And I log in as "teacher1"
-    And I follow "Catalog"
-    And I follow "View catalog"
-    And I click on ".link-go-to-content[1]" "link"
-    Then I pause scenario execution

@@ -45,6 +45,18 @@ class utils {
      * Profile image file area name
      */
     const PROFILE_IMAGE_FILE_AREA = 'profileimage';
+    /**
+     * Normal Size for image
+     */
+    const IMAGE_SIZE_TYPE_NORMAL = 'normal';
+    /**
+     * LG Size for image
+     */
+    const IMAGE_SIZE_TYPE_LG = 'lg';
+    /**
+     * XL Size for image
+     */
+    const IMAGE_SIZE_TYPE_XL = 'xl';
 
     /**
      * Get frontpage images URL
@@ -90,18 +102,5 @@ class utils {
         }
         return $filesurl;
     }
-
-    /**
-     * Normal Size for image
-     */
-    const IMAGE_SIZE_TYPE_NORMAL = 'normal';
-    /**
-     * LG Size for image
-     */
-    const IMAGE_SIZE_TYPE_LG = 'lg';
-    /**
-     * XL Size for image
-     */
-    const IMAGE_SIZE_TYPE_XL = 'xl';
 
 }

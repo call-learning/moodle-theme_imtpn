@@ -25,10 +25,13 @@
 namespace theme_imtpn;
 
 use block_base;
+use coding_exception;
 use context_block;
 use context_course;
+use context_module;
 use context_system;
 use core_analytics\stats;
+use dml_exception;
 use file_exception;
 use moodle_page;
 use moodle_url;
@@ -47,121 +50,6 @@ defined('MOODLE_INTERNAL') || die();
 class setup {
 
     /**
-     * Install updates
-     */
-    public static function install_update() {
-        global $PAGE, $CFG, $DB;
-
-        static::setup_config_values();
-        if (!$DB->record_exists('block_rss_client', ['url' => 'https://www.imt.fr/feed/'])) {
-            $id = $DB->insert_record(
-                'block_rss_client',
-                array('userid' => get_admin()->id,
-                    'title' => 'IMT',
-                    'preferredtitle' => '',
-                    'description' =>
-                        'Premier groupe de grandes écoles d\'ingénieurs et managers en France',
-                    'shared' => '0',
-                    'url' => 'https://www.imt.fr/feed/',
-                    'skiptime' => '0',
-                    'skipuntil' => '0')
-            );
-        }
-        require_once($CFG->dirroot . '/my/lib.php');
-        // Get the default Dashboard block.
-        $defaultmy = my_get_page(null, MY_PAGE_PRIVATE);
-
-        $page = new moodle_page();
-        $page->set_pagetype('my-index');
-        $page->set_subpage($defaultmy->id);
-        $page->set_url(new moodle_url('/'));
-        $page->set_context(context_system::instance());
-
-        $oldpage = $PAGE;
-        $PAGE = $page;
-        $dashboarddef = self::DASHBOARD_BLOCK_DEFINITION;
-        $murpedagocm = mur_pedagogique::get_cm();
-        if ($murpedagocm) {
-            $forumid = $murpedagocm->instance;
-            $dashboarddef = array_map(function($b) use ($forumid) {
-                if ($b['blockname'] == 'forum_feed') {
-                    $b['configdata']['forumid'] = $forumid;
-                }
-                return $b;
-            }, self::DASHBOARD_BLOCK_DEFINITION);
-        }
-        static::setup_page_blocks($page, $dashboarddef);
-        my_reset_page_for_all_users();
-        // Note here: this will only define capabilities for the default page. If we
-        // want the dashboard to work as expected we also need to set forcedefaultmymoodle to true.
-
-        // Setup Home page.
-        $page = new moodle_page();
-        $page->set_pagetype('site-index');
-        $page->set_docs_path('');
-        $page->set_context(context_system::instance());
-        $PAGE = $page;
-        static::setup_page_blocks($page, self::HOMEPAGE_BLOCK_DEFINITION);
-        $PAGE = $oldpage;
-
-        // Setup sharing cart
-        if ($DB->record_exists('block', array('name' => 'sharing_cart'))) {
-            // Setup Ressource library activities.
-            $page = new moodle_page();
-            $page->set_pagetype('resource-library-activities');
-            $page->set_docs_path('');
-            $page->set_context(context_system::instance());
-            $PAGE = $page;
-            static::setup_page_blocks($page, array(
-                    array(
-                        'blockname' => 'sharing_cart',
-                        'showinsubcontexts' => '1',
-                        'defaultregion' => 'side-right',
-                        'defaultweight' => '0',
-                        'configdata' => [],
-                        'capabilities' => array()
-                    ),
-                )
-            );
-            $PAGE = $oldpage;
-
-        }
-    }
-
-    /**
-     * Setup block for mur pedagogique
-     *
-     * @throws \coding_exception
-     * @throws \dml_exception
-     */
-    public static function setup_murpedago_blocks() {
-        $cm = mur_pedagogique::get_cm();
-        if ($cm) {
-            $pageforum = new moodle_page();
-            $pageforum->set_cm($cm);
-            $pageforum->set_pagelayout('incourse');
-            $pageforum->set_pagetype('mod-forum-view');
-            self::setup_page_blocks($pageforum, self::MUR_PEDAGO_BLOCK_DEFINITION, $regionname = 'side-pre');
-            $pagemurpedago = new moodle_page();
-            $pageforum->set_cm($cm);
-            $pageforum->set_pagelayout('incourse');
-            $pagemurpedago->set_pagetype('theme-imtpn-pages-murpedagogique-index');
-            self::setup_page_blocks($pagemurpedago, self::MUR_PEDAGO_BLOCK_DEFINITION, $regionname = 'side-pre');
-            $pagegroupoverview = new moodle_page();
-            $pagegroupoverview->set_pagelayout('standard');
-            $pagegroupoverview->set_pagetype('group-overview');
-            self::setup_page_blocks($pagegroupoverview, self::MUR_PEDAGO_BLOCK_DEFINITION, $regionname = 'side-pre');
-            $pagegroups = new moodle_page();
-            $pagegroups->set_pagelayout('incourse');
-            $pagegroups->set_pagetype('group-page');
-            $pagegroups->set_context(\context_module::instance($cm->id));
-            self::setup_page_blocks($pagegroups, self::MUR_PEDAGO_GROUP_BLOCK_DEFINITION, $regionname = 'side-pre');
-        }
-    }
-
-    // @codingStandardsIgnoreStart
-    // phpcs:disable
-    /**
      * Dashboard block definition
      */
     const MUR_PEDAGO_BLOCK_DEFINITION = array(
@@ -178,8 +66,6 @@ class setup {
         )
     );
 
-    // @codingStandardsIgnoreStart
-    // phpcs:disable
     /**
      * Dashboard block definition
      */
@@ -197,133 +83,9 @@ class setup {
         )
     );
 
-    /**
-     * Setup dashboard  - to be completed
-     *
-     * @return bool
-     * @throws \dml_exception
-     */
-    public static function setup_page_blocks($page, $blockdeflist, $regionname = 'content') {
-        global $DB;
-        $transaction = $DB->start_delegated_transaction(); // Do not commit transactions until the end.
-        $blocks = $page->blocks;
-        $blocks->add_regions(array($regionname), false);
-        $blocks->set_default_region($regionname);
-        $blocks->load_blocks();
-
-        // Delete unceessary blocks.
-        $centralblocks = $blocks->get_blocks_for_region($regionname);
-        foreach ($centralblocks as $cb) {
-            blocks_delete_instance($cb->instance);
-        }
-        // Add the blocks.
-        foreach ($blockdeflist as $blockdef) {
-            global $DB;
-            $blockinstance = (object) $blockdef;
-            $blockinstance->parentcontextid = $page->context->id;
-            $blockinstance->pagetypepattern = $page->pagetype;
-            if (!empty($page->subpage)) {
-                $blockinstance->subpagepattern = $page->subpage;
-            }
-            if (!empty($blockinstance->configdata)) {
-                $blockinstance->configdata = base64_encode(serialize((object) $blockinstance->configdata));
-
-            } else {
-                $blockinstance->configdata = '';
-            }
-            $blockinstance->timecreated = time();
-            $blockinstance->timemodified = $blockinstance->timecreated;
-
-            $contextdefs = [];
-            if (!empty($blockinstance->capabilities)) {
-                $contextdefs = $blockinstance->capabilities;
-                unset($blockinstance->capabilities);
-            }
-
-            $blockinstance->id = $DB->insert_record('block_instances', $blockinstance);
-            if (!empty($blockdef['files'])) {
-                static::upload_files_in_block($blockinstance, $blockdef['files']);
-            }
-            // Ensure the block context is created.
-            context_block::instance($blockinstance->id);
-
-            // If the new instance was created, allow it to do additional setup.
-            if ($block = block_instance($blockinstance->blockname, $blockinstance)) {
-                $block->instance_create();
-            }
-            foreach ($contextdefs as $capability => $roles) {
-                foreach ($roles as $rolename => $permission) {
-                    $roleid = $DB->get_field('role', 'id', array('shortname' => $rolename));
-                    if ($roleid) {
-                        role_change_permission($roleid, $block->context, $capability, $permission);
-                    }
-                }
-            }
-        }
-        $DB->commit_delegated_transaction($transaction);// Ok, we can commit.
-        return true;
-    }
-
-    /**
-     * @param object $blockinstance
-     * @param $files
-     * @throws file_exception
-     * @throws stored_file_creation_exception
-     */
-    protected static function upload_files_in_block($blockinstance, $files) {
-        global $DB;
-        $configdata = unserialize(base64_decode($blockinstance->configdata));
-        $context = context_block::instance($blockinstance->id);
-        foreach ($files as $filename => $filespec) {
-            $filerecord = array(
-                'contextid' => $context->id,
-                'component' => 'block_' . $blockinstance->blockname,
-                'filearea' => empty($filespec['filearea']) ? "files" : $filespec['filearea'],
-                'itemid' => isset($filespec['itemid']) ? $filespec['itemid'] : $blockinstance->id,
-                'filepath' => dirname($filename) == '.' ? '/' : dirname($filename),
-                'filename' => basename($filename),
-            );
-            // Create an area to upload the file.
-            $fs = get_file_storage();
-            // Create a file from the string that we made earlier.
-            if (!($file = $fs->get_file($filerecord['contextid'],
-                $filerecord['component'],
-                $filerecord['filearea'],
-                $filerecord['itemid'],
-                $filerecord['filepath'],
-                $filerecord['filename']))) {
-                global $CFG;
-                $originalpath = $CFG->dirroot;
-                $originalpath .= empty($filespec['filepath']) ?
-                    "/theme/imtpn/data/files/{$filerecord['filename']}" : $filespec['filepath'];
-
-                $file = $fs->create_file_from_pathname($filerecord,
-                    $originalpath);
-            }
-            if (!empty($filespec['textfields'])) {
-                foreach ($filespec['textfields'] as $textfield) {
-                    $configdata->{$textfield} =
-                        file_rewrite_pluginfile_urls($configdata->{$textfield},
-                            'pluginfile.php',
-                            $context->id,
-                            'block',
-                            $filerecord['filearea'],
-                            $filerecord['itemid']
-                        );
-                }
-            }
-        }
-        $DB->update_record('block_instances',
-            [
-                'id' => $blockinstance->id,
-                'configdata' => base64_encode(serialize($configdata)),
-                'timemodified' => time()
-            ]);
-    }
-
-
-    // @codingStandardsIgnoreStart
     // phpcs:disable
+    // @codingStandardsIgnoreStart
+
     /**
      * Dashboard block definition
      */
@@ -414,6 +176,9 @@ class setup {
             'capabilities' => array()
         ),
     );
+
+    // @codingStandardsIgnoreStart
+    // phpcs:disable
     /**
      * Homepage block definition
      */
@@ -515,9 +280,103 @@ class setup {
         )
 
     );
+    /**
+     * The defaults settings
+     */
+    const DEFAULT_SETTINGS = [
+        'moodle' => [
+            'country' => 'FR',
+            'timezone' => 'Europe/Paris',
+            'block_html_allowcssclasses' => true,
+            'defaulthomepage' => HOMEPAGE_MY,
+        ]
+    ];
 
-    // phpcs:enable
-    // @codingStandardsIgnoreEnd
+    /**
+     * Install updates
+     */
+    public static function install_update() {
+        global $PAGE, $CFG, $DB;
+
+        static::setup_config_values();
+        if (!$DB->record_exists('block_rss_client', ['url' => 'https://www.imt.fr/feed/'])) {
+            $id = $DB->insert_record(
+                'block_rss_client',
+                array('userid' => get_admin()->id,
+                    'title' => 'IMT',
+                    'preferredtitle' => '',
+                    'description' =>
+                        'Premier groupe de grandes écoles d\'ingénieurs et managers en France',
+                    'shared' => '0',
+                    'url' => 'https://www.imt.fr/feed/',
+                    'skiptime' => '0',
+                    'skipuntil' => '0')
+            );
+        }
+        require_once($CFG->dirroot . '/my/lib.php');
+        // Get the default Dashboard block.
+        $defaultmy = my_get_page(null, MY_PAGE_PRIVATE);
+
+        $page = new moodle_page();
+        $page->set_pagetype('my-index');
+        $page->set_subpage($defaultmy->id);
+        $page->set_url(new moodle_url('/'));
+        $page->set_context(context_system::instance());
+
+        $oldpage = $PAGE;
+        $PAGE = $page;
+        $dashboarddef = self::DASHBOARD_BLOCK_DEFINITION;
+        $murpedagocm = mur_pedagogique::get_cm();
+        if ($murpedagocm) {
+            $forumid = $murpedagocm->instance;
+            $dashboarddef = array_map(function($b) use ($forumid) {
+                if ($b['blockname'] == 'forum_feed') {
+                    $b['configdata']['forumid'] = $forumid;
+                }
+                return $b;
+            }, self::DASHBOARD_BLOCK_DEFINITION);
+        }
+        static::setup_page_blocks($page, $dashboarddef);
+        my_reset_page_for_all_users();
+        // Note here: this will only define capabilities for the default page. If we
+        // want the dashboard to work as expected we also need to set forcedefaultmymoodle to true.
+
+        // Setup Home page.
+        $page = new moodle_page();
+        $page->set_pagetype('site-index');
+        $page->set_docs_path('');
+        $page->set_context(context_system::instance());
+        $PAGE = $page;
+        static::setup_page_blocks($page, self::HOMEPAGE_BLOCK_DEFINITION);
+        $PAGE = $oldpage;
+
+        // Setup sharing cart
+        if ($DB->record_exists('block', array('name' => 'sharing_cart'))) {
+            // Setup Ressource library activities.
+            $page = new moodle_page();
+            $page->set_pagetype('resource-library-activities');
+            $page->set_docs_path('');
+            $page->set_context(context_system::instance());
+            $PAGE = $page;
+            static::setup_page_blocks($page, array(
+                    array(
+                        'blockname' => 'sharing_cart',
+                        'showinsubcontexts' => '1',
+                        'defaultregion' => 'side-right',
+                        'defaultweight' => '0',
+                        'configdata' => [],
+                        'capabilities' => array()
+                    ),
+                )
+            );
+            $PAGE = $oldpage;
+
+        }
+    }
+
+
+    // @codingStandardsIgnoreStart
+    // phpcs:disable
 
     /**
      * Setup config values
@@ -538,14 +397,168 @@ class setup {
     }
 
     /**
-     * The defaults settings
+     * Setup dashboard  - to be completed
+     *
+     * @param moodle_page $page
+     * @param array $blockdeflist
+     * @param string $regionname
+     * @return bool
+     * @throws \dml_transaction_exception
+     * @throws dml_exception
+     * @throws file_exception
+     * @throws stored_file_creation_exception
      */
-    const DEFAULT_SETTINGS = [
-        'moodle' => [
-            'country' => 'FR',
-            'timezone' => 'Europe/Paris',
-            'block_html_allowcssclasses' => true,
-            'defaulthomepage' => HOMEPAGE_MY,
-        ]
-    ];
+    public static function setup_page_blocks($page, $blockdeflist, $regionname = 'content') {
+        global $DB;
+        $transaction = $DB->start_delegated_transaction(); // Do not commit transactions until the end.
+        $blocks = $page->blocks;
+        $blocks->add_regions(array($regionname), false);
+        $blocks->set_default_region($regionname);
+        $blocks->load_blocks();
+
+        // Delete unceessary blocks.
+        $centralblocks = $blocks->get_blocks_for_region($regionname);
+        foreach ($centralblocks as $cb) {
+            blocks_delete_instance($cb->instance);
+        }
+        // Add the blocks.
+        foreach ($blockdeflist as $blockdef) {
+            global $DB;
+            $blockinstance = (object) $blockdef;
+            $blockinstance->parentcontextid = $page->context->id;
+            $blockinstance->pagetypepattern = $page->pagetype;
+            if (!empty($page->subpage)) {
+                $blockinstance->subpagepattern = $page->subpage;
+            }
+            if (!empty($blockinstance->configdata)) {
+                $blockinstance->configdata = base64_encode(serialize((object) $blockinstance->configdata));
+
+            } else {
+                $blockinstance->configdata = '';
+            }
+            $blockinstance->timecreated = time();
+            $blockinstance->timemodified = $blockinstance->timecreated;
+
+            $contextdefs = [];
+            if (!empty($blockinstance->capabilities)) {
+                $contextdefs = $blockinstance->capabilities;
+                unset($blockinstance->capabilities);
+            }
+
+            $blockinstance->id = $DB->insert_record('block_instances', $blockinstance);
+            if (!empty($blockdef['files'])) {
+                static::upload_files_in_block($blockinstance, $blockdef['files']);
+            }
+            // Ensure the block context is created.
+            context_block::instance($blockinstance->id);
+
+            // If the new instance was created, allow it to do additional setup.
+            if ($block = block_instance($blockinstance->blockname, $blockinstance)) {
+                $block->instance_create();
+            }
+            foreach ($contextdefs as $capability => $roles) {
+                foreach ($roles as $rolename => $permission) {
+                    $roleid = $DB->get_field('role', 'id', array('shortname' => $rolename));
+                    if ($roleid) {
+                        role_change_permission($roleid, $block->context, $capability, $permission);
+                    }
+                }
+            }
+        }
+        $DB->commit_delegated_transaction($transaction);// Ok, we can commit.
+        return true;
+    }
+
+    // @codingStandardsIgnoreEnd
+    // phpcs:enable
+
+    /**
+     * Upload files in blocks
+     *
+     * @param object $blockinstance
+     * @param array $files
+     * @throws file_exception
+     * @throws stored_file_creation_exception
+     */
+    protected static function upload_files_in_block($blockinstance, $files) {
+        global $DB;
+        $configdata = unserialize(base64_decode($blockinstance->configdata));
+        $context = context_block::instance($blockinstance->id);
+        foreach ($files as $filename => $filespec) {
+            $filerecord = array(
+                'contextid' => $context->id,
+                'component' => 'block_' . $blockinstance->blockname,
+                'filearea' => empty($filespec['filearea']) ? "files" : $filespec['filearea'],
+                'itemid' => isset($filespec['itemid']) ? $filespec['itemid'] : $blockinstance->id,
+                'filepath' => dirname($filename) == '.' ? '/' : dirname($filename),
+                'filename' => basename($filename),
+            );
+            // Create an area to upload the file.
+            $fs = get_file_storage();
+            // Create a file from the string that we made earlier.
+            if (!($file = $fs->get_file($filerecord['contextid'],
+                $filerecord['component'],
+                $filerecord['filearea'],
+                $filerecord['itemid'],
+                $filerecord['filepath'],
+                $filerecord['filename']))) {
+                global $CFG;
+                $originalpath = $CFG->dirroot;
+                $originalpath .= empty($filespec['filepath']) ?
+                    "/theme/imtpn/data/files/{$filerecord['filename']}" : $filespec['filepath'];
+
+                $file = $fs->create_file_from_pathname($filerecord,
+                    $originalpath);
+            }
+            if (!empty($filespec['textfields'])) {
+                foreach ($filespec['textfields'] as $textfield) {
+                    $configdata->{$textfield} =
+                        file_rewrite_pluginfile_urls($configdata->{$textfield},
+                            'pluginfile.php',
+                            $context->id,
+                            'block',
+                            $filerecord['filearea'],
+                            $filerecord['itemid']
+                        );
+                }
+            }
+        }
+        $DB->update_record('block_instances',
+            [
+                'id' => $blockinstance->id,
+                'configdata' => base64_encode(serialize($configdata)),
+                'timemodified' => time()
+            ]);
+    }
+
+    /**
+     * Setup block for mur pedagogique
+     *
+     * @throws coding_exception
+     * @throws dml_exception
+     */
+    public static function setup_murpedago_blocks() {
+        $cm = mur_pedagogique::get_cm();
+        if ($cm) {
+            $pageforum = new moodle_page();
+            $pageforum->set_cm($cm);
+            $pageforum->set_pagelayout('incourse');
+            $pageforum->set_pagetype('mod-forum-view');
+            self::setup_page_blocks($pageforum, self::MUR_PEDAGO_BLOCK_DEFINITION, $regionname = 'side-pre');
+            $pagemurpedago = new moodle_page();
+            $pageforum->set_cm($cm);
+            $pageforum->set_pagelayout('incourse');
+            $pagemurpedago->set_pagetype('theme-imtpn-pages-murpedagogique-index');
+            self::setup_page_blocks($pagemurpedago, self::MUR_PEDAGO_BLOCK_DEFINITION, $regionname = 'side-pre');
+            $pagegroupoverview = new moodle_page();
+            $pagegroupoverview->set_pagelayout('standard');
+            $pagegroupoverview->set_pagetype('group-overview');
+            self::setup_page_blocks($pagegroupoverview, self::MUR_PEDAGO_BLOCK_DEFINITION, $regionname = 'side-pre');
+            $pagegroups = new moodle_page();
+            $pagegroups->set_pagelayout('incourse');
+            $pagegroups->set_pagetype('group-page');
+            $pagegroups->set_context(context_module::instance($cm->id));
+            self::setup_page_blocks($pagegroups, self::MUR_PEDAGO_GROUP_BLOCK_DEFINITION, $regionname = 'side-pre');
+        }
+    }
 }

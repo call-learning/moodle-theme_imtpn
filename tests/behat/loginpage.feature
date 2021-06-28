@@ -1,4 +1,4 @@
-@javascript @theme_imtpn
+@theme @javascript @theme_imtpn
 Feature: Login page
   The login page has got specific IMTPN features
 

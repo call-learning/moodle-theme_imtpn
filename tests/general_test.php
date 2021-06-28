@@ -25,13 +25,14 @@
  */
 
 use block_group_members\output\group_members;
+use theme_imtpn\table\groups;
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
  * Class block_group_members
  *
- * @package     block_group_members
+ * @package     theme_imtpn
  * @copyright   2021 CALL Learning <laurent@call-learning.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -46,15 +47,17 @@ class general_testcase extends advanced_testcase {
         $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $group = [];
-        $group[0] = $this->getDataGenerator()->create_group(['courseid' => $course->id, 'name'=> 'Statistiques pour l\'ingénieur']);
-        $group[1] = $this->getDataGenerator()->create_group(['courseid' => $course->id, 'name'=> 'éthique de la science et ingénieur']);
-        list($where, $params) = \theme_imtpn\table\groups::filter_by_groupname('ingénieur');
+        $group[0] =
+            $this->getDataGenerator()->create_group(['courseid' => $course->id, 'name' => 'Statistiques pour l\'ingénieur']);
+        $group[1] =
+            $this->getDataGenerator()->create_group(['courseid' => $course->id, 'name' => 'éthique de la science et ingénieur']);
+        list($where, $params) = groups::filter_by_groupname('ingénieur');
         $ingenieur = $DB->get_records_sql("SELECT * FROM {groups} g WHERE 1=1 $where", $params);
         $this->assertCount(2, $ingenieur);
-        list($where, $params) = \theme_imtpn\table\groups::filter_by_groupname('ingenieur');
+        list($where, $params) = groups::filter_by_groupname('ingenieur');
         $ingenieur = $DB->get_records_sql("SELECT * FROM {groups} g WHERE 1=1 $where", $params);
         $this->assertCount(2, $ingenieur);
-        list($where, $params) = \theme_imtpn\table\groups::filter_by_groupname('ethique');
+        list($where, $params) = groups::filter_by_groupname('ethique');
         $ethique = $DB->get_records_sql("SELECT * FROM {groups} g WHERE 1=1 $where", $params);
         $this->assertCount(1, $ethique);
     }

@@ -103,6 +103,12 @@ function theme_imtpn_get_extra_scss($theme) {
     return $extracss . $additionalcss;
 }
 
+/**
+ * Reset all blocks
+ *
+ * @throws coding_exception
+ * @throws dml_exception
+ */
 function reset_mur_pedago_blocks() {
     \theme_imtpn\setup::setup_murpedago_blocks();
 }
@@ -114,7 +120,8 @@ function reset_mur_pedago_blocks() {
  * is logged in, the notloggedin is not there anymore, resulting in the left navbar taking space.
  * This resolves this issue on this theme.
  *
- * @param $page
+ * @param moodle_page $page
+ * @throws coding_exception
  */
 function theme_imtpn_page_init($page) {
     mur_pedagogique::set_additional_page_classes($page);

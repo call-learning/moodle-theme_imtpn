@@ -40,21 +40,25 @@ class custom_menu_item_advanced extends custom_menu_item {
     use custom_menu_advanced_trait;
 
     /**
-     * @var mixed|null icon
+     * @var mixed|null $iconclasses class for icon
      */
     protected $iconclasses;
 
+    /**
+     * @var bool $iscurrentpage is current page or not
+     */
     protected $iscurrentpage = false;
 
     /**
      * Constructs the new custom menu item
      *
      * @param string $text
-     * @param moodle_url $url A moodle url to apply as the link for this item [Optional]
-     * @param string $title A title to apply to this item [Optional]
-     * @param int $sort A sort or to use if we need to sort differently [Optional]
-     * @param custom_menu_item $parent A reference to the parent custom_menu_item this child
+     * @param moodle_url|null $url A moodle url to apply as the link for this item [Optional]
+     * @param null $title A title to apply to this item [Optional]
+     * @param null $sort A sort or to use if we need to sort differently [Optional]
+     * @param custom_menu_item|null $parent A reference to the parent custom_menu_item this child
      *        belongs to, only if the child has a parent. [Optional]
+     * @param null $iconclasses
      */
     public function __construct($text, moodle_url $url = null, $title = null, $sort = null, custom_menu_item $parent = null,
         $iconclasses = null) {
