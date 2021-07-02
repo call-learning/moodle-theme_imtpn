@@ -1,26 +1,21 @@
 .syllabus-title {
   padding-bottom: 2em;
+  display: flex;
+  flex-direction: column;
+
   .sfield-fullnamehtml {
-
     font-size: 2.5em;
-    text-align: center;
-
   }
   .sfield-courseimage {
     max-width: 400px;
     margin: auto;
     box-shadow: 0 2px 14px -4px rgba(0, 0, 0, 0.25);
     margin-bottom: 40px;
-    display: block;
   }
   .sfield-tagline  {
     max-width: 75%;
     margin: auto;
     font-size: 1.5em;
-    text-align: center;
-  }
-  .sfield-accroche {
-    text-align: center;
   }
 }
 
@@ -29,27 +24,39 @@
     color: $primary;
   }
 
+  @include media-breakpoint-up(md) {
+    .sfield-label {
+      white-space: nowrap;
+    }
+  }
+
   .sfield-content {
     @include media-breakpoint-up(md) {
       white-space: nowrap;
     }
+
     p {
       display: none; // Moodle always insert an empty paragraph in text area content.
     }
+
     ul {
       display: inline;
       list-style: none;
       padding: 0px;
+
       li {
         display: inline;
       }
+
       li::after {
         content: ", ";
       }
+
       li:last-child::after {
         content: "";
       }
     }
+
     color: $app-gray-2;
     font-size: 14px;
     font-style: italic;

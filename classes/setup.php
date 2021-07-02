@@ -105,19 +105,19 @@ class setup {
 <div class="d-flex flex-row flex-wrap flex-md-nowrap justify-content-center align-items-stretch my-4">
     <a>
 	    <img src="/theme/imtpn/pix/icons/book.svg" alt=""/>
-        <div>Créer un nouveau cours</div>
+        <span>Créer un nouveau cours</span>
     </a>
     <a>
         <img src="/theme/imtpn/pix/icons/hand-leaf.svg" alt=""/>
-        <div>Partager une ressource</div>
+        <span>Partager une ressource</span>
     </a>
     <a href="/theme/imtpn/pages/themescat.php">
         <img src="/theme/imtpn/pix/icons/globe-glass.svg" alt=""/>
-        <div>Explorer le catalogue</div>
+        <span>Explorer le catalogue</span>
     </a>
     <a>
         <img src="/theme/imtpn/pix/icons/bubbles.svg" alt=""/>
-        <div>Echanger avec mes collègues</div>
+        <span>Echanger avec mes collègues</span>
     </a>
 </div>'],
             'capabilities' => array()

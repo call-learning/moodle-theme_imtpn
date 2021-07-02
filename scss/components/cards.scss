@@ -29,12 +29,14 @@
   }
 
   .title {
+    text-overflow: ellipsis;
     white-space: normal;
-    font-size: 20px;
+    font-size: 16px;
     line-height: 150%;
     font-weight: bold;
     color: $body-color;
-    padding: 24px 8px;
+    padding: 8px;
+    padding-right:24px;
     max-height: 60px;
     overflow: hidden;
     text-align: center;

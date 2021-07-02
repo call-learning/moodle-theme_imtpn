@@ -7,3 +7,8 @@ html, body {
   box-shadow: 0 2px 14px -4px rgb(0 0 0 / 25%);
   background: #fff;
 }
+
+// Space for last menu in boostrap.
+#nav-drawer nav:nth-last-child(2) {
+  padding-bottom: 20px !important;
+}
