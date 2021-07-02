@@ -22,6 +22,15 @@
     }
 
 }
-#page-themescat .block-thumblinks-action .thumbnail {
+
+#page-themescat .block-thumblinks-action {
+    .container div.row-fluid .col-sm-12 {
+        padding-bottom: 1.5em;
+    }
+    @include media-breakpoint-up(md) {
+        .container div.row-fluid .col-sm-12 {
+            padding-bottom: 2em;
+        }
+    }
     height: 250px;
 }
