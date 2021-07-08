@@ -296,7 +296,7 @@ class setup {
      * Install updates
      */
     public static function install_update() {
-        global $PAGE, $CFG, $DB;
+        global $PAGE, $CFG, $DB, $OUTPUT;
 
         static::setup_config_values();
         if (!$DB->record_exists('block_rss_client', ['url' => 'https://www.imt.fr/feed/'])) {
@@ -372,6 +372,18 @@ class setup {
             $PAGE = $oldpage;
 
         }
+        // Rebuild the OUTPUT variable as if not $OUPUT->page is set to the last set page.
+        // This will avoid an error message when the renderer is used later
+        // and does not point the right page.
+        $target = null;
+        if ($PAGE->pagelayout === 'maintenance') {
+            // If the page is using the maintenance layout then we're going to force target to maintenance.
+            // This leads to a special core renderer that is designed to block access to API's that are likely unavailable for this
+            // page layout.
+            $target = RENDERER_TARGET_MAINTENANCE;
+        }
+        $OUTPUT = $PAGE->get_renderer('core', null, $target);
+
     }
 
 
