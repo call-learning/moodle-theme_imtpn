@@ -80,6 +80,12 @@ if (!$isingroup && has_capability('theme/imtpn:canselfjoingroup', $context)) {
         get_string('joingroup', 'theme_imtpn'));
     $buttons .= $joingroup;
 }
+if ($isingroup) {
+    $leavegroup = $OUTPUT->single_button(
+        new moodle_url('/theme/imtpn/pages/murpedagogique/leavegroup.php', array('groupid' => $groupid)),
+        get_string('leavegroup', 'theme_imtpn'));
+    $buttons .= $leavegroup;
+}
 if (has_capability('moodle/course:managegroups', $context)) {
     $editgroup = $OUTPUT->single_button(
         new moodle_url('/theme/imtpn/pages/murpedagogique/groupaddedit.php', array('id' => $groupid)),
