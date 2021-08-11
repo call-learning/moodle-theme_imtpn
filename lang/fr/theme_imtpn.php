@@ -45,9 +45,9 @@ $string['groupmessagescount'] = '{$a} messages';
 $string['groupname'] = 'Nom du groupe';
 $string['groups:groupname'] = 'Name';
 $string['groupleft'] = 'You left the group {$a}';
-$string['groupjoined'] = '';
 $string['groups:members'] = 'Membres';
 $string['groups:postcount'] = '# Posts';
+$string['groupwrongjoinkey'] = 'La clé d\'inscription n\'est pas valide';
 $string['joingroup'] = 'Rejoindre le groupe';
 $string['legal_mention'] = 'Les illustrations de ce site sont intégralement ou en partie issues
  des banques Freepik et Unsplash, proposant des contenus libres et gratuits.';

@@ -1,17 +1,19 @@
 #page-my-index {
-  #block-region-content {
-    display: flex;
-    flex-wrap: wrap;
-    section {
-      width: 100%;
+    #block-region-content {
+        display: flex;
+        flex-wrap: wrap;
+
+        section {
+            width: 100%;
+        }
+
+        @include media-breakpoint-up(lg) {
+            section.block_calendar_upcoming,
+            section.block_forum_feed {
+                flex: 0 0 50%;
+                width: 50%;
+            }
+        }
     }
-    @include media-breakpoint-up(lg) {
-      section.block_calendar_upcoming,
-      section.block_forum_feed {
-        flex: 0 0 50%;
-        width: 50%;
-      }
-    }
-  }
 
 }

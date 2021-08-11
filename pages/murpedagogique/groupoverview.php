@@ -129,8 +129,6 @@ $filterset->add_filter(new integer_filter('courseid', filter::JOINTYPE_DEFAULT, 
 if (!empty($groupname)) {
     $filterset->add_filter(new string_filter('name', filter::JOINTYPE_DEFAULT, [$groupname]));
 }
-
-/* @var core_renderer $OUTPUT */
 echo $OUTPUT->header();
 echo $OUTPUT->box_start('py-5');
 $form->display();
@@ -141,4 +139,3 @@ $grouptable = new groups(html_writer::random_id());
 $grouptable->set_filterset($filterset);
 $grouptable->out(20, true);
 echo $OUTPUT->footer();
-

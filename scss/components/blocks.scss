@@ -1,68 +1,69 @@
 .imtpn-container {
-  width: 940px;
-  max-width: calc(100% - 40px);
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
+    width: 940px;
+    max-width: calc(100% - 40px);
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
 }
 
 .grey-background {
-  background-color: $app-gray-3;
+    background-color: $app-gray-3;
 }
 
 .block-featured-courses {
-  display: grid;
-  grid-gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
 .db-welcome {
-  .card {
-    text-align: center;
-
-    h5 {
-      @extend .title-dashboard;
-    }
-
-    .card-text {
-
-      p {
-        font-size: 17px;
-      }
-
-      a {
-        padding: 15px;
-        color: $primary;
-        border: 1px solid $primary;
-        width: 210px;
-        font-size: 17px;
+    .card {
         text-align: center;
-        margin: 0 10px 20px 10px;
 
-        @include media-breakpoint-down(md) {
-          width: calc(50% - 20px);
+        h5 {
+            @extend .title-dashboard;
         }
 
-        >i {
-          font-size: 37px;
-          margin-bottom: 10px;
+        .card-text {
+
+            p {
+                font-size: 17px;
+            }
+
+            a {
+                padding: 15px;
+                color: $primary;
+                border: 1px solid $primary;
+                width: 210px;
+                font-size: 17px;
+                text-align: center;
+                margin: 0 10px 20px 10px;
+
+                @include media-breakpoint-down(md) {
+                    width: calc(50% - 20px);
+                }
+
+                > i {
+                    font-size: 37px;
+                    margin-bottom: 10px;
+                }
+            }
         }
-      }
     }
-  }
 }
 
 .db-inspiration {
-  .fa {
-    color: $primary;
-  }
+    .fa {
+        color: $primary;
+    }
 }
+
 // Remove card border for all blocks.
 
 #page-my-index .block > .card {
     @extend .card-dashboard;
 
     h5 {
-      @extend .title-dashboard;
+        @extend .title-dashboard;
     }
 }

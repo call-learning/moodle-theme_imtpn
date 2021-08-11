@@ -1,18 +1,21 @@
 /* Hide some Forum features not necessary for the "Mur pedagogique" */
 .mur-pedagogique {
     // Do not display the groups user belong to.
-     .author-groups-container {
-         display: none;
-     }
+    .author-groups-container {
+        display: none;
+    }
+
     // No rating.
     .rating-aggregate-container {
         display: none; // We also do not want this to be accessible.
     }
 }
+
 .groupoverview-search-form {
     input[name='groupname'] {
         width: 100%;
     }
+
     @include media-breakpoint-down(md) {
         flex-wrap: wrap;
         .form-group.fitem {
@@ -27,6 +30,7 @@
     .container div.row-fluid .col-sm-12 {
         padding-bottom: 1.5em;
     }
+
     @include media-breakpoint-up(md) {
         .container div.row-fluid .col-sm-12 {
             padding-bottom: 2em;

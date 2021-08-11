@@ -72,4 +72,4 @@ class groupoverview_form extends moodleform {
         $mform->addElement('cancel', 'cancelbutton', get_string('clear'),
             ['class' => 'mr-auto']);
     }
-};
+}

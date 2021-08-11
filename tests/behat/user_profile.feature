@@ -41,7 +41,6 @@ Feature: I check that the user profile has the right informaiton
     And I should see "Course 2"
     And I should not see "Course 1"
 
-
   Scenario: As a an admin I should be able to switch on and off the profil features
     Given the following config values are set as admin:
       | simplifiedprofilepage | 0 | theme_imtpn |

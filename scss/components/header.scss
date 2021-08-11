@@ -1,193 +1,198 @@
 body {
-  .navbar.navbar-light {
-    background-color: white;
-  }
-  @include media-breakpoint-down(sm) {
-    .navbar {
-      .navbar__logo {
-        max-width: 100px;
-      }
+    .navbar.navbar-light {
+        background-color: white;
     }
-  }
-}
-body.notloggedin {
-  .navbar {
-    background-color: initial;
-    box-shadow: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-    height: 80px;
-    padding: 0;
-    max-height: none;
 
     @include media-breakpoint-down(sm) {
-      background-color: $imt-darkblue;
-      opacity: 0.8;
-    }
-    .imtpn-container {
-      flex-grow: 1;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .navbar-nav .nav-item.currentpage {
-      border-bottom: $primary solid;
-      border-width: 2px;
-    }
-
-    &.navbar-dark {
-      .nav-link {
-        a, a:hover, a:visited {
-          font-weight: bold;
-          color: $navbar-dark-color;
-          text-decoration: none;
+        .navbar {
+            .navbar__logo {
+                max-width: 100px;
+            }
         }
-      }
     }
-  }
+}
 
-  header.header {
-    position: relative;
-    min-height: $navbar-height;
-    @include media-breakpoint-up(sm) {
-      position: fixed;
-      width: 100%;
-      top: 0px;
-      z-index: $zindex-fixed - 1
-    }
-
-    flex: 0 0 auto;
-
-    background-image: url([[pix:theme|backgrounds/header]]);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-
-    color: $white;
-
-    .header__triangle-1 {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-
-      background: $primary;
-      opacity: 0.8;
-
-      width: 62%;
-      height: 100%;
-
-      @include media-breakpoint-down(md) {
-        width: 52%;
-      }
-
-      @include media-breakpoint-down(sm) {
-        width: 100%;
-        &::after {
-          display: none;
-        }
-      }
-
-      &:after {
-        content: "";
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-color: $primary transparent transparent transparent;
-        border-width: $navbar-height $navbar-height 0 0;
-        right: -($navbar-height);
-        position: absolute;
-        top: 0;
-      }
-
-    }
-
-    .header__triangle-2 {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-
-      width: 0;
-      height: 0;
-      border-style: solid;
-      border-width: 200px 0 0 200px;
-      border-color: transparent transparent transparent $app-gray-1;
-    }
-
-    .header__triangle-3 {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-
-      width: 0;
-      height: 0;
-      border-style: solid;
-      border-width: 0 0 200px 200px;
-      border-color: transparent transparent $secondary transparent;
-
-      @include media-breakpoint-down(sm) {
-        display: none;
-      }
-    }
-
-    .header__bottom {
-      position: relative;
-
-      padding-top: 80px;
-      height: 312px;
-
-      @include media-breakpoint-down(sm) {
-        height: 262px;
-      }
-
-      .imtpn-container {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: center;
-        height: 100%;
-      }
-    }
-
-    .header__title {
-      font-size: 32px;
-      font-weight: bold;
-      line-height: 42px;
-
-      @include media-breakpoint-down(sm) {
-        font-size: 20px;
-        text-align: center;
-        line-height: 30px;
-      }
-    }
-
-    .header__button {
-      margin-top: 20px;
-
-      @include media-breakpoint-down(sm) {
-        width: 100%;
-      }
-
-      a {
-        min-width: 278px;
+body.notloggedin {
+    .navbar {
+        background-color: initial;
+        box-shadow: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+        height: 80px;
+        padding: 0;
+        max-height: none;
 
         @include media-breakpoint-down(sm) {
-          min-width: 0;
-          width: 100%;
+            background-color: $imt-darkblue;
+            opacity: 0.8;
         }
-      }
+
+        .imtpn-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar-nav .nav-item.currentpage {
+            border-bottom: $primary solid;
+            border-width: 2px;
+        }
+
+        &.navbar-dark {
+            .nav-link {
+                a, a:hover, a:visited {
+                    font-weight: bold;
+                    color: $navbar-dark-color;
+                    text-decoration: none;
+                }
+            }
+        }
     }
-  }
+
+    header.header {
+        position: relative;
+        min-height: $navbar-height;
+        @include media-breakpoint-up(sm) {
+            position: fixed;
+            width: 100%;
+            top: 0px;
+            z-index: $zindex-fixed - 1
+        }
+
+        flex: 0 0 auto;
+
+        background-image: url([[pix:theme|backgrounds/header]]);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        color: $white;
+
+        .header__triangle-1 {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+
+            background: $primary;
+            opacity: 0.8;
+
+            width: 62%;
+            height: 100%;
+
+            @include media-breakpoint-down(md) {
+                width: 52%;
+            }
+
+            @include media-breakpoint-down(sm) {
+                width: 100%;
+                &::after {
+                    display: none;
+                }
+            }
+
+            &:after {
+                content: "";
+                width: 0;
+                height: 0;
+                border-style: solid;
+                border-color: $primary transparent transparent transparent;
+                border-width: $navbar-height $navbar-height 0 0;
+                right: -($navbar-height);
+                position: absolute;
+                top: 0;
+            }
+
+        }
+
+        .header__triangle-2 {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 200px 0 0 200px;
+            border-color: transparent transparent transparent $app-gray-1;
+        }
+
+        .header__triangle-3 {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 0 200px 200px;
+            border-color: transparent transparent $secondary transparent;
+
+            @include media-breakpoint-down(sm) {
+                display: none;
+            }
+        }
+
+        .header__bottom {
+            position: relative;
+
+            padding-top: 80px;
+            height: 312px;
+
+            @include media-breakpoint-down(sm) {
+                height: 262px;
+            }
+
+            .imtpn-container {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: center;
+                height: 100%;
+            }
+        }
+
+        .header__title {
+            font-size: 32px;
+            font-weight: bold;
+            line-height: 42px;
+
+            @include media-breakpoint-down(sm) {
+                font-size: 20px;
+                text-align: center;
+                line-height: 30px;
+            }
+        }
+
+        .header__button {
+            margin-top: 20px;
+
+            @include media-breakpoint-down(sm) {
+                width: 100%;
+            }
+
+            a {
+                min-width: 278px;
+
+                @include media-breakpoint-down(sm) {
+                    min-width: 0;
+                    width: 100%;
+                }
+            }
+        }
+    }
 }
+
 #page-site-index.notloggedin {
-  #page {
-    @include media-breakpoint-up(sm) {
-      margin-top: (312px + $navbar-height);
+    #page {
+        @include media-breakpoint-up(sm) {
+            margin-top: (312px + $navbar-height);
+        }
     }
-  }
-  header.header {
-    .header__triangle-1:after {
-        border-width: 312px 312px 0 0;
-        right: -312px;
-      }
+
+    header.header {
+        .header__triangle-1:after {
+            border-width: 312px 312px 0 0;
+            right: -312px;
+        }
     }
 }

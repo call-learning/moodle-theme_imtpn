@@ -1,6 +1,5 @@
 @theme @javascript @theme_imtpn @local_resourcelibrary
-Feature: I check that the user profile has the right informaiton
-  The user profile should have been modified to include only relevant information
+Feature: I check that the syllabus is working and accessible
 
   Background:
     Given the following "courses" exist:

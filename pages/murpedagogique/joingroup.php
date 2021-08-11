@@ -36,7 +36,7 @@ $course = $DB->get_record('course', array('id' => $group->courseid), '*', MUST_E
 $context = context_course::instance($course->id, MUST_EXIST);
 require_login($course->id);
 if (!has_capability('theme/imtpn:canselfjoingroup', $context)) {
-    throw new moodle_exception('selfjoinerror','theme_imtpn');
+    throw new moodle_exception('selfjoinerror', 'theme_imtpn');
 }
 $PAGE->set_url(new moodle_url('/theme/imtpn/pages/murpedagogique/joingroup.php', array('groupid' => $groupid)));
 $PAGE->set_title("$course->shortname: " . get_string('groups'));
@@ -47,6 +47,22 @@ $PAGE->navbar->add(get_string('groups'),
 );
 
 echo $OUTPUT->header();
+if ($group->enrolmentkey) {
+    $form = new \theme_imtpn\form\group_enrolment_form();
+    $form->set_data(['groupid' => $groupid]);
+    echo $form->render();
+    if (!$form->is_submitted()) {
+        echo $OUTPUT->footer();
+        die();
+    }
+    if ($data = $form->get_data()) {
+        if ($data->enrolmentkey != $group->enrolmentkey) {
+            echo $OUTPUT->notification(get_string('groupwrongjoinkey', 'theme_imtpn', $group->name), 'notifyfailure');
+            echo $OUTPUT->footer();
+            die();
+        }
+    }
+}
 if (groups_add_member($groupid, $USER->id, 'theme_imtpn')) {
     echo $OUTPUT->notification(get_string('groupjoined', 'theme_imtpn', $group->name), 'notifysuccess');
 } else {

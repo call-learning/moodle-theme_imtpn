@@ -15,34 +15,43 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Steps definitions related with the imtpn theme.
- *
+ * Mur pedagogique group enrolment form (with key)
  *
  * @package   theme_imtpn
- * @category  test
  * @copyright 2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// NOTE: no MOODLE_INTERNAL test here, this file may be required by behat before including /config.php.
+namespace theme_imtpn\form;
+defined('MOODLE_INTERNAL') || die();
 
-require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
+use moodleform;
+
+global $CFG;
+require_once($CFG->dirroot . '/lib/formslib.php');
 
 /**
- * Imtpn theme steps definitions.
+ * Group enrolment form class
  *
  * @package   theme_imtpn
- * @category  test
  * @copyright 2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class behat_theme_imtpn extends behat_base {
+class group_enrolment_form extends moodleform {
+
     /**
-     * Make sure that the blocks for the mur pedagogique are set to what they need to be
-     *
-     * @Given /^I reset the murpedagogique blocks$/
+     * Form definition
      */
-    public function i_reset_the_murpedagogique_blocks() {
-        \theme_imtpn\setup::setup_murpedago_blocks();
+    protected function definition() {
+        $mform =& $this->_form;
+        $mform->addElement('passwordunmask', 'enrolmentkey', get_string('enrolmentkey', 'group'), 'maxlength="254" size="24"',
+            get_string('enrolmentkey', 'group'));
+        $mform->addHelpButton('enrolmentkey', 'enrolmentkey', 'group');
+        $mform->setType('enrolmentkey', PARAM_RAW);
+
+        $mform->addElement('hidden', 'groupid');
+        $mform->setType('groupid', PARAM_INT);
+
+        $this->add_action_buttons();
     }
 }

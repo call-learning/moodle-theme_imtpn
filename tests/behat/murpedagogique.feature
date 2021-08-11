@@ -23,9 +23,10 @@ Feature: Mur pedagogique test cases
       | activity | name            | intro           | type    | course | idnumber        | groupmode |
       | forum    | Mur pedagogique | Mur pedagogique | general | C1     | MUR_PEDAGOGIQUE | 1         |
     And the following "groups" exist:
-      | name | course | idnumber |
-      | G1   | C1     | G1       |
-      | G2   | C1     | G2       |
+      | name | course | idnumber | enrolmentkey |
+      | G1   | C1     | G1       |              |
+      | G2   | C1     | G2       |              |
+      | G4   | C1     | G4       |  abcd        |
     And the following "group members" exist:
       | user     | group |
       | student1 | G1    |
@@ -36,23 +37,16 @@ Feature: Mur pedagogique test cases
     # We just changed the mur pedagogique identifier so we need to reset the blocks
     Then I reset the murpedagogique blocks
 
-  Scenario: As a logged in user I should see the mur pedagogique link if I am registered in the course
-    Given I log in as "student1"
-    Then I should see "Catalog" in the ".fixed-top.navbar" "css_element"
-    Then I should see "Mur pédagogique" in the ".fixed-top.navbar" "css_element"
+  Scenario Outline: As a logged in user I should see the mur pedagogique link if I am registered in the course
+    Given I log in as "<user>"
+    Then I <catalogexistence> see "Catalog" in the ".fixed-top.navbar" "css_element"
+    Then I <murpedagoexistence> see "Mur pédagogique" in the ".fixed-top.navbar" "css_element"
     And I log out
-
-  Scenario: As an admin I should see the mur pedagogique link if I am registered in the course
-    Given I log in as "admin"
-    Then I should see "Catalog" in the ".fixed-top.navbar" "css_element"
-    Then I should see "Mur pédagogique" in the ".fixed-top.navbar" "css_element"
-    And I log out
-
-  Scenario: As a logged in user I should not see the mur pedagogique link if I am registered in the course
-    Given I log in as "student2"
-    Then I should see "Catalog" in the ".fixed-top.navbar" "css_element"
-    Then I should not see "Mur pédagogique" in the ".fixed-top.navbar" "css_element"
-    And I log out
+    Examples:
+      | user     | catalogexistence | murpedagoexistence |
+      | student1 | should           | should             |
+      | student2 | should           | should not         |
+      | admin    | should           | should             |
 
   Scenario: When the mur pedagogique is disabled I should not see the menu
     Given the following config values are set as admin:
@@ -105,3 +99,31 @@ Feature: Mur pedagogique test cases
     Then I click on "Continue" "button"
     And I should see "Add a new topic"
 
+  Scenario: As a student I can join a group with a password
+    Given I log in as "student3"
+    Then I follow "Mur pédagogique"
+    Then I click on "View all groups" "button"
+    And I click on "a.murpedago-group-link" "css_element" in the "G4" "table_row"
+    And I should not see "Add a new topic"
+    And I should see "Règles de participation"
+    Then I click on "Join group" "button"
+    Then I should see "Enrolment key"
+    Then I set the field "Enrolment key" to "abc"
+    And I click on "Save" "button"
+    Then I should see "The enrolment key you entered is not valid"
+    Then I set the field "Enrolment key" to "abcd"
+    And I click on "Save" "button"
+    Then I should see "Congratulation ! You have joined"
+    Then I click on "Continue" "button"
+    And I should see "Add a new topic"
+
+  Scenario: As a student I can leave a group I already joined
+    Given I log in as "student3"
+    Then I follow "Mur pédagogique"
+    Then I click on "View all groups" "button"
+    And I click on "a.murpedago-group-link" "css_element" in the "G2" "table_row"
+    And I should see "Leave group"
+    Then I click on "Leave group" "button"
+    Then I should see "You left the group "
+    Then I click on "Continue" "button"
+    And I should see "Add a new topic"

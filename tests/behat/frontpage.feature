@@ -35,7 +35,7 @@ Feature: Front page blocks
     And I should see "Pour les étudiants" in the "region-main" "region"
     And I should see "Cours à la une" in the "region-main" "region"
     And I should see "Quoi de neuf?" in the "region-main" "region"
-    And I should see "Access the \"Pédagothèque Numérique\" from anywhere" in the "#page-footer" "css_element"
+    And I should see "Illustration are or in part from Freepik et Unsplash" in the "#page-footer" "css_element"
     And I should see "Log in"
 
   Scenario: I should be able to login from the main Log in Button
