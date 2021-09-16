@@ -57,7 +57,7 @@ $PAGE->navbar->add(get_string('groups'),
 );
 
 echo $OUTPUT->header();
-if (groups_delete_group_members($groupid, $USER->id)) {
+if (groups_remove_member($groupid, $USER->id)) {
     echo $OUTPUT->notification(get_string('groupleft', 'theme_imtpn', $group->name), 'notifysuccess');
 } else {
     echo $OUTPUT->notification(get_string('cannotleavegroup', 'theme_imtpn', $group->name), 'notifyfailure');
