@@ -126,4 +126,4 @@ Feature: Mur pedagogique test cases
     Then I click on "Leave group" "button"
     Then I should see "You left the group "
     Then I click on "Continue" "button"
-    And I should see "Add a new topic"
+    And I should not see "Add a new topic"
