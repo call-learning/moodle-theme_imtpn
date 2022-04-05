@@ -31,8 +31,15 @@ $string['catalogue'] = 'Catalogue';
 $string['configtitle'] = 'Theme IMT Pédagothèque Numérique';
 $string['createcourse'] = 'Créer un cours';
 $string['cannotleavegroup'] = 'Cannot leave group {$a}';
+$string['choosereadme'] = 'Un thème basé sur Boost (Bootstrap 4.5) créé spécialement pour l\'IMT';
+$string['customscripts'] = 'Custom Script activés ?';
+$string['customscripts_desc'] = 'Met en place la variable $CFG->customscript pour que cela pointe vers le répertoire dédié, cela
+est nécessaire pour que le Mur pédagogique fonctionne complètement.';
 $string['defaultfpslogan'] = 'Bienvenue sur la<br>Pédagothèque Numérique de l\'IMT';
 $string['editgroup'] = 'Editer le groupe';
+$string['emailvstheme'] = 'Email domain vs Theme';
+$string['emailvstheme_desc'] = 'Correspondance entre l\'extension du domaine de l\'utilisateur et le thème, entré comme un objet
+JSON ( {\'mydomain.com\' : \'theme_imt_lille\'} )';
 $string['footercontent_desc'] = 'Bas de page, contenu';
 $string['footercontent'] = 'Bas de page, contenu';
 $string['footer'] = 'Bas de page';

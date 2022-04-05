@@ -87,7 +87,7 @@ jobs:
           moodle-plugin-ci add-plugin --clone https://github.com/call-learning/moodle-block_sharing_cart.git --branch resourcelibrary_integration
           moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
           moodle-plugin-ci add-config '$CFG->customscripts = dirname(__FILE__) . "/theme/imtpn/customscripts/";'
-          moodle-plugin-ci add-config '$CFG->behat_extraallowedsettings = ["customscripts"];';
+          moodle-plugin-ci add-config '$CFG->behat_extraallowedsettings = ["customscripts"];'
         env:
           DB: ${{ matrix.database }}
           MOODLE_BRANCH: ${{ matrix.moodle-branch }}

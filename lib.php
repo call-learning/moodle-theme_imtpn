@@ -114,6 +114,16 @@ function reset_mur_pedago_blocks() {
 }
 
 /**
+ * Setup customscript variable
+ *
+ * @throws coding_exception
+ * @throws dml_exception
+ */
+function setup_customscripts() {
+    \theme_imtpn\setup::setup_customscripts();
+}
+
+/**
  * Fix issue with notloggedin class
  *
  * Usually the pages are marked as notlogged in if no user is logged in. In case the guest user

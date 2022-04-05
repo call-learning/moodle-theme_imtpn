@@ -24,18 +24,12 @@
 
 namespace theme_imtpn;
 
-use block_base;
 use coding_exception;
-use context_block;
-use context_course;
 use context_module;
 use context_system;
-use core_analytics\stats;
 use dml_exception;
-use file_exception;
 use moodle_page;
 use moodle_url;
-use stored_file_creation_exception;
 use theme_clboost\setup_utils;
 
 defined('MOODLE_INTERNAL') || die();
@@ -440,6 +434,52 @@ class setup {
             $pagegroups->set_pagetype('group-page');
             $pagegroups->set_context(context_module::instance($cm->id));
             setup_utils::setup_page_blocks($pagegroups, self::MUR_PEDAGO_GROUP_BLOCK_DEFINITION, $regionname = 'side-pre');
+        }
+    }
+
+    /**
+     * Setup customscript variable
+     * @return void
+     */
+    public static function setup_customscripts() {
+        global $CFG;
+        $isactive = get_config('theme_imtpn', 'customscripts');
+        if ($isactive) {
+            set_config('customscripts', $CFG->dirroot.'/theme/imtpn/customscripts/');
+        } else {
+            unset_config('customscripts');
+        }
+    }
+
+    /**
+     * Default value for theme match.
+     */
+    const DEFAULT_THEME_MATCH= [
+        'imt-nord-europe.fr' => 'imtpn_lille',
+        'imt-atlantique.fr' => 'imtpn_atlantique',
+        'mines-albi.fr' => 'imtpn_albi_carmaux',
+    ];
+    /**
+     * Set user theme for user
+     * @param int $userid
+     * @return void
+     * @throws dml_exception
+     */
+    public static function setup_user_theme($userid) {
+        global $DB;
+        $user = \core_user::get_user($userid);
+        if ($user) {
+            $themelist = get_list_of_themes();
+            $emailvstheme = get_config('theme_imtpn', 'emailvstheme');
+            if ($emailvstheme && ($themematch = json_decode($emailvstheme))) {
+                foreach ((array) $themematch as $domainname => $themename) {
+                    if (strstr($user->email, $domainname)) {
+                        if (in_array($themename, array_keys($themelist))) {
+                            $DB->set_field('user', 'theme', $themename, ['id' => $user->id]);
+                        }
+                    }
+                }
+            }
         }
     }
 }

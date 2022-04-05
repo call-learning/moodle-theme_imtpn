@@ -216,7 +216,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         }
         if (!empty($CFG->enableresourcelibrary)) {
             $this->add_if_not_exist($menu, new moodle_url('/theme/imtpn/pages/themescat.php'),
-                get_string('catalogue', 'theme_imtpn'), 'fa fa-star-o text-primary');
+                get_string('catalogue', 'theme_imtpn'), 'fa fa-star-o catalog-menu-star');
         }
         if (!$menu->has_children()) {
             return '';

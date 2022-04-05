@@ -30,9 +30,16 @@ $string['cannotjoin'] = 'You have not been able to join the group {$a}, are you 
 $string['catalogue'] = 'Catalog';
 $string['configtitle'] = 'Theme IMT Pédagothèque Numérique';
 $string['createcourse'] = 'Create a course';
+$string['choosereadme'] = 'A theme based on Boost (Bootstrap 4.5) specifically designed for IMT';
 $string['cannotleavegroup'] = 'Ne peut quitter le groupe {$a}';
+$string['customscripts'] = 'Custom Script Enable ?';
+$string['customscripts_desc'] = 'Setup the $CFG->customscript variable so it points to our dedicated folder, this
+is necessary for the "Mur pédagogique" to work correctly.';
 $string['defaultfpslogan'] = 'Welcome to<br>"Pédagothèque Numérique" from IMT';
 $string['editgroup'] = 'Edit group';
+$string['emailvstheme'] = 'Email domain vs Theme';
+$string['emailvstheme_desc'] = 'Match between domain name extension and user theme as JSON object
+ ( {\'mydomain.com\' : \'theme_imt_lille\'} )';
 $string['footercontent_desc'] = 'Footer content description';
 $string['footercontent'] = 'Footer content';
 $string['footer'] = 'Footer';

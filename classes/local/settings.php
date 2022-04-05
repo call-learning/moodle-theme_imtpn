@@ -29,6 +29,7 @@ use admin_setting_confightmleditor;
 use admin_setting_configstoredfile;
 use admin_setting_configtext;
 use admin_settingpage;
+use theme_imtpn\setup;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -82,8 +83,9 @@ class settings extends \theme_clboost\local\settings {
      * This is intended to be overriden in the subtheme to add new pages for example.
      *
      * @param admin_settingpage $settings
+     * @param string $currentthemename
      */
-    protected static function additional_settings(admin_settingpage &$settings) {
+    protected static function additional_settings(admin_settingpage &$settings, $currentthemename = 'clboost') {
         // Advanced settings.
         $page = new admin_settingpage('footer',
             static::get_string('footer', 'theme_imtpn'));
@@ -158,6 +160,21 @@ class settings extends \theme_clboost\local\settings {
             static::get_string('profilebgimage_desc', 'theme_imtpn'),
             utils::PROFILE_IMAGE_FILE_AREA);
         $setting->set_updatedcallback('theme_reset_all_caches');
+        $page->add($setting);
+        if ($currentthemename === 'imtpn') {
+            $setting = new admin_setting_configcheckbox('theme_imtpn/customscripts',
+                static::get_string('customscripts', 'theme_imtpn'),
+                static::get_string('customscripts_desc', 'theme_imtpn'),
+                false);
+            $setting->set_updatedcallback('setup_customscripts');
+            $page->add($setting);
+            $setting = new \admin_setting_configtextarea('theme_imtpn/emailvstheme',
+                static::get_string('emailvstheme', 'theme_imtpn'),
+                static::get_string('emailvstheme_desc', 'theme_imtpn'),
+                json_encode(setup::DEFAULT_THEME_MATCH, JSON_PRETTY_PRINT));
+            $page->add($setting);
+        }
+
         $page->add($setting);
         $settings->add($page);
 
