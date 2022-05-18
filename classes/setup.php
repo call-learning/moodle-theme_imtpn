@@ -439,13 +439,14 @@ class setup {
 
     /**
      * Setup customscript variable
+     *
      * @return void
      */
     public static function setup_customscripts() {
         global $CFG;
         $isactive = get_config('theme_imtpn', 'customscripts');
         if ($isactive) {
-            set_config('customscripts', $CFG->dirroot.'/theme/imtpn/customscripts/');
+            set_config('customscripts', $CFG->dirroot . '/theme/imtpn/customscripts/');
         } else {
             unset_config('customscripts');
         }
@@ -454,19 +455,21 @@ class setup {
     /**
      * Default value for theme match.
      */
-    const DEFAULT_THEME_MATCH= [
+    const DEFAULT_THEME_MATCH = [
         'imt-nord-europe.fr' => 'imtpn_lille',
         'imt-atlantique.fr' => 'imtpn_atlantique',
         'mines-albi.fr' => 'imtpn_albi_carmaux',
     ];
+
     /**
      * Set user theme for user
+     *
      * @param int $userid
      * @return void
      * @throws dml_exception
      */
     public static function setup_user_theme($userid) {
-        global $DB;
+        global $DB, $PAGE, $USER;
         $user = \core_user::get_user($userid);
         if ($user) {
             $themelist = get_list_of_themes();
@@ -475,7 +478,15 @@ class setup {
                 foreach ((array) $themematch as $domainname => $themename) {
                     if (strstr($user->email, $domainname)) {
                         if (in_array($themename, array_keys($themelist))) {
-                            $DB->set_field('user', 'theme', $themename, ['id' => $user->id]);
+                            $currenttheme = $DB->get_field('user', 'theme', ['id' => $user->id]);
+                            if ($currenttheme != $themename) {
+                                $DB->set_field('user', 'theme', $themename, ['id' => $user->id]);
+                                $USER->theme = $themename;
+                                if ($PAGE) {
+                                    $PAGE->initialise_theme_and_output();
+                                    $PAGE->reload_theme();
+                                }
+                            }
                         }
                     }
                 }

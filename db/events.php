@@ -29,4 +29,8 @@ $observers = array(
         'eventname'   => 'core\event\user_loggedin',
         'callback'    => 'theme_imtpn\observer::user_has_logged_in',
     ),
+    array(
+        'eventname'   => 'core\event\user_loggedinas',
+        'callback'    => 'theme_imtpn\observer::user_has_logged_in_as',
+    ),
 );

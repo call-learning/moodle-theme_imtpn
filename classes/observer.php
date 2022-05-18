@@ -16,6 +16,7 @@
 namespace theme_imtpn;
 
 use core\event\user_loggedin;
+use core\event\user_loggedinas;
 
 /**
  * Observer class for different events
@@ -33,5 +34,14 @@ class observer {
      */
     static function user_has_logged_in(user_loggedin $event) {
         setup::setup_user_theme($event->userid);
+    }
+    /**
+     * When user has logged in as we also check the theme
+     *
+     * @param user_loggedinas $event
+     * @return void
+     */
+    static function user_has_logged_in_as(user_loggedinas $event) {
+        setup::setup_user_theme($event->relateduserid);
     }
 }
