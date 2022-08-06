@@ -106,7 +106,9 @@ if ($PAGE->user_allowed_editing()) {
 // Add create new group if can do.
 
 $currentbuttons = $PAGE->button;
-$currentbuttons .= $OUTPUT->edit_button($currenturl);
+if ($PAGE->user_allowed_editing()) {
+    $currentbuttons .= $OUTPUT->edit_button($currenturl);
+}
 
 if (has_capability('moodle/course:managegroups', $context)) {
     $addnewgroup = $OUTPUT->single_button(

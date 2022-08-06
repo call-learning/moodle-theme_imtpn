@@ -344,6 +344,9 @@ class discussion_list_mur_pedago {
             'visiblediscussioncount' => count($discussions)
         ];
 
+        // Prevent adding new subject on the front page.
+        $forumview['forum']['capabilities']['create'] = $forumview['forum']['capabilities']['create'] && !empty($groupid);
+
         if ($forumview['forum']['capabilities']['create']) {
             $forumview['newdiscussionhtml'] = $this->get_discussion_form($user, $cm, $currentgroupid);
         }
