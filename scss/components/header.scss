@@ -2,12 +2,12 @@ body {
     .navbar.navbar-light {
         background-color: white;
     }
-
+    .navbar .navbar__logo {
+        padding: 5px;
+    }
     @include media-breakpoint-down(sm) {
-        .navbar {
-            .navbar__logo {
-                max-width: 100px;
-            }
+        .navbar .navbar__logo {
+            max-width: 100px;
         }
     }
 }
@@ -194,5 +194,11 @@ body.notloggedin {
             border-width: 312px 312px 0 0;
             right: -312px;
         }
+    }
+}
+
+#page-login-index, #page-themescat {
+    .header__triangle-3, .header__triangle-2 {
+        visibility: hidden;
     }
 }
