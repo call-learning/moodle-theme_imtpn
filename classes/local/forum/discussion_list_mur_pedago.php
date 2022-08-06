@@ -289,7 +289,7 @@ class discussion_list_mur_pedago {
         $forum = $this->forum;
         $course = $forum->get_course_record();
         // Fetch the current currentgroupid.
-        $currentgroupid = groups_get_activity_group($cm, true) ?: null;
+        $currentgroupid = $groupid ?? (groups_get_activity_group($cm, true) ?: null);
 
         $forumexporter = $this->exporterfactory->get_forum_exporter(
             $user,
@@ -519,7 +519,8 @@ class discussion_list_mur_pedago {
                 null, $cm),
             'thresholdwarning' => $thresholdwarning,
             'inpagereply' => false,
-            'edit' => 0
+            'edit' => 0,
+            'groupid' => $groupid
         );
         $posturl = new moodle_url('/mod/forum/post.php');
         $mformpost = new mod_forum_post_form($posturl, $formparams, 'post', '', array('id' => 'mformforum'));
