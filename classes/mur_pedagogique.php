@@ -178,7 +178,8 @@ class mur_pedagogique {
         $PAGE->set_pagetype('mod-forum-view');
 
         $currentbuttons = $PAGE->button;
-        $currentbuttons .= $OUTPUT->edit_button($url);
+
+        $currentbuttons .= $PAGE->user_allowed_editing() ? $OUTPUT->edit_button($url) : '';
         $viewallgroups = $OUTPUT->single_button(
             new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php'),
             get_string('viewallgroups', 'theme_imtpn'));
