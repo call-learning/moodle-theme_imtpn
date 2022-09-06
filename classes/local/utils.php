@@ -31,8 +31,6 @@ use html_writer;
 use moodle_url;
 use theme_imtpn\mur_pedagogique;
 
-defined('MOODLE_INTERNAL') || die;
-
 /**
  * Utils
  *

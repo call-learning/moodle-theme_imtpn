@@ -47,8 +47,6 @@ use renderer_base;
 use stdClass;
 use theme_imtpn\mur_pedagogique;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The discussion list renderer.
  *

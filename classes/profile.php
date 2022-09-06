@@ -44,8 +44,6 @@ use stdClass;
 use theme_imtpn\local\utils;
 use theme_imtpn\output\courses_thumbnails;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class mur_pedagogique
  *
@@ -94,7 +92,7 @@ class profile {
     }
 
     /**
-     * Parse all callbacks and builds the tree.
+     * Parse all callbacks && builds the tree.
      *
      * @param integer $user ID of the user for which the profile is displayed.
      * @param bool $iscurrentuser true if the profile being viewed is of current user, else false.
@@ -240,7 +238,7 @@ class profile {
             $sql = "SELECT h.id, h.name, h.wwwroot,
                        a.name as application, a.display_name
                   FROM {mnet_host} h, {mnet_application} a
-                 WHERE h.id = ? AND h.applicationid = a.id";
+                 WHERE h.id = ? && h.applicationid = a.id";
 
             $remotehost = $DB->get_record_sql($sql, array($user->mnethostid));
             $remoteuser = new stdclass();
@@ -256,12 +254,12 @@ class profile {
         }
 
         if ($iscurrentuser
-            or (!isset($hiddenfields['email']) and (
+            || (!isset($hiddenfields['email']) && (
                     $user->maildisplay == core_user::MAILDISPLAY_EVERYONE
-                    or ($user->maildisplay == core_user::MAILDISPLAY_COURSE_MEMBERS_ONLY and enrol_sharing_course($user, $USER))
-                    or has_capability('moodle/course:useremail', $courseorusercontext) // TODO: Deprecate/remove for MDL-37479.
+                    || ($user->maildisplay == core_user::MAILDISPLAY_COURSE_MEMBERS_ONLY && enrol_sharing_course($user, $USER))
+                    || has_capability('moodle/course:useremail', $courseorusercontext) // TODO: Deprecate/remove for MDL-37479.
                 ))
-            or (isset($identityfields['email']) and $canviewuseridentity)
+            || (isset($identityfields['email']) && $canviewuseridentity)
         ) {
             $node = new node('contact', 'email', '', null, null,
                 obfuscate_mailto($user->email, ''), new pix_icon('t/email', get_string('email')));
@@ -401,7 +399,7 @@ class profile {
                 if ($usergroups = groups_get_all_groups($course->id, $user->id)) {
                     $groupstr = '';
                     foreach ($usergroups as $group) {
-                        if ($course->groupmode == SEPARATEGROUPS and !$accessallgroups and $user->id != $USER->id) {
+                        if ($course->groupmode == SEPARATEGROUPS && !$accessallgroups && $user->id != $USER->id) {
                             if (!groups_is_member($group->id, $user->id)) {
                                 continue;
                             }
@@ -468,7 +466,7 @@ class profile {
         $categories = profile_get_user_fields_with_data_by_category($user->id);
         foreach ($categories as $categoryid => $fields) {
             foreach ($fields as $formfield) {
-                if ($formfield->is_visible() and !$formfield->is_empty()) {
+                if ($formfield->is_visible() && !$formfield->is_empty()) {
                     $node = new node('contact', 'custom_field_' . $formfield->field->shortname,
                         format_string($formfield->field->name), null, null, $formfield->display_data());
                     $tree->add_node($node);

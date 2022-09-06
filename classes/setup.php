@@ -32,8 +32,6 @@ use moodle_page;
 use moodle_url;
 use theme_clboost\setup_utils;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class setup
  *

@@ -21,7 +21,6 @@
  * @copyright 2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Upgrade steps for this plugin

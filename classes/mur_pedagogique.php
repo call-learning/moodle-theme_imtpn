@@ -40,8 +40,6 @@ use stdClass;
 use theme_imtpn\local\forum\discussion_list_mur_pedago;
 use theme_imtpn\output\group_info;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class mur_pedagogique
  *

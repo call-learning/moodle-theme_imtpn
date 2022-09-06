@@ -25,8 +25,6 @@
 use theme_imtpn\local\utils;
 use theme_imtpn\mur_pedagogique;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Serves any files associated with the theme settings.
  *
@@ -60,8 +58,8 @@ function theme_imtpn_pluginfile($course, $cm, $context, $filearea, $args, $force
 
             $filename = array_pop($args);
             $filepath = $args ? '/' . implode('/', $args) . '/' : '/';
-            if (!$file = $fs->get_file($context->id, 'group', 'description', $group->id, $filepath, $filename) or
-                $file->is_directory()) {
+            $file = $fs->get_file($context->id, 'group', 'description', $group->id, $filepath, $filename);
+            if (!$file || $file->is_directory()) {
                 send_file_not_found();
             }
 
@@ -71,7 +69,7 @@ function theme_imtpn_pluginfile($course, $cm, $context, $filearea, $args, $force
         } else if ($filearea === 'groupicon') {
             $filename = array_pop($args);
 
-            if ($filename !== 'f1' and $filename !== 'f2') {
+            if ($filename !== 'f1' && $filename !== 'f2') {
                 send_file_not_found();
             }
             if (!$file = $fs->get_file($context->id, 'group', 'icon', $group->id, '/', $filename . '.png')) {

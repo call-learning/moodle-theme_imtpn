@@ -24,10 +24,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use block_group_members\output\group_members;
+namespace theme_imtpn;
 use theme_imtpn\table\groups;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Class block_group_members
@@ -36,11 +34,11 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright   2021 CALL Learning <laurent@call-learning.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class general_testcase extends advanced_testcase {
+class general_test extends \advanced_testcase {
     /**
      * Group name search
      *
-     * @throws coding_exception
+     * @covers \theme_imtpn\table\groups::filter_by_groupname
      */
     public function test_get_group_member_list() {
         global $DB;

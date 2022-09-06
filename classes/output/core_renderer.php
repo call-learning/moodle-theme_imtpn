@@ -42,8 +42,6 @@ use stdClass;
 use theme_imtpn\local\custom_menu_advanced;
 use theme_imtpn\mur_pedagogique;
 
-defined('MOODLE_INTERNAL') || die;
-
 /**
  * Renderers to align Moodle's HTML with that expected by Bootstrap
  *
@@ -134,7 +132,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         if (empty($CFG->langmenu)) {
             return '';
         }
-        if ($this->page->course != SITEID and !empty($this->page->course->lang)) {
+        if ($this->page->course != SITEID && !empty($this->page->course->lang)) {
             // Do not show lang menu if language forced.
             return '';
         }
@@ -305,7 +303,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
                 get_string('pageinfodebugsummary', 'core_admin', // IMTPN: output as a list.
                     $this->page->debug_summary()) . '</div>';
         }
-        if (debugging(null, DEBUG_DEVELOPER) and
+        if (debugging(null, DEBUG_DEVELOPER) &&
             has_capability('moodle/site:config', context_system::instance())) {  // Only in developer mode
             // Add link to profiling report if necessary.
             if (function_exists('profiling_is_running') && profiling_is_running()) {

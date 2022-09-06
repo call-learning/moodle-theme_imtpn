@@ -31,8 +31,6 @@ use admin_setting_configtext;
 use admin_settingpage;
 use theme_imtpn\setup;
 
-defined('MOODLE_INTERNAL') || die;
-
 /**
  * Theme settings. In one place.
  *

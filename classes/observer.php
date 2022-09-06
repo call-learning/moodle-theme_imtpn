@@ -32,7 +32,7 @@ class observer {
      * @param user_loggedin $event
      * @return void
      */
-    static function user_has_logged_in(user_loggedin $event) {
+    public static function user_has_logged_in(user_loggedin $event) {
         setup::setup_user_theme($event->userid);
     }
     /**
@@ -41,7 +41,7 @@ class observer {
      * @param user_loggedinas $event
      * @return void
      */
-    static function user_has_logged_in_as(user_loggedinas $event) {
+    public static function user_has_logged_in_as(user_loggedinas $event) {
         setup::setup_user_theme($event->relateduserid);
     }
 }

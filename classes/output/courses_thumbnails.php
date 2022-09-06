@@ -32,7 +32,6 @@ use core\external\exporter;
 use core_course\external\course_summary_exporter;
 use core_course_category;
 use dml_exception;
-use local_syllabus\locallib\utils;
 use moodle_exception;
 use moodle_url;
 use renderable;

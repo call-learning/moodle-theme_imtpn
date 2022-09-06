@@ -25,7 +25,6 @@
  */
 
 namespace theme_imtpn\output;
-defined('MOODLE_INTERNAL') || die();
 
 use coding_exception;
 use dml_exception;

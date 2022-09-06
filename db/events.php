@@ -18,7 +18,6 @@
  * Code to be executed after the plugin's database scheme has been installed is defined here.
  *
  * @package     theme_imtpn
- * @category    events
  * @copyright   2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

@@ -27,8 +27,6 @@ namespace theme_imtpn\local;
 use core\plugininfo\theme;
 use theme_boost\autoprefixer;
 
-defined('MOODLE_INTERNAL') || die;
-
 /**
  * Theme constants. In one place.
  *

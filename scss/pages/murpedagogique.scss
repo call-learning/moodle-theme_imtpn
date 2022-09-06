@@ -38,3 +38,12 @@
     }
     height: 250px;
 }
+
+// The new subject pops in first.
+.mur-pedagogique #collapseAddForm fieldset#id_general div.fcontainer div#fitem_id_groupinfo{
+    order:-10;
+    box-shadow: 0 2px 14px -4px rgba(0,0,0,.25);
+    padding: 10px;
+    border: 1px solid #dee2e6 !important;
+    background-color: #f2f2f2;
+}
