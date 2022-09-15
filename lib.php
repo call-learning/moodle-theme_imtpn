@@ -97,7 +97,7 @@ function theme_imtpn_pluginfile($course, $cm, $context, $filearea, $args, $force
  */
 function theme_imtpn_get_extra_scss($theme) {
     $extracss = theme_clboost_get_extra_scss($theme);
-    $additionalcss = \theme_imtpn\profile::inject_scss($theme->name);
+    $additionalcss = \theme_imtpn\profile::inject_scss($theme);
     return $extracss . $additionalcss;
 }
 

@@ -56,13 +56,20 @@ class profile {
     /**
      * Inject CSS into the page
      *
-     * @param string $themename
+     * @param object $theme
      * @return string
      * @throws coding_exception
      * @throws dml_exception
      */
-    public static function inject_scss($themename) {
-        $profileimageurl = utils::get_profile_page_image_url($themename);
+    public static function inject_scss($theme) {
+        $themesnames = $theme->parents;
+        array_unshift($themesnames, $theme->name);
+        foreach ($themesnames as $themename) {
+            $profileimageurl = utils::get_profile_page_image_url($themename);
+            if (!empty($profileimageurl)) {
+                break;
+            }
+        }
         if (empty($profileimageurl)) {
             $profileimageurl[utils::IMAGE_SIZE_TYPE_NORMAL] = '[[pix:theme|backgrounds/profile]]';
             $profileimageurl[utils::IMAGE_SIZE_TYPE_LG] = '[[pix:theme|backgrounds/profile-2x]]';
