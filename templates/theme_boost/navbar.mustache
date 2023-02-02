@@ -47,7 +47,7 @@
     </ul>
 
     <ul class="navbar-nav d-none d-md-flex ml-auto">
-        <li class="d-none d-lg-block">
+        <li class="d-none d-lg-block"  id="nav-search-box">
             {{{ output.search_box }}}
         </li>
         {{{ output.lang_menu }}}
@@ -55,7 +55,8 @@
     </ul>
     <ul class="nav navbar-nav">
         <!-- navbar_plugin_output -->
-        <li class="nav-item align-self-center">
+        <!- nav-user-icon is then used in scss to hide it on small screens ->
+        <li class="nav-item align-self-center" id="nav-user-icons">
             {{{ output.navbar_plugin_output }}}
         </li>
         <!-- user_menu -->

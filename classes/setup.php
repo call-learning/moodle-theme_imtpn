@@ -293,9 +293,9 @@ class setup {
         global $PAGE, $CFG, $DB, $OUTPUT;
 
         static::setup_config_values();
-        if (!$DB->record_exists('block_rss_client', ['url' => 'https://www.imt.fr/feed/'])) {
+        if (!$DB->record_exists('block_rss_thumbnails', ['url' => 'https://www.imt.fr/feed/'])) {
             $id = $DB->insert_record(
-                'block_rss_client',
+                'block_rss_thumbnails',
                 array('userid' => get_admin()->id,
                     'title' => 'IMT',
                     'preferredtitle' => '',
@@ -334,7 +334,8 @@ class setup {
         my_reset_page_for_all_users();
         // Note here: this will only define capabilities for the default page. If we
         // want the dashboard to work as expected we also need to set forcedefaultmymoodle to true.
-
+        // Reset the mur pedagogique block.
+        self::setup_murpedago_blocks();
         // Setup Home page.
         $page = new moodle_page();
         $page->set_pagetype('site-index');
@@ -377,7 +378,6 @@ class setup {
             $target = RENDERER_TARGET_MAINTENANCE;
         }
         $OUTPUT = $PAGE->get_renderer('core', null, $target);
-
     }
 
 

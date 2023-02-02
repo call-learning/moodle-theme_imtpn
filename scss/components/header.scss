@@ -11,9 +11,42 @@ body {
         }
     }
 }
-
+nav.navbar {
+    justify-content: space-between;
+}
+nav.navbar {
+    ul.nav.navbar-nav, ul.navbar-nav:nth-of-type(2) {
+        flex-wrap: nowrap;
+        flex-direction: row;
+    }
+}
+@include media-breakpoint-down(lg) {
+    #nav-search-box {
+        margin-top: -0.5em;
+    }
+}
+@include media-breakpoint-down(md) {
+    #nav-user-icons {
+        display: none;
+    }
+}
+nav.navbar .navbar-nav li > * {
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+@include media-breakpoint-down(lg) {
+    nav.navbar .navbar-nav {
+        flex-direction: column;
+        li > * {
+            padding-top: 0;
+            padding-bottom: 0;
+            white-space: nowrap;
+        }
+    }
+}
 body.notloggedin {
-    .navbar {
+    nav.navbar {
         background-color: initial;
         box-shadow: none;
         border-bottom: 1px solid rgba(255, 255, 255, 0.25);
