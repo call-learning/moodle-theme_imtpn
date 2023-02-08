@@ -68,7 +68,6 @@
 
 .syllabus-content {
     flex-grow: 1;
-
     h4 {
         color: $primary;
         font-size: 20px;
@@ -87,31 +86,8 @@
 }
 
 .syllabus-side {
-    width: 33%;
-    min-width: 300px;
-    max-width: 440px;
-    margin-left: 30px;
-    flex-shrink: 0;
-
-    @include media-breakpoint-down(lg) {
-        width: 300px;
-    }
-
-    @include media-breakpoint-down(md) {
-        width: 100%;
-        margin-left: auto;
-        margin-bottom: 1em;
-    }
-    @include media-breakpoint-up(md) {
-        .list-group {
-            box-shadow: 5px 5px 10px 0px rgb(0 0 0 / 25%);
-            padding: 1.5em;
-        }
-    }
-
-    .list-group-item {
-        border: 0;
-        padding: 0;
+    .title-label {
+        display: none;
     }
 }
 
