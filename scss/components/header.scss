@@ -2,13 +2,10 @@ body {
     .navbar.navbar-light {
         background-color: white;
     }
+
     .navbar .navbar__logo {
-        padding: 5px;
-    }
-    @include media-breakpoint-down(sm) {
-        .navbar .navbar__logo {
-            max-width: 100px;
-        }
+        max-height: $navbar-height;
+        width: auto;
     }
 }
 nav.navbar {
@@ -215,12 +212,16 @@ body.notloggedin {
     }
 }
 
-#page-site-index.notloggedin {
-    #page {
-        @include media-breakpoint-up(sm) {
-            margin-top: (312px + $navbar-height);
-        }
+#page-wrapper #page {
+    margin-top: 0;
+}
+@include media-breakpoint-up(sm) {
+    body {
+        margin-top: $navbar-height;
     }
+}
+
+#page-site-index.notloggedin {
 
     header.header {
         .header__triangle-1:after {

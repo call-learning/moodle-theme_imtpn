@@ -239,7 +239,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      */
     protected function add_if_not_exist(custom_menu_advanced $menu, moodle_url $url, $label, $class = '') {
         foreach ($menu->get_children() as $child) {
-            if ($url->out_omit_querystring() == $child->get_url()->out_omit_querystring()) {
+            if ($child->get_url() === null || $url->out_omit_querystring() == $child->get_url()->out_omit_querystring()) {
                 return;
             }
         }
