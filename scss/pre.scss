@@ -67,6 +67,7 @@ $btn-border-radius-sm:        initial !default;
 // Fonts
 
 $font-family-sans-serif: "Helvetica Regular", sans-serif !default;
+$font-family-base: $font-family-sans-serif !default;
 $font-weight-base: initial !default;
 
 $headings-font-family: "Helvetica Bold", sans-serif !default;
@@ -95,7 +96,7 @@ $navbar-height: 90px !default;
 
 // Navdrawer
 $drawer-width: 285px !default;
-$drawer-width-semi-expanded: 106px !default;
+$drawer-width-semi-expanded: 50px !default;
 
 // Pagination
 
@@ -111,3 +112,6 @@ $screen-md-max: 991px;
 $screen-lg: 992px;
 
 $screen-lg-max: 1199px;
+
+$dropdown-link-hover-color: $white;
+$dropdown-link-hover-bg: $primary;

@@ -108,19 +108,18 @@
         </div>
         <div class="row pb-5">
             <div class="col">
-                    <div class="potentialidplist mt-3">
-                        {{#identityproviders}}
-                            <div class="potentialidp d-flex flex-column">
-                                <a href="{{url}}" title={{#quote}}{{name}}{{/quote}} class="text-center">
-                                    <img src="{{iconurl}}" class="img-fluid m-3 p-3"/>
-                                </a>
-                                <a href="{{url}}" title={{#quote}}{{name}}{{/quote}} class="btn btn-secondary m-auto">
-                                    {{name}}
-                                </a>
-                            </div>
-                        {{/identityproviders}}
-                    </div>
-
+                <div class="potentialidplist mt-3">
+                    {{#identityproviders}}
+                        <div class="potentialidp d-flex flex-column">
+                            <a href="{{url}}" title={{#quote}}{{name}}{{/quote}} class="text-center">
+                                <img src="{{iconurl}}" class="img-fluid m-3 p-3"/>
+                            </a>
+                            <a href="{{url}}" title={{#quote}}{{name}}{{/quote}} class="btn btn-secondary m-auto">
+                                {{name}}
+                            </a>
+                        </div>
+                    {{/identityproviders}}
+                </div>
             </div>
         </div>
         {{/hasidentityproviders}}

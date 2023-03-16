@@ -17,12 +17,12 @@
 {{!
     Page navbar.
 }}
-<nav class="fixed-top navbar  {{# additionalinfo.isloggedin }} navbar-light {{/additionalinfo.isloggedin}}  {{^ additionalinfo.isloggedin }} navbar-dark {{/additionalinfo.isloggedin}} navbar-expand moodle-has-zindex" aria-label="{{#str}}sitemenubar, admin{{/str}}">
+<nav class="fixed-top navbar pl-1 {{# additionalinfo.isloggedin }} navbar-light {{/additionalinfo.isloggedin}}  {{^ additionalinfo.isloggedin }} navbar-dark {{/additionalinfo.isloggedin}} navbar-expand moodle-has-zindex" aria-label="{{#str}}sitemenubar, admin{{/str}}">
     {{# additionalinfo.hasnavdrawer }}
         {{# additionalinfo.isloggedin }}
     <div data-region="drawer-toggle" class="d-inline-block">
         <button aria-expanded="{{#navdraweropen}}true{{/navdraweropen}}{{^navdraweropen}}false{{/navdraweropen}}" aria-controls="nav-drawer" type="button"
-                class="btn nav-link mr-auto ml-auto btn-light bg-gray" data-action="toggle-drawer" data-side="left" data-preference="drawer-open-nav">{{#pix}}i/menubars{{/pix}}
+                class="btn nav-link mr-auto ml-auto btn-light bg-white" data-action="toggle-drawer" data-side="left" data-preference="drawer-open-nav">{{#pix}}i/menubars{{/pix}}
             <span class="sr-only">{{#str}}sidepanel, core{{/str}}</span></button>
     </div>
         {{/ additionalinfo.isloggedin }}
@@ -30,11 +30,10 @@
     {{^ additionalinfo.isloggedin }}
         <div class="imtpn-container">
     {{/additionalinfo.isloggedin}}
-    <a href="{{{ config.wwwroot }}}" class="navbar-brand {{# output.should_display_navbar_logo }}has-logo{{/ output.should_display_navbar_logo }}
+    <a href="{{{ config.wwwroot }}}" class="navbar-brand p-0 ml-3 {{# output.should_display_navbar_logo }}has-logo{{/ output.should_display_navbar_logo }}
         {{^ output.should_display_navbar_logo }}
-                d-none d-sm-inline
-            {{/ output.should_display_navbar_logo }}
-                ">
+            d-none  d-sm-inline-flex
+        {{/ output.should_display_navbar_logo }}">
         {{# output.should_display_navbar_logo }}
             <img src="{{output.get_compact_logo_url}}" alt="{{sitename}}" class="img-fluid navbar__logo">
         {{/ output.should_display_navbar_logo }}
