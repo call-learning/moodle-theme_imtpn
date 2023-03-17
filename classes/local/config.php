@@ -50,4 +50,15 @@ class config extends \theme_clboost\local\config {
         );
         return $layout;
     }
+
+    /**
+     * Setup the theme config
+     *
+     * @param \theme_config $theme
+     * @param string $themeparentname
+     */
+    public static function setup_config(&$theme, $themeparentname = 'clboost') {
+        $theme = parent::setup_config($theme, $themeparentname);
+        $theme->removedprimarynavitems = explode(',', get_config('theme_imtpn', 'hidenodesprimarynavigation'));
+    }
 }

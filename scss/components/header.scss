@@ -212,13 +212,8 @@ body.notloggedin {
     }
 }
 
-#page-wrapper #page {
-    margin-top: 0;
-}
-@include media-breakpoint-up(sm) {
-    body {
-        margin-top: $navbar-height;
-    }
+.navbar.fixed-top {
+    align-items: center;
 }
 
 #page-site-index.notloggedin {

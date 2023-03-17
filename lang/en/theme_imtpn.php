@@ -94,3 +94,6 @@ $string['theme/imtpn:editcataloguethemes'] = 'Can edit catalogue Themes';
 $string['userinfos'] = 'Infos';
 $string['viewallgroups'] = 'View all groups';
 $string['viewcatalog'] = 'View catalog';
+$string['primarynavigationheading'] = 'Primary navigation';
+$string['hidenodesprimarynavigationsetting'] = 'Hide nodes in primary navigation';
+$string['hidenodesprimarynavigationsetting_desc'] = 'With this setting, you can hide one or multiple nodes from the primary navigation.';

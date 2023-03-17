@@ -35,15 +35,14 @@
             d-none  d-sm-inline-flex
         {{/ output.should_display_navbar_logo }}">
         {{# output.should_display_navbar_logo }}
-            <img src="{{output.get_compact_logo_url}}" alt="{{sitename}}" class="img-fluid navbar__logo">
+            <img src="{{output.get_compact_logo_url}}" alt="{{sitename}}" class="img-fluid ">
         {{/ output.should_display_navbar_logo }}
     </a>
-
-    <ul class="navbar-nav d-none d-md-flex flex-grow-1">
-        <!-- custom_menu -->
-        {{{ output.custom_menu }}}
-        <!-- page_heading_menu -->
-    </ul>
+    {{#primarymoremenu}}
+        <div class="primary-navigation">
+            {{> core/moremenu}}
+        </div>
+    {{/primarymoremenu}}
 
     <ul class="navbar-nav d-none d-md-flex ml-auto">
         <li class="d-none d-lg-block"  id="nav-search-box">
@@ -54,8 +53,7 @@
     </ul>
     <ul class="nav navbar-nav">
         <!-- navbar_plugin_output -->
-        <!- nav-user-icon is then used in scss to hide it on small screens ->
-        <li class="nav-item align-self-center" id="nav-user-icons">
+        <li class="nav-item d-flex align-self-center" id="nav-user-icons">
             {{{ output.navbar_plugin_output }}}
         </li>
         <!-- user_menu -->

@@ -173,7 +173,28 @@ class settings extends \theme_clboost\local\settings {
             $page->add($setting);
         }
 
+        // Create primary navigation heading.
+        $name = 'theme_imtpn/primarynavigationheading';
+        $title = get_string('primarynavigationheading', 'theme_imtpn', null, true);
+        $setting = new \admin_setting_heading($name, $title, null);
         $page->add($setting);
+
+        // Prepare hide nodes options.
+        $hidenodesoptions = [
+            'home' => get_string('home'),
+            'myhome' => get_string('myhome'),
+            'mycourses' => get_string('mycourses'),
+            'siteadmin' => get_string('administrationsite')
+        ];
+
+        // Setting: Hide nodes in primary navigation.
+        $name = 'theme_imtpn/hidenodesprimarynavigation';
+        $title = get_string('hidenodesprimarynavigationsetting', 'theme_imtpn', null, true);
+        $description = get_string('hidenodesprimarynavigationsetting_desc', 'theme_imtpn', null, true);
+        $setting = new \admin_setting_configmulticheckbox($name, $title, $description, array(), $hidenodesoptions);
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $page->add($setting);
+
         $settings->add($page);
 
     }

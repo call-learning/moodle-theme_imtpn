@@ -347,7 +347,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      * @throws dml_exception
      * @throws moodle_exception
      */
-    public function context_header($headerinfo = null, $headinglevel = 1) {
+    public function context_header($headerinfo = null, $headinglevel = 1): string {
         global $DB, $USER, $CFG, $SITE;
         require_once($CFG->dirroot . '/user/lib.php');
         $context = $this->page->context;
@@ -356,7 +356,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         $subheader = null;
         $userbuttons = null;
 
-        if ($this->should_display_main_logo($headinglevel)) {
+        if ($this->should_display_navbar_logo($headinglevel)) {
             $sitename = format_string($SITE->fullname, true, array('context' => context_course::instance(SITEID)));
             return html_writer::div(html_writer::empty_tag('img', [
                 'src' => $this->get_logo_url(null, 150), 'alt' => $sitename, 'class' => 'img-fluid']), 'logo');
@@ -471,7 +471,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      *
      * Uses bootstrap compatible html.
      */
-    public function navbar() {
+    public function navbar(): string {
         $navbar = mur_pedagogique::fix_navbar($this->page->navbar, $this->page);
         return $this->render_from_template('core/navbar', $navbar);
     }
