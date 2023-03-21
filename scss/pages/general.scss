@@ -36,3 +36,27 @@ a:not([href]).btn-secondary {
 #goto-top-link {
     z-index: 1;
 }
+
+.secondary-navigation .navigation {
+    border-bottom: 0;
+    margin: 0;
+    padding: 0;
+}
+#page.drawers {
+    padding-left: 0;
+    padding-right: 0;
+    div[role="main"] {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .main-inner {
+        max-width: $course-content-maxwidth;
+    }
+
+}
+
+@include media-breakpoint-down(lg) {
+    #page.drawers .main-inner {
+        padding: 1.5rem 3rem;
+    }
+}

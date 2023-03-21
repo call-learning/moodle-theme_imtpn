@@ -17,26 +17,10 @@
 {{!
     Page navbar.
 }}
-<nav class="fixed-top navbar pl-1 {{# additionalinfo.isloggedin }} navbar-light {{/additionalinfo.isloggedin}}  {{^ additionalinfo.isloggedin }} navbar-dark {{/additionalinfo.isloggedin}} navbar-expand moodle-has-zindex" aria-label="{{#str}}sitemenubar, admin{{/str}}">
-    {{# additionalinfo.hasnavdrawer }}
-        {{# additionalinfo.isloggedin }}
-    <div data-region="drawer-toggle" class="d-inline-block">
-        <button aria-expanded="{{#navdraweropen}}true{{/navdraweropen}}{{^navdraweropen}}false{{/navdraweropen}}" aria-controls="nav-drawer" type="button"
-                class="btn nav-link mr-auto ml-auto btn-light bg-white" data-action="toggle-drawer" data-side="left" data-preference="drawer-open-nav">{{#pix}}i/menubars{{/pix}}
-            <span class="sr-only">{{#str}}sidepanel, core{{/str}}</span></button>
-    </div>
-        {{/ additionalinfo.isloggedin }}
-    {{/ additionalinfo.hasnavdrawer}}
-    {{^ additionalinfo.isloggedin }}
-        <div class="imtpn-container">
-    {{/additionalinfo.isloggedin}}
-    <a href="{{{ config.wwwroot }}}" class="navbar-brand p-0 ml-3 {{# output.should_display_navbar_logo }}has-logo{{/ output.should_display_navbar_logo }}
-        {{^ output.should_display_navbar_logo }}
-            d-none  d-sm-inline-flex
-        {{/ output.should_display_navbar_logo }}">
-        {{# output.should_display_navbar_logo }}
-            <img src="{{output.get_compact_logo_url}}" alt="{{sitename}}" class="img-fluid ">
-        {{/ output.should_display_navbar_logo }}
+<nav class="fixed-top navbar px-3 px-xl-0 {{# additionalinfo.isloggedin }} navbar-light {{/additionalinfo.isloggedin}}  {{^ additionalinfo.isloggedin }} navbar-dark {{/additionalinfo.isloggedin}} navbar-expand moodle-has-zindex" aria-label="{{#str}}sitemenubar, admin{{/str}}">
+
+    <a href="{{{ config.wwwroot }}}" class="navbar-brand nav-link px-1  has-logo d-flex align-items-center">
+        <img src="{{output.get_compact_logo_url}}" alt="{{sitename}}" class="img-fluid navbar__logo">
     </a>
     {{#primarymoremenu}}
         <div class="primary-navigation">
@@ -44,16 +28,16 @@
         </div>
     {{/primarymoremenu}}
 
-    <ul class="navbar-nav d-none d-md-flex ml-auto">
-        <li class="d-none d-lg-block"  id="nav-search-box">
+    <ul class="navbar-nav d-none d-md-flex ml-auto align-self-stretch">
+        <li class="d-none d-lg-flex"  id="nav-search-box">
             {{{ output.search_box }}}
         </li>
         {{{ output.lang_menu }}}
         {{{ output.page_heading_menu }}}
     </ul>
-    <ul class="nav navbar-nav">
+    <ul class="nav navbar-nav align-self-stretch">
         <!-- navbar_plugin_output -->
-        <li class="nav-item d-flex align-self-center" id="nav-user-icons">
+        <li class="nav-item d-none d-lg-flex" id="nav-user-icons">
             {{{ output.navbar_plugin_output }}}
         </li>
         <!-- user_menu -->
@@ -61,9 +45,8 @@
             {{{ output.user_menu }}}
         </li>
     </ul>
-    <!-- search_box -->
-    {{^ additionalinfo.isloggedin }}
-    </div>
-    {{/additionalinfo.isloggedin}}
+
+     {{{ output.edit_switch }}}
 </nav>
+<div class="nav-border-bottom"></div>
 

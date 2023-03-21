@@ -58,7 +58,6 @@
     {{{ output.standard_top_of_body_html }}}
 
     {{> theme_boost/navbar }}
-    {{> theme_boost/nav-drawer }}
     {{> theme_imtpn/imt-header }}
     <div id="page" class="container d-print-block">
         {{{ output.full_header }}}
@@ -70,7 +69,7 @@
                     <div> {{{ output.region_main_settings_menu }}} </div>
                 </div>
                 {{/hasregionmainsettingsmenu}}
-                <section id="region-main" {{#hasblocks}}class="has-blocks mb-3"{{/hasblocks}} aria-label="{{#str}}content{{/str}}">
+                <section id="region-main" aria-label="{{#str}}content{{/str}}">
 
                     {{#hasregionmainsettingsmenu}}
                         <div class="region_main_settings_menu_proxy"></div>
@@ -81,11 +80,6 @@
                     {{{ output.course_content_footer }}}
 
                 </section>
-                {{#hasblocks}}
-                <section data-region="blocks-column" class="d-print-none" aria-label="{{#str}}blocks{{/str}}">
-                    {{{ sidepreblocks }}}
-                </section>
-                {{/hasblocks}}
             </div>
         </div>
     </div>
@@ -95,3 +89,9 @@
 
 </body>
 </html>
+{{#js}}
+M.util.js_pending('theme_boost/loader');
+require(['theme_boost/loader'], function() {
+    M.util.js_complete('theme_boost/loader');
+});
+{{/js}}

@@ -54,11 +54,18 @@ body.pagelayout-mypublic {
 
         > div {
             margin-top: 300px;
-            padding: 0 !important;
+            background-color: $white;
+            padding: 0 1.25rem;
         }
 
-        .card {
-            background: $white;
+        .size-150 {
+            width: 150px;
+            height: 150px;
+            font-size: 3rem;
+        }
+
+        .singlebutton {
+            margin-top: 1.25rem;
         }
     }
 

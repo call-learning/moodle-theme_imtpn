@@ -94,10 +94,10 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      */
     public function get_compact_logo_url($maxwidth = 100, $maxheight = 100) {
         $path = $this->get_current_theme_base_url();
-        $compactlogourl = new moodle_url("{$path}/pix/logos/logo-imt-dark.png");
+        $compactlogourl = new moodle_url("{$path}/pix/logos/logo.svg");
         if (!isloggedin() || isguestuser()) {
             // If we are not logged in, the logo should be white instead.
-            $compactlogourl = new moodle_url("{$path}/pix/logos/logo-imt-white.png");
+            $compactlogourl = new moodle_url("{$path}/pix/logos/logo-white.svg");
         }
 
         return $compactlogourl;
@@ -164,87 +164,6 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         return $content;
     }
 
-    /**
-     * Returns the custom menu if one has been set
-     *
-     * A custom menu can be configured by browsing to
-     *    Settings: Administration > Appearance > Themes > Theme settings
-     * and then configuring the custommenu config setting as described.
-     *
-     * Theme developers: DO NOT OVERRIDE! Please override function
-     * {@see core_renderer::render_custom_menu()} instead.
-     *
-     * @param string $custommenuitems - custom menuitems set by theme instead of global theme settings
-     * @return string
-     * @throws coding_exception
-     * @throws dml_exception
-     * @throws moodle_exception
-     */
-    public function custom_menu($custommenuitems = '') {
-        global $CFG;
-
-        if (empty($custommenuitems) && !empty($CFG->custommenuitems)) {
-            $custommenuitems = $CFG->custommenuitems;
-        }
-        $custommenu = new custom_menu_advanced($custommenuitems, current_language());
-        return $this->render_custom_menu($custommenu);
-    }
-
-    /**
-     * Renders a custom menu object (located in outputcomponents.php)
-     *
-     * The custom menu this method produces makes use of the YUI3 menunav widget
-     * and requires very specific html elements and classes.
-     *
-     * @param custom_menu $menu
-     * @return string
-     * @throws coding_exception
-     * @throws dml_exception
-     * @throws moodle_exception
-     */
-    protected function render_custom_menu(custom_menu $menu) {
-        global $CFG, $USER;
-
-        $loggedin = isloggedin() && !isguestuser(); // Check if really logged in and not just as a guest.
-        if ($loggedin) {
-            $this->add_if_not_exist($menu, new moodle_url('/my'), get_string('mymoodle', 'my'));
-        }
-        if (isloggedin() && !isguestuser() && mur_pedagogique::has_access($USER->id)) {
-            $menu->add(get_string('murpedagogique', 'theme_imtpn'), mur_pedagogique::get_url());
-        }
-        if (!empty($CFG->enableresourcelibrary)) {
-            $this->add_if_not_exist($menu, new moodle_url('/theme/imtpn/pages/themescat.php'),
-                get_string('catalogue', 'theme_imtpn'), 'fa fa-star-o catalog-menu-star');
-        }
-        if (!$menu->has_children()) {
-            return '';
-        }
-
-        $content = '';
-        foreach ($menu->get_children() as $item) {
-            $context = $item->export_for_template($this);
-            $content .= $this->render_from_template('core/custom_menu_item', $context);
-        }
-
-        return $content;
-    }
-
-    /**
-     * Add if does not exist
-     *
-     * @param custom_menu_advanced $menu
-     * @param moodle_url $url
-     * @param string $label
-     * @param string $class
-     */
-    protected function add_if_not_exist(custom_menu_advanced $menu, moodle_url $url, $label, $class = '') {
-        foreach ($menu->get_children() as $child) {
-            if ($child->get_url() === null || $url->out_omit_querystring() == $child->get_url()->out_omit_querystring()) {
-                return;
-            }
-        }
-        $menu->add($label, $url, null, null, $class);
-    }
 
     /**
      * The standard tags (typically performance information and validation links,
@@ -356,17 +275,15 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         $subheader = null;
         $userbuttons = null;
 
-        if ($this->should_display_navbar_logo($headinglevel)) {
-            $sitename = format_string($SITE->fullname, true, array('context' => context_course::instance(SITEID)));
-            return html_writer::div(html_writer::empty_tag('img', [
-                'src' => $this->get_logo_url(null, 150), 'alt' => $sitename, 'class' => 'img-fluid']), 'logo');
-        }
-
         // Make sure to use the heading if it has been set.
         if (isset($headerinfo['heading'])) {
             $heading = $headerinfo['heading'];
         } else {
             $heading = $this->page->heading;
+        }
+
+        if ($this->page->pagelayout == 'mydashboard') {
+            return '';
         }
 
         // The user context currently has images and buttons. Other contexts may follow.

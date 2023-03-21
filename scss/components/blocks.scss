@@ -62,6 +62,11 @@
 
 #page-my-index .block > .card {
     @extend .card-dashboard;
+    .card-body {
+        padding-top: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
 
     h5 {
         @extend .title-dashboard;
