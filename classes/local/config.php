@@ -26,7 +26,6 @@ namespace theme_imtpn\local;
 
 use core\plugininfo\theme;
 use theme_boost\autoprefixer;
-use theme_imtpn\mur_pedagogique;
 use moodle_url;
 
 /**
@@ -64,9 +63,6 @@ class config extends \theme_clboost\local\config {
         $theme = parent::setup_config($theme, $themeparentname);
         $theme->removedprimarynavitems = explode(',', get_config('theme_imtpn', 'hidenodesprimarynavigation'));
         $CFG->custommenuitems = '';
-        if (isloggedin() && !isguestuser() && mur_pedagogique::has_access($USER->id)) {
-            $CFG->custommenuitems = get_string('murpedagogique', 'theme_imtpn') . '|' . mur_pedagogique::get_url() . "\n";
-        }
         if (!empty($CFG->enableresourcelibrary)) {
             $url = new moodle_url('/theme/imtpn/pages/themescat.php');
             $CFG->custommenuitems .= get_string('catalogue', 'theme_imtpn') . '|' . $url->out() . "\n";

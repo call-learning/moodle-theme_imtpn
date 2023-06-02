@@ -35,7 +35,6 @@ use html_writer;
 use moodle_url;
 use stdClass;
 use table_sql;
-use theme_imtpn\mur_pedagogique;
 use theme_imtpn\output\group_info;
 use user_picture;
 
@@ -100,15 +99,10 @@ class groups extends table_sql implements dynamic_table {
         $this->no_sorting('grouplink');
         $this->no_sorting('groupimage');
         $this->pageable(true);
-        $forumcondition = '';
-        $cm = mur_pedagogique::get_cm();
-        if ($cm) {
-            $forumcondition = " WHERE d.forum = {$cm->instance}";
-        }
         $this->sql->fields = "g.id AS groupid,g.name AS groupname, COALESCE(dc.count,0) as postcount";
         $this->sql->from = " {groups} g "
             . "LEFT JOIN (SELECT COUNT(*) count, d.groupid FROM {forum_discussions} d "
-            . "LEFT JOIN {forum_posts} p ON p.discussion = d.id $forumcondition  GROUP BY d.groupid) dc ON g.id = dc.groupid ";
+            . "LEFT JOIN {forum_posts} p ON p.discussion = d.id GROUP BY d.groupid) dc ON g.id = dc.groupid ";
         $this->sql->where = "g.courseid = :courseid";
         $this->sql->params = [];
     }
@@ -217,29 +211,5 @@ class groups extends table_sql implements dynamic_table {
             $html .= html_writer::span($OUTPUT->user_picture($user, ['includefullname' => false]));
         }
         return $html . $additionalmessage;
-    }
-
-    /**
-     * Link to group column
-     *
-     * @param object $row
-     * @return string
-     * @throws \moodle_exception
-     * @throws dml_exception
-     */
-    public function col_grouplink($row) {
-        $group = groups_get_group($row->groupid, '*', MUST_EXIST);
-        return html_writer::link(
-            mur_pedagogique::get_group_page_url($group),
-            html_writer::span('', 'fa fa-arrow-circle-o-right fa-2x'),
-            ['class' => 'murpedago-group-link']
-        );
-    }
-
-    /**
-     * Guess the base url for the participants table.
-     */
-    public function guess_base_url(): void {
-        $this->baseurl = new moodle_url('/theme/imtpn/pages/murpedagogique/groupoverview.php');
     }
 }

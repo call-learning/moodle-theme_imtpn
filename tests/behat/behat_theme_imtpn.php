@@ -37,12 +37,5 @@ require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class behat_theme_imtpn extends behat_base {
-    /**
-     * Make sure that the blocks for the mur pedagogique are set to what they need to be
-     *
-     * @Given /^I reset the murpedagogique blocks$/
-     */
-    public function i_reset_the_murpedagogique_blocks() {
-        \theme_imtpn\setup::setup_murpedago_blocks();
-    }
+    // Add custom steps here.
 }

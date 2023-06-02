@@ -8,7 +8,7 @@ Theme pour la "Pédagothèque Numérique" - IMT.
 Installation
 ==
 
-A rajouter dans config.php, si on veut que le mur pédagogique marche correctement:
+A rajouter dans config.php, si on veut que les scripts js personnalisés marchent correctement:
     
     $CFG->customscripts = dirname(__FILE__) . '/theme/imtpn/customscripts/';
 
@@ -43,8 +43,6 @@ Dépendances sur les blocks:
 * https://github.com/call-learning/moodle-block_forum_feed/ (page de tableau de bord)
 * https://github.com/call-learning/moodle-block_enhanced_myoverview/ (page de tableau de bord/ enseignant)
 * https://github.com/call-learning/moodle-block_thumblinks_action/ (page de themes de catalogue de cours) 
-* https://github.com/call-learning/moodle-block_forum_groups/ (mur pédagogique)
-* https://github.com/call-learning/moodle-block_group_members/ (mur pédagogique)
 * https://github.com/call-learning/moodle-block_sharing_cart/tree/resourcelibrary_integration (integration avec bibliothèque)
 
 Ensuite il nous faudra les modules locaux:

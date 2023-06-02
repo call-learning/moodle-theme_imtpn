@@ -45,7 +45,7 @@ use theme_imtpn\local\utils;
 use theme_imtpn\output\courses_thumbnails;
 
 /**
- * Class mur_pedagogique
+ * Class profile
  *
  * @package   theme_imtpn
  * @copyright 2021 - CALL Learning - Laurent David <laurent@call-learning.fr>

@@ -40,7 +40,6 @@ use moodle_url;
 use single_select;
 use stdClass;
 use theme_imtpn\local\custom_menu_advanced;
-use theme_imtpn\mur_pedagogique;
 
 /**
  * Renderers to align Moodle's HTML with that expected by Bootstrap
@@ -384,12 +383,11 @@ class core_renderer extends \theme_clboost\output\core_renderer {
     }
 
     /**
-     * This renders the navbar : The change here is only in the mur pedagogique contexte.
+     * This renders the navbar
      *
      * Uses bootstrap compatible html.
      */
     public function navbar(): string {
-        $navbar = mur_pedagogique::fix_navbar($this->page->navbar, $this->page);
         return $this->render_from_template('core/navbar', $navbar);
     }
 
