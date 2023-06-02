@@ -43,40 +43,6 @@ use theme_clboost\setup_utils;
  */
 class setup {
 
-    /**
-     * Dashboard block definition
-     */
-    const MUR_PEDAGO_BLOCK_DEFINITION = array(
-        array(
-            'blockname' => 'forum_groups',
-            'showinsubcontexts' => '1',
-            'defaultregion' => 'side-pre',
-            'defaultweight' => '0',
-            'configdata' =>
-                [
-                    "title" => 'populargroups|theme_imtpn',
-                ],
-            'capabilities' => array(),
-        )
-    );
-
-    /**
-     * Dashboard block definition
-     */
-    const MUR_PEDAGO_GROUP_BLOCK_DEFINITION = array(
-        array(
-            'blockname' => 'group_members',
-            'showinsubcontexts' => '1',
-            'defaultregion' => 'side-pre',
-            'defaultweight' => '0',
-            'configdata' =>
-                [
-                    "title" => '',
-                ],
-            'capabilities' => array(),
-        )
-    );
-
     // phpcs:disable
     // @codingStandardsIgnoreStart
 
@@ -114,14 +80,6 @@ class setup {
         <span>Echanger avec mes collègues</span>
     </a>
 </div>'],
-            'capabilities' => array()
-        ),
-        array(
-            'blockname' => 'forum_feed',
-            'showinsubcontexts' => '0',
-            'defaultregion' => 'content',
-            'defaultweight' => '1',
-            'configdata' => array('title' => 'Les news du mur pédagogique', 'maxtextlength' => 75, 'maxfeed' => 5),
             'capabilities' => array()
         ),
         array(
@@ -320,22 +278,10 @@ class setup {
         $oldpage = $PAGE;
         $PAGE = $page;
         $dashboarddef = self::DASHBOARD_BLOCK_DEFINITION;
-        $murpedagocm = mur_pedagogique::get_cm();
-        if ($murpedagocm) {
-            $forumid = $murpedagocm->instance;
-            $dashboarddef = array_map(function($b) use ($forumid) {
-                if ($b['blockname'] == 'forum_feed') {
-                    $b['configdata']['forumid'] = $forumid;
-                }
-                return $b;
-            }, self::DASHBOARD_BLOCK_DEFINITION);
-        }
         setup_utils::setup_page_blocks($page, $dashboarddef);
         my_reset_page_for_all_users();
         // Note here: this will only define capabilities for the default page. If we
         // want the dashboard to work as expected we also need to set forcedefaultmymoodle to true.
-        // Reset the mur pedagogique block.
-        self::setup_murpedago_blocks();
         // Setup Home page.
         $page = new moodle_page();
         $page->set_pagetype('site-index');
@@ -404,37 +350,6 @@ class setup {
 
     // @codingStandardsIgnoreEnd
     // phpcs:enable
-
-    /**
-     * Setup block for mur pedagogique
-     *
-     * @throws coding_exception
-     * @throws dml_exception
-     */
-    public static function setup_murpedago_blocks() {
-        $cm = mur_pedagogique::get_cm();
-        if ($cm) {
-            $pageforum = new moodle_page();
-            $pageforum->set_cm($cm);
-            $pageforum->set_pagelayout('incourse');
-            $pageforum->set_pagetype('mod-forum-view');
-            setup_utils::setup_page_blocks($pageforum, self::MUR_PEDAGO_BLOCK_DEFINITION, $regionname = 'side-pre');
-            $pagemurpedago = new moodle_page();
-            $pageforum->set_cm($cm);
-            $pageforum->set_pagelayout('incourse');
-            $pagemurpedago->set_pagetype('theme-imtpn-pages-murpedagogique-index');
-            setup_utils::setup_page_blocks($pagemurpedago, self::MUR_PEDAGO_BLOCK_DEFINITION, $regionname = 'side-pre');
-            $pagegroupoverview = new moodle_page();
-            $pagegroupoverview->set_pagelayout('standard');
-            $pagegroupoverview->set_pagetype('group-overview');
-            setup_utils::setup_page_blocks($pagegroupoverview, self::MUR_PEDAGO_BLOCK_DEFINITION, $regionname = 'side-pre');
-            $pagegroups = new moodle_page();
-            $pagegroups->set_pagelayout('incourse');
-            $pagegroups->set_pagetype('group-page');
-            $pagegroups->set_context(context_module::instance($cm->id));
-            setup_utils::setup_page_blocks($pagegroups, self::MUR_PEDAGO_GROUP_BLOCK_DEFINITION, $regionname = 'side-pre');
-        }
-    }
 
     /**
      * Setup customscript variable

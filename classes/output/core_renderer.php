@@ -31,16 +31,13 @@ use context_system;
 use core_message\api;
 use core_message\helper;
 use core_userfeedback;
-use custom_menu;
 use dml_exception;
 use html_writer;
 use local_resourcelibrary\locallib\utils;
 use moodle_exception;
 use moodle_url;
-use single_select;
 use stdClass;
 use theme_imtpn\local\custom_menu_advanced;
-use theme_imtpn\mur_pedagogique;
 
 /**
  * Renderers to align Moodle's HTML with that expected by Bootstrap
@@ -381,16 +378,6 @@ class core_renderer extends \theme_clboost\output\core_renderer {
             $logourl = new moodle_url("{$path}/pix/logos/logo-imt-white.png");
         }
         return $logourl;
-    }
-
-    /**
-     * This renders the navbar : The change here is only in the mur pedagogique contexte.
-     *
-     * Uses bootstrap compatible html.
-     */
-    public function navbar(): string {
-        $navbar = mur_pedagogique::fix_navbar($this->page->navbar, $this->page);
-        return $this->render_from_template('core/navbar', $navbar);
     }
 
     /**

@@ -23,7 +23,6 @@
  */
 
 use theme_imtpn\local\utils;
-use theme_imtpn\mur_pedagogique;
 
 /**
  * Serves any files associated with the theme settings.
@@ -39,10 +38,8 @@ use theme_imtpn\mur_pedagogique;
  * @throws coding_exception
  */
 function theme_imtpn_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
-    $cmmpda = mur_pedagogique::get_cm();
     // Patch for groups so any user can see the icon + description.
-    if (($filearea == 'groupicon' || $filearea == 'groupdescription') && $context->contextlevel == CONTEXT_COURSE
-        && $cmmpda->course == $context->get_course_context()->instanceid) {
+    if (($filearea == 'groupicon' || $filearea == 'groupdescription') && $context->contextlevel == CONTEXT_COURSE) {
         global $DB;
         $fs = get_file_storage();
 
@@ -102,16 +99,6 @@ function theme_imtpn_get_extra_scss($theme) {
 }
 
 /**
- * Reset all blocks
- *
- * @throws coding_exception
- * @throws dml_exception
- */
-function reset_mur_pedago_blocks() {
-    \theme_imtpn\setup::setup_murpedago_blocks();
-}
-
-/**
  * Setup customscript variable
  *
  * @throws coding_exception
@@ -119,18 +106,4 @@ function reset_mur_pedago_blocks() {
  */
 function setup_customscripts() {
     \theme_imtpn\setup::setup_customscripts();
-}
-
-/**
- * Fix issue with notloggedin class
- *
- * Usually the pages are marked as notlogged in if no user is logged in. In case the guest user
- * is logged in, the notloggedin is not there anymore, resulting in the left navbar taking space.
- * This resolves this issue on this theme.
- *
- * @param moodle_page $page
- * @throws coding_exception
- */
-function theme_imtpn_page_init($page) {
-    mur_pedagogique::set_additional_page_classes($page);
 }

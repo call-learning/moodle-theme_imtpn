@@ -17,26 +17,6 @@ Feature: Front page blocks
       | teacher1 | C1     | editingteacher |
       | student1 | C1     | student        |
     # The forum should be in group mode = 1.
-    And the following "activities" exist:
-      | activity | name            | intro           | type    | course | idnumber        |
-      | forum    | Mur pedagogique | Mur pedagogique | general | C1     | MUR_PEDAGOGIQUE |
-    Given the following config values are set as admin:
-      | murpedagoidnumber | MUR_PEDAGOGIQUE | theme_imtpn |
-      | murpedagoenabled  | 1               | theme_imtpn |
-
-  Scenario: As a non logged in user I should see the frontpage blocks
-    Given I am on homepage
-    Then I should see "Acceptance test site"
-    Then I should see "Catalog" in the ".fixed-top.navbar" "css_element"
-    And ".d-inline-block[data-region='drawer-toggle']" "css_element" should not be visible
-    Then I should not see "Mur pédagogique" in the ".fixed-top.navbar" "css_element"
-    And I should see "Pédagothèque Numérique ?" in the "region-main" "region"
-    And I should see "Pour les enseignants" in the "region-main" "region"
-    And I should see "Pour les étudiants" in the "region-main" "region"
-    And I should see "Cours à la une" in the "region-main" "region"
-    And I should see "Quoi de neuf?" in the "region-main" "region"
-    And I should see "Illustration are or in part from Freepik et Unsplash" in the "#page-footer" "css_element"
-    And I should see "Log in"
 
   Scenario: I should be able to login from the main Log in Button
     Given I am on site homepage

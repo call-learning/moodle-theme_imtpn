@@ -59,7 +59,7 @@ class settings extends \theme_clboost\local\settings {
     const DEFAULT_RULES = "
         <h3>Règles de participation</h3>
         <p><strong>Respect</strong> : les utilisateurs doivent s’adresser aux autres utilisateurs, à la modération et à
-        l'administration du Mur pédagogique avec respect, en évitant les commentaires irritants, irrespectueux, faux ou pouvant
+        l'administration avec respect, en évitant les commentaires irritants, irrespectueux, faux ou pouvant
         porter préjudice à un utilisateur ou une entité.</p>
         <p><strong>Spams</strong> : tout message doit rester en lien avec la thématique du groupe et sans intention
         promotionnelle ou commerciale.
@@ -92,34 +92,6 @@ class settings extends \theme_clboost\local\settings {
             static::get_string('footercontent', 'theme_imtpn'),
             static::get_string('footercontent_desc', 'theme_imtpn'),
             self::DEFAULT_FOOTER_CONTENT,
-            PARAM_RAW);
-        $page->add($setting);
-
-        $settings->add($page);
-
-        // Mur pedago.
-        $page = new admin_settingpage('murpedago',
-            static::get_string('murpedagogique', 'theme_imtpn'));
-
-        $setting = new admin_setting_configtext('theme_imtpn/murpedagoidnumber',
-            static::get_string('murpedagoidnumber', 'theme_imtpn'),
-            static::get_string('murpedagoidnumber_desc', 'theme_imtpn'),
-            'MUR_PEDAGOGIQUE',
-            PARAM_ALPHANUMEXT);
-        $setting->set_updatedcallback('reset_mur_pedago_blocks');
-        $page->add($setting);
-
-        $setting = new admin_setting_configcheckbox('theme_imtpn/murpedagoenabled',
-            static::get_string('murpedagoenabled', 'theme_imtpn'),
-            static::get_string('murpedagoenabled_desc', 'theme_imtpn'),
-            false);
-        $setting->set_updatedcallback('reset_mur_pedago_blocks');
-        $page->add($setting);
-
-        $setting = new admin_setting_confightmleditor('theme_imtpn/murpedagogrouprules',
-            static::get_string('murpedagogrouprules', 'theme_imtpn'),
-            static::get_string('murpedagogrouprules_desc', 'theme_imtpn'),
-            self::DEFAULT_RULES,
             PARAM_RAW);
         $page->add($setting);
 

@@ -29,7 +29,6 @@ use context_system;
 use dml_exception;
 use html_writer;
 use moodle_url;
-use theme_imtpn\mur_pedagogique;
 
 /**
  * Utils
