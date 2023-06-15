@@ -68,7 +68,7 @@ class config extends \theme_clboost\local\config {
             $CFG->custommenuitems = get_string('murpedagogique', 'theme_imtpn') . '|' . mur_pedagogique::get_url() . "\n";
         }
         if (!empty($CFG->enableresourcelibrary)) {
-            $url = new moodle_url('/theme/imtpn/pages/themescat.php');
+            $url = new moodle_url('/local/resourcelibrary/index.php');
             $CFG->custommenuitems .= get_string('catalogue', 'theme_imtpn') . '|' . $url->out() . "\n";
         }
     }
