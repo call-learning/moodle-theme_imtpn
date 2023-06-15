@@ -64,7 +64,7 @@ class config extends \theme_clboost\local\config {
         $theme->removedprimarynavitems = explode(',', get_config('theme_imtpn', 'hidenodesprimarynavigation'));
         $CFG->custommenuitems = '';
         if (!empty($CFG->enableresourcelibrary)) {
-            $url = new moodle_url('/theme/imtpn/pages/themescat.php');
+            $url = new moodle_url('http://moodlepg.local/local/resourcelibrary/index.php');
             $CFG->custommenuitems .= get_string('catalogue', 'theme_imtpn') . '|' . $url->out() . "\n";
         }
     }
