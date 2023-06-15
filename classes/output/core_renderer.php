@@ -37,6 +37,7 @@ use html_writer;
 use local_resourcelibrary\locallib\utils;
 use moodle_exception;
 use moodle_url;
+use navbar;
 use single_select;
 use stdClass;
 use theme_imtpn\local\custom_menu_advanced;
@@ -388,7 +389,8 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      * Uses bootstrap compatible html.
      */
     public function navbar(): string {
-        return $this->render_from_template('core/navbar', $navbar);
+        global $PAGE;
+        return $this->render_from_template('core/navbar', new navbar($PAGE));
     }
 
     /**
