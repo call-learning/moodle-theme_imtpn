@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$templatecontext = \theme_clboost\local\utils::prepare_standard_page($OUTPUT, $PAGE);
+$templatecontext = \theme_clboost\local\utils::prepare_standard_page($OUTPUT, $PAGE, false);
 $templatecontext['sitename'] = format_string(
     $SITE->fullname,
     true,

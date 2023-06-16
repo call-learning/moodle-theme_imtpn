@@ -24,6 +24,6 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-$templatecontext = \theme_clboost\local\utils::prepare_standard_page($OUTPUT, $PAGE, 'side-pre');
+$templatecontext = \theme_clboost\local\utils::prepare_standard_page($OUTPUT, $PAGE);
 echo $OUTPUT->render_from_template('theme_imtpn/myprofile', $templatecontext);
 
