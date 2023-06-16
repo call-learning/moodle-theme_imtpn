@@ -33,6 +33,7 @@ $string['createcourse'] = 'Créer un cours';
 $string['cannotleavegroup'] = 'Cannot leave group {$a}';
 $string['choosereadme'] = 'Un thème basé sur Boost (Bootstrap 4.5) créé spécialement pour l\'IMT';
 $string['customscripts'] = 'Custom Script activés ?';
+$string['customscripts_desc'] = 'Devons nous activer les scripts "custom" ?';
 $string['defaultfpslogan'] = 'Bienvenue sur la<br>Pédagothèque Numérique de l\'IMT';
 $string['editgroup'] = 'Editer le groupe';
 $string['emailvstheme'] = 'Email domain vs Theme';
