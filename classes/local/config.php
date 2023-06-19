@@ -59,7 +59,7 @@ class config extends \theme_clboost\local\config {
      * @param string $themeparentname
      */
     public static function setup_config(&$theme, $themeparentname = 'clboost') {
-        global $CFG, $USER;
+        global $CFG;
         $theme = parent::setup_config($theme, $themeparentname);
         $theme->removedprimarynavitems = explode(',', get_config('theme_imtpn', 'hidenodesprimarynavigation'));
         $CFG->custommenuitems = '';

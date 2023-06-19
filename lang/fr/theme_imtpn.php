@@ -85,3 +85,7 @@ $string['imtpn:editcataloguethemes'] = 'Peut éditer la page de liste de Themes 
 $string['userinfos'] = 'Infos';
 $string['viewallgroups'] = 'Parcourir les groupes existants';
 $string['viewcatalog'] = 'Voir le catalogue';
+$string['primarynavigationheading'] = 'Navigation primaire';
+$string['hidenodesprimarynavigationsetting'] = 'Cache les noeuds de la navigation primaire';
+$string['hidenodesprimarynavigationsetting_desc'] = 'Avec ce paramètres vous pouvez cacher des noeuds multiples provenant
+de la navigation primaire.';

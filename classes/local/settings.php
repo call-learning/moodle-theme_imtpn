@@ -155,7 +155,7 @@ class settings extends \theme_clboost\local\settings {
         $hidenodesoptions = [
             'home' => get_string('home'),
             'myhome' => get_string('myhome'),
-            'mycourses' => get_string('mycourses'),
+            'courses' => get_string('mycourses'),
             'siteadmin' => get_string('administrationsite')
         ];
 
