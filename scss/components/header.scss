@@ -26,6 +26,9 @@ body.notloggedin {
             justify-content: space-between;
         }
 
+        &> ul.nav.navbar-nav:last-child {
+            padding-right: 8em;
+        }
         .navbar-nav .nav-item.currentpage {
             border-bottom: $primary solid;
             border-width: 2px;
