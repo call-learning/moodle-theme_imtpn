@@ -5,7 +5,7 @@
 }
 
 body.notloggedin {
-    .navbar.fixed-top  {
+    .navbar.fixed-top {
         background-color: transparent;
         box-shadow: none;
         border-bottom: 1px solid transparent;
@@ -26,7 +26,7 @@ body.notloggedin {
             justify-content: space-between;
         }
 
-        &> ul.nav.navbar-nav:last-child {
+        & > ul.nav.navbar-nav:last-child {
             padding-right: 8em;
         }
         .navbar-nav .nav-item.currentpage {
@@ -36,7 +36,9 @@ body.notloggedin {
 
         &.navbar-dark {
             .nav-link {
-                a, a:hover, a:visited {
+                a,
+                a:hover,
+                a:visited {
                     font-weight: bold;
                     color: $navbar-dark-color;
                     text-decoration: none;
@@ -65,8 +67,8 @@ body.notloggedin {
         @include media-breakpoint-up(sm) {
             position: fixed;
             width: 100%;
-            top: 0px;
-            z-index: $zindex-fixed - 1
+            top: 0;
+            z-index: $zindex-fixed - 1;
         }
 
         flex: 0 0 auto;
@@ -209,7 +211,7 @@ body.notloggedin {
     position: fixed;
     top: $navbar-height;
     width: 100%;
-    box-shadow: 0 2px 4px rgba(0,0,0,.08);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
 }
 
 #page-site-index.notloggedin {
@@ -222,8 +224,10 @@ body.notloggedin {
     }
 }
 
-#page-login-index, #page-themescat {
-    .header__triangle-3, .header__triangle-2 {
+#page-login-index,
+#page-themescat {
+    .header__triangle-3,
+    .header__triangle-2 {
         visibility: hidden;
     }
 }

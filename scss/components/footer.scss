@@ -99,13 +99,15 @@ footer.footer {
         li {
             margin: 0 10px;
 
-            a, a:visited, a:hover {
+            a,
+            a:visited,
+            a:hover {
                 color: inherit;
             }
         }
 
 
-        logininfo {
+        .logininfo {
             justify-content: center;
         }
     }

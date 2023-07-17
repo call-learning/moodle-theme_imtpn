@@ -2,6 +2,7 @@
     box-shadow: 0 2px 14px -4px rgba(0, 0, 0, 0.25);
     background: $white;
     position: relative;
+    /* stylelint-disable declaration-no-important */
     height: 288px !important;
 
     @include media-breakpoint-down(sm) {
@@ -56,7 +57,7 @@
         position: absolute;
         right: 0;
         bottom: 0;
-        padding:0.5rem;
+        padding: 0.5rem;
     }
 }
 

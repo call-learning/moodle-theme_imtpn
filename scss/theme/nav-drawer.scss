@@ -1,24 +1,27 @@
-#nav-drawer[aria-hidden="true"] .list-group-item{
-  width: 100%;
-  padding: 12px 0;
+#nav-drawer[aria-hidden="true"] .list-group-item {
+    width: 100%;
+    padding: 12px 0;
 }
-#nav-drawer[aria-hidden="true"] .list-group-item .media-left{
-  display:inline-block;
-  margin:0 auto;
+
+#nav-drawer[aria-hidden="true"] .list-group-item .media-left {
+    display: inline-block;
+    margin: 0 auto;
 }
-#nav-drawer[aria-hidden="true"]  .list-group-item .media-left .icon{
-  margin:0;
+
+#nav-drawer[aria-hidden="true"] .list-group-item .media-left .icon {
+    margin: 0;
 }
+
 // Space for last menu in boostrap.
 #nav-drawer {
-  .list-group-item{
-    padding: 0.5em 0;
-    .media-left{
-      display:inline-block;
-      margin:0 auto;
-      .icon {
-        margin:0;
-      }
+    .list-group-item {
+        padding: 0.5em 0;
+        .media-left {
+            display: inline-block;
+            margin: 0 auto;
+            .icon {
+                margin: 0;
+            }
+        }
     }
-  }
 }

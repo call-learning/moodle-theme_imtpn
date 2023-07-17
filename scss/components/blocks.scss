@@ -63,6 +63,7 @@
 #page-my-index .block > .card {
     @extend .card-dashboard;
     .card-body {
+        /* stylelint-disable declaration-no-important */
         padding-top: 0 !important;
         padding-left: 0 !important;
         padding-right: 0 !important;

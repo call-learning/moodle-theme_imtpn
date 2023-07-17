@@ -6,6 +6,7 @@
         @extend .imtpn-container;
 
         .card-body {
+            /* stylelint-disable declaration-no-important */
             padding: 0 !important;
         }
     }
