@@ -372,10 +372,10 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      */
     public function get_logo_url($maxwidth = null, $maxheight = 200) {
         $path = $this->get_current_theme_base_url();
-        $logourl = new moodle_url("{$path}/pix/logos/logo-imt-dark.png");
+        $logourl = new moodle_url("{$path}/pix/logos/logo.svg");
         if (!isloggedin() || isguestuser()) {
             // If we are not logged in, the logo should be white instead.
-            $logourl = new moodle_url("{$path}/pix/logos/logo-imt-white.png");
+            $logourl = new moodle_url("{$path}/pix/logos/logo-white.svg");
         }
         return $logourl;
     }
