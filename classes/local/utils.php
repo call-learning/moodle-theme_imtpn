@@ -100,4 +100,16 @@ class utils {
         return $filesurl;
     }
 
+    /**
+     * Add body additional classes when user is guest
+     *
+     * @param \moodle_page $page
+     * @return void
+     */
+    public static function add_body_additional_classes(\moodle_page $page) {
+        $loggedin = isloggedin() && !isguestuser();
+        if (!$loggedin) {
+            $page->add_body_class('notloggedin');
+        }
+    }
 }

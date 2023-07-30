@@ -107,3 +107,17 @@ function theme_imtpn_get_extra_scss($theme) {
 function setup_customscripts() {
     \theme_imtpn\setup::setup_customscripts();
 }
+
+
+/**
+ * Fix issue with notloggedin class
+ *
+ * Usually the pages are marked as notlogged in if no user is logged in. In case the guest user
+ * is logged in, the notloggedin is not there anymore, resulting in the left navbar taking space.
+ * This resolves this issue on this theme.
+ *
+ * @param $page
+ */
+function theme_imtpn_page_init($page) {
+    utils::add_body_additional_classes($page);
+}
