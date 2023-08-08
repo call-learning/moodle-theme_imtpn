@@ -43,7 +43,6 @@ Feature: I check that the syllabus is working and accessible
   Scenario: As a teacher I should see my courses in the catalog
     And I log in as "teacher1"
     And I follow "Catalog"
-    And I click on "View catalog" "button"
     And I should see "Course 1"
     And I should see "Course 2"
     And I should see "Course 3"

@@ -44,7 +44,7 @@ export const init = () => {
                         function (response) {
                             $('.block_sharing_cart .tree').replaceWith($(response));
                             $.init_item_tree();
-                        }, "html");
+                        }, "html").catch((error) => window.console.log(error));
                     iconPromise.resolve();
                 });
             }

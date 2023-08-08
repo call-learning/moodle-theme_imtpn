@@ -116,7 +116,7 @@ function setup_customscripts() {
  * is logged in, the notloggedin is not there anymore, resulting in the left navbar taking space.
  * This resolves this issue on this theme.
  *
- * @param $page
+ * @param moodle_page $page
  */
 function theme_imtpn_page_init($page) {
     utils::add_body_additional_classes($page);

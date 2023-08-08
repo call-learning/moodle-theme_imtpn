@@ -12,7 +12,6 @@ Feature: Login page
     Given the following config values are set as admin:
       | user_attribute | username | auth_shibboleth |
 
-
   Scenario: I should see the message for external user login and login
     Given I am on homepage
     And I click on "Log in" "link" in the ".logininfo" "css_element"
@@ -22,7 +21,6 @@ Feature: Login page
     And I set the field "Password" to "teacher1"
     When I press "Log in"
     Then I should see "You are logged in as"
-
 
   Scenario: I should see the message for additional external login methods
     And I log in as "admin"
