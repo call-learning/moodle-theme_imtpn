@@ -63,7 +63,8 @@ body.notloggedin {
     }
     header.header {
         position: relative;
-        min-height: $navbar-height;
+        height: $navbar-height;
+        overflow: hidden;
         @include media-breakpoint-up(sm) {
             position: fixed;
             width: 100%;
@@ -147,7 +148,7 @@ body.notloggedin {
         .header__bottom {
             position: relative;
             padding-top: 80px;
-            height: 312px;
+            height: $imt-header-height;
 
             @include media-breakpoint-down(sm) {
                 height: 262px;
@@ -218,8 +219,8 @@ body.notloggedin {
 
     header.header {
         .header__triangle-1:after {
-            border-width: 312px 312px 0 0;
-            right: -312px;
+            border-width: $imt-header-height $imt-header-height 0 0;
+            right: -($imt-header-height);
         }
     }
 }

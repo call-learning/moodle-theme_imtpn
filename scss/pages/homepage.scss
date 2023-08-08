@@ -53,3 +53,14 @@
     margin-top: 1.5rem;
     padding: 1.5rem 0.5rem;
 }
+// On the front page, the header is fixed to the top of the page.
+// This means that the page content needs to be pushed down by the height of the header.
+
+#page-site-index {
+    #page {
+        padding-top: $imt-header-height;
+    }
+    header.header {
+        height: $imt-header-height;
+    }
+}

@@ -400,4 +400,28 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         // Add $opts->navitems[] here.
         // Nothing for now.
     }
+
+
+    /**
+     * The standard tags (typically skip links) that should be output just inside
+     * the start of the <body> tag. Designed to be called in theme layout.php files.
+     *
+     * @return string HTML fragment.
+     */
+    public function standard_top_of_body_html() {
+        global $SITE;
+        $output = parent::standard_top_of_body_html();
+        $templatecontext = [];
+        if (!isloggedin() || isguestuser()) {
+            $templatecontext['loginurl'] = get_login_url();
+        } else {
+            return $output; // No need to display the header once logged in.
+        }
+        $sitesummarytxt = empty($SITE->summary) ?
+            get_string('defaultfpslogan', 'theme_imtpn') :
+            $SITE->summary;
+        $templatecontext['fppageheader'] = format_text($sitesummarytxt, FORMAT_HTML);
+        $output .= $this->render_from_template('theme_imtpn/imt_header', $templatecontext);
+        return $output;
+    }
 }
