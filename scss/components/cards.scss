@@ -57,13 +57,21 @@
         position: absolute;
         right: 0;
         bottom: 0;
+        padding: 0.5rem; // Fix dashboard card arrow.
+    }
+    &.dashboard-card .link-go-to-content{
+
     }
 }
 
-#page-local-resourcelibrary-index .dashboard-card-deck .dashboard-card .dashboard-card-img {
-    height: 180px;
+#page-local-resourcelibrary-index .dashboard-card-deck .dashboard-card {
+    .dashboard-card-img {
+        height: 180px;
+    }
+    .link-go-to-content {
+        padding: initial;
+    }
 }
-
 
 .card-news {
 
