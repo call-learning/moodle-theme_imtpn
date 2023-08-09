@@ -66,5 +66,7 @@ if (!core_course_category::can_view_course_info($course) && !is_enrolled($contex
 }
 
 // Then redirect
+if (!empty($CFG->enablesyllabus)) {
+    redirect(new moodle_url('/local/syllabus/view.php', array('id'=>$course->id)));
+}
 
-redirect(new moodle_url('/local/syllabus/view.php', array('id'=>$course->id)));
