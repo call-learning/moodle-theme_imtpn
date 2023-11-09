@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version   = 2023080800; /* This is the version number to increment when changes needing an update are made */
-$plugin->requires  = 2022112801;
+$plugin->version   = 2023092800; /* This is the version number to increment when changes needing an update are made */
+$plugin->requires  = 2022112500;
 $plugin->release   = '4.1.1';
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->component = 'theme_imtpn';
