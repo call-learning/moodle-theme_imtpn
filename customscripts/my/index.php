@@ -21,6 +21,5 @@ if (!empty($dashbyroleplugin)) {
     if ($dashbyroleplugin->is_installed_and_upgraded()) {
         global $CFG;
         include_once($CFG->dirroot . '/local/dash_by_role/customscripts/my/index.php');
-        die();
     }
 }
