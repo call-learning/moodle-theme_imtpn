@@ -22,3 +22,11 @@
 @import 'pages/course';
 @import 'pages/login';
 
+// Fix classhes of colors between background and foreground.
+.bg-secondary.text-dark {
+    background-color: $imt-lightgray !important; // stylelint-disable-line declaration-no-important
+}
+.custom-select:disabled {
+    color: #555;
+    background-color: #eee
+}

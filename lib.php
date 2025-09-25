@@ -39,18 +39,18 @@ use theme_imtpn\local\utils;
  */
 function theme_imtpn_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
     // Patch for groups so any user can see the icon + description.
-    if (($filearea == 'groupicon' || $filearea == 'groupdescription') && $context->contextlevel == CONTEXT_COURSE) {
-        global $DB;
+    $isvalid = ($filearea == 'groupicon' || $filearea == 'groupdescription') && $context->contextlevel == CONTEXT_COURSE;
+    $isvalid = $isvalid || $filearea === 'logos';
+    if ($isvalid) {
+        $group = null;
         $fs = get_file_storage();
-
-        require_course_login($course, true, null, false);
-
-        $groupid = (int) array_shift($args);
-
-        $group = $DB->get_record('groups', array('id' => $groupid, 'courseid' => $course->id), '*', MUST_EXIST);
-
+        if ($filearea === 'groupicon' || $filearea === 'groupdescription') {
+            global $DB;
+            require_course_login($course, true, null, false);
+            $groupid = (int) array_shift($args);
+            $group = $DB->get_record('groups', array('id' => $groupid, 'courseid' => $course->id), '*', MUST_EXIST);
+        }
         if ($filearea === 'groupdescription') {
-
             require_login($course);
 
             $filename = array_pop($args);
@@ -59,13 +59,11 @@ function theme_imtpn_pluginfile($course, $cm, $context, $filearea, $args, $force
             if (!$file || $file->is_directory()) {
                 send_file_not_found();
             }
-
             \core\session\manager::write_close(); // Unlock session during file serving.
             send_stored_file($file, 60 * 60, 0, $forcedownload, $options);
 
         } else if ($filearea === 'groupicon') {
             $filename = array_pop($args);
-
             if ($filename !== 'f1' && $filename !== 'f2') {
                 send_file_not_found();
             }
@@ -77,8 +75,16 @@ function theme_imtpn_pluginfile($course, $cm, $context, $filearea, $args, $force
 
             \core\session\manager::write_close(); // Unlock session during file serving.
             send_stored_file($file, 60 * 60, 0, false, $options);
-
-        } else {
+        } else if ($filearea === 'logos' && $context->contextlevel == CONTEXT_SYSTEM) {
+            $theme = theme_config::load('theme_imtpn');
+            // By default, theme files must be cache-able by both browsers and proxies.
+            if (!array_key_exists('cacheability', $options)) {
+                $options['cacheability'] = 'public';
+            }
+            return $theme->setting_file_serve($filearea, $args, $forcedownload, $options);
+        }
+        else
+        {
             send_file_not_found();
         }
     }

@@ -25,7 +25,6 @@
 namespace theme_imtpn\output;
 
 use coding_exception;
-use context_course;
 use context_header;
 use context_system;
 use core_message\api;
@@ -33,7 +32,7 @@ use core_message\helper;
 use core_userfeedback;
 use dml_exception;
 use html_writer;
-use local_resourcelibrary\locallib\utils;
+use local_resourcelibrary\local\utils;
 use moodle_exception;
 use moodle_url;
 use stdClass;
@@ -67,12 +66,6 @@ class core_renderer extends \theme_clboost\output\core_renderer {
     }
 
     /**
-     * Get the compact logo URL.
-     *
-     * @return string
-     */
-
-    /**
      * Should we display the logo ?
      *
      * @return bool
@@ -90,14 +83,52 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      * @return bool|false|moodle_url
      */
     public function get_compact_logo_url($maxwidth = 100, $maxheight = 100) {
-        $path = $this->get_current_theme_base_url();
-        $compactlogourl = new moodle_url("{$path}/pix/logos/logo.svg");
         if (!isloggedin() || isguestuser()) {
             // If we are not logged in, the logo should be white instead.
-            $compactlogourl = new moodle_url("{$path}/pix/logos/logo-white.svg");
+            return $this->get_logo_from_config('logo-white');
         }
+        return $this->get_logo_from_config('logo');
+    }
 
-        return $compactlogourl;
+    /**
+     * Get Logo URL
+     * If it has not been overriden by core_admin config, serve the logo in pix
+     *
+     * @param null $maxwidth
+     * @param int $maxheight
+     * @return bool|false|moodle_url
+     */
+    public function get_logo_url($maxwidth = null, $maxheight = 200) {
+        if (!isloggedin() || isguestuser()) {
+            // If we are not logged in, the logo should be white instead.
+            return $this->get_logo_from_config('logo-white');
+        }
+        return $this->get_logo_from_config('logo');
+    }
+
+    /**
+     * Get the logo content from config
+     *
+     * @return moodle_url
+     */
+    private function get_logo_from_config(string $logofilename): moodle_url {
+        $filenametoconfig = ['logo' => 'logo', 'logo-white' => 'logo_white'];
+        $configname = $filenametoconfig[$logofilename];
+        $logofilepath = get_config('theme_imtpn', $configname);
+        if (!empty($logofilepath)) {
+            $component = 'theme_imtpn';
+            $itemindex = $logofilename == 'logo' ? 0 : 1;
+            return moodle_url::make_pluginfile_url(
+                \core\context\system::instance()->id,
+                'theme_imtpn',
+                $configname,
+                "",
+                theme_get_revision() . "/",
+                basename($logofilepath)
+            );
+        }
+        $basepath = $this->get_current_theme_base_url();
+        return new moodle_url("{$basepath}/pix/logos/{$logofilename}.svg");
     }
 
     /**
@@ -360,24 +391,6 @@ class core_renderer extends \theme_clboost\output\core_renderer {
 
         $contextheader = new context_header($heading, $headinglevel, $imagedata, $userbuttons);
         return $this->render_context_header($contextheader);
-    }
-
-    /**
-     * Get Logo URL
-     * If it has not been overriden by core_admin config, serve the logo in pix
-     *
-     * @param null $maxwidth
-     * @param int $maxheight
-     * @return bool|false|moodle_url
-     */
-    public function get_logo_url($maxwidth = null, $maxheight = 200) {
-        $path = $this->get_current_theme_base_url();
-        $logourl = new moodle_url("{$path}/pix/logos/logo.svg");
-        if (!isloggedin() || isguestuser()) {
-            // If we are not logged in, the logo should be white instead.
-            $logourl = new moodle_url("{$path}/pix/logos/logo-white.svg");
-        }
-        return $logourl;
     }
 
     /**
