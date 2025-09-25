@@ -89,3 +89,8 @@ $string['primarynavigationheading'] = 'Navigation primaire';
 $string['hidenodesprimarynavigationsetting'] = 'Cache les noeuds de la navigation primaire';
 $string['hidenodesprimarynavigationsetting_desc'] = 'Avec ce paramètres vous pouvez cacher des noeuds multiples provenant
 de la navigation primaire.';
+$string['logosandimages'] = 'Logos and images settings';
+$string['logo'] = 'Logo';
+$string['logo_desc'] = 'Logo to display in the header. If none is provided, the default image will be displayed instead.';
+$string['logo_white'] = 'Logo White';
+$string['logo_white_desc'] = 'Logo to display in the header on a dark background. If none is provided, the default image will be displayed instead.';

@@ -169,5 +169,27 @@ class settings extends \theme_clboost\local\settings {
 
         $settings->add($page);
 
+        $themefullname = 'theme_' . $currentthemename;
+        // Logos and images.
+        $page = new admin_settingpage('logosandimages',
+            get_string('logosandimages', 'theme_imtpn'));
+
+        // Logo
+        $name = $themefullname . '/logo';
+        $title = get_string('logo', 'theme_imtpn');
+        $description = get_string('logo_desc', 'theme_imtpn');
+        $setting = new admin_setting_configstoredfile($name, $title, $description, 'logo');
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $page->add($setting);
+
+        // Logo white
+        $name = $themefullname . '/logo_white';
+        $title = get_string('logo_white', 'theme_imtpn');
+        $description = get_string('logo_white_desc', 'theme_imtpn');
+        $setting = new admin_setting_configstoredfile($name, $title, $description, 'logo_white');
+        $setting->set_updatedcallback('theme_reset_all_caches');
+        $page->add($setting);
+
+        $settings->add($page);
     }
 }
