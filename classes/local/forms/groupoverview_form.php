@@ -50,11 +50,24 @@ class groupoverview_form extends moodleform {
      * @param bool $editable
      * @param null $ajaxformdata
      */
-    public function __construct($action = null, $customdata = null, $method = 'post', $target = '', $attributes = null,
+    public function __construct(
+        $action = null,
+        $customdata = null,
+        $method = 'post',
+        $target = '',
+        $attributes = null,
         $editable = true,
-        $ajaxformdata = null) {
-        parent::__construct($action, $customdata, $method, $target, ['class' => 'groupoverview-search-form container d-flex'],
-            $editable, $ajaxformdata);
+        $ajaxformdata = null
+    ) {
+        parent::__construct(
+            $action,
+            $customdata,
+            $method,
+            $target,
+            ['class' => 'groupoverview-search-form container d-flex'],
+            $editable,
+            $ajaxformdata
+        );
     }
 
     /**
@@ -63,13 +76,19 @@ class groupoverview_form extends moodleform {
     protected function definition() {
         $mform = $this->_form;
         $mform->addElement(
-            'text', 'groupname', get_string('groupname', 'theme_imtpn'),
+            'text',
+            'groupname',
+            get_string('groupname', 'theme_imtpn'),
             ['class' => 'container']
         );
         $mform->setType('groupname', PARAM_TEXT);
 
         $mform->addElement('submit', 'submitbutton', get_string('search'));
-        $mform->addElement('cancel', 'cancelbutton', get_string('clear'),
-            ['class' => 'mr-auto']);
+        $mform->addElement(
+            'cancel',
+            'cancelbutton',
+            get_string('clear'),
+            ['class' => 'mr-auto']
+        );
     }
 }

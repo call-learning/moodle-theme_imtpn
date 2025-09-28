@@ -29,11 +29,11 @@ require(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/clilib.php');
 
 // Get the cli options.
-list($options, $unrecognised) = cli_get_params([
+[$options, $unrecognised] = cli_get_params([
     'help' => false,
     'name' => null,
 ], [
-    'h' => 'help'
+    'h' => 'help',
 ]);
 
 $usage = "Run different setup script for testing purpose
@@ -60,7 +60,7 @@ if ($options['help']) {
 $setupclass = new ReflectionClass('\theme_imtpn\setup');
 
 $refpossiblefunctions = $setupclass->getMethods(ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_STATIC);
-$possiblefunctions = array_map(function($f) {
+$possiblefunctions = array_map(function ($f) {
     return $f->name;
 }, $refpossiblefunctions);
 

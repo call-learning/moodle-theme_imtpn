@@ -42,7 +42,6 @@ use theme_clboost\setup_utils;
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class setup {
-
     // phpcs:disable
     // @codingStandardsIgnoreStart
 

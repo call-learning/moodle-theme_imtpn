@@ -46,7 +46,6 @@ use theme_imtpn\local\custom_menu_advanced;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class core_renderer extends \theme_clboost\output\core_renderer {
-
     /**
      * Size of the profile image
      */
@@ -175,11 +174,21 @@ class core_renderer extends \theme_clboost\output\core_renderer {
             } else {
                 $currentlang = $strlang;
             }
-            $this->language = $menu->add($currentlang, new moodle_url('#'), $strlang, 10000,
-                "flag-icon flag-icon-{$shortlangcode}");
+            $this->language = $menu->add(
+                $currentlang,
+                new moodle_url('#'),
+                $strlang,
+                10000,
+                "flag-icon flag-icon-{$shortlangcode}"
+            );
             foreach ($langs as $langtype => $langname) {
-                $this->language->add($langname, new moodle_url($this->page->url, array('lang' => $langtype)), null,
-                    null, "flag-icon flag-icon-{$langtype}");
+                $this->language->add(
+                    $langname,
+                    new moodle_url($this->page->url, ['lang' => $langtype]),
+                    null,
+                    null,
+                    "flag-icon flag-icon-{$langtype}"
+                );
             }
         }
 
@@ -227,8 +236,10 @@ class core_renderer extends \theme_clboost\output\core_renderer {
 
         if (core_userfeedback::can_give_feedback()) {
             $list[] = html_writer::div(
-                $this->render_from_template('core/userfeedback_footer_link',
-                    ['url' => core_userfeedback::make_link()->out(false)])
+                $this->render_from_template(
+                    'core/userfeedback_footer_link',
+                    ['url' => core_userfeedback::make_link()->out(false)]
+                )
             ); // IMTPN: output as a list.
         }
 
@@ -238,8 +249,11 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         $output .= $this->unique_performance_info_token;
         if ($this->page->devicetypeinuse == 'legacy') {
             // The legacy theme is in use print the notification.
-            $list[] = html_writer::tag('div', get_string('legacythemeinuse'),
-                array('class' => 'legacythemeinuse')); // IMTPN: output as a list.
+            $list[] = html_writer::tag(
+                'div',
+                get_string('legacythemeinuse'),
+                ['class' => 'legacythemeinuse']
+            ); // IMTPN: output as a list.
         }
 
         // Get links to switch device types (only shown for users not on a default device).
@@ -247,11 +261,16 @@ class core_renderer extends \theme_clboost\output\core_renderer {
 
         if (!empty($CFG->debugpageinfo)) {
             $list[] = '<div class="performanceinfo pageinfo">' .
-                get_string('pageinfodebugsummary', 'core_admin', // IMTPN: output as a list.
-                    $this->page->debug_summary()) . '</div>';
+                get_string(
+                    'pageinfodebugsummary',
+                    'core_admin', // IMTPN: output as a list.
+                    $this->page->debug_summary()
+                ) . '</div>';
         }
-        if (debugging(null, DEBUG_DEVELOPER) &&
-            has_capability('moodle/site:config', context_system::instance())) {  // Only in developer mode
+        if (
+            debugging(null, DEBUG_DEVELOPER) &&
+            has_capability('moodle/site:config', context_system::instance())
+        ) {  // Only in developer mode
             // Add link to profiling report if necessary.
             if (function_exists('profiling_is_running') && profiling_is_running()) {
                 $txt = get_string('profiledscript', 'admin');
@@ -260,8 +279,8 @@ class core_renderer extends \theme_clboost\output\core_renderer {
                 $link = '<a title="' . $title . '" href="' . $url . '">' . $txt . '</a>';
                 $list[] = '<div class="profilingfooter">' . $link . '</div>'; // IMTPN: output as a list.
             }
-            $purgeurl = new moodle_url('/admin/purgecaches.php', array('confirm' => 1,
-                'sesskey' => sesskey(), 'returnurl' => $this->page->url->out_as_local_url(false)));
+            $purgeurl = new moodle_url('/admin/purgecaches.php', ['confirm' => 1,
+                'sesskey' => sesskey(), 'returnurl' => $this->page->url->out_as_local_url(false)]);
             $list[] = '<div class="purgecaches">' .
                 html_writer::link($purgeurl, get_string('purgecaches', 'admin')) . '</div>';
             // IMTPN: output as a list.
@@ -315,7 +334,8 @@ class core_renderer extends \theme_clboost\output\core_renderer {
         }
 
         // The user context currently has images and buttons. Other contexts may follow.
-        if (isset($headerinfo['user'])
+        if (
+            isset($headerinfo['user'])
             || $context->contextlevel == CONTEXT_USER
             || $this->page->pagelayout == 'mypublic'
         ) {
@@ -324,7 +344,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
             } else {
                 // Look up the user information if it is not supplied.
                 if ($context->contextlevel == CONTEXT_USER) {
-                    $user = $DB->get_record('user', array('id' => $context->instanceid));
+                    $user = $DB->get_record('user', ['id' => $context->instanceid]);
                 } else {
                     $user = $USER;
                 }
@@ -347,39 +367,38 @@ class core_renderer extends \theme_clboost\output\core_renderer {
                     $heading = fullname($user);
                 }
 
-                $imagedata = $this->user_picture($user, array('size' => self::PROFILE_IMAGE_SIZE));
+                $imagedata = $this->user_picture($user, ['size' => self::PROFILE_IMAGE_SIZE]);
 
                 // Check to see if we should be displaying a message button.
                 if (!empty($CFG->messaging) && has_capability('moodle/site:sendmessage', $context)) {
-                    $userbuttons = array(
-                        'messages' => array(
+                    $userbuttons = [
+                        'messages' => [
                             'buttontype' => 'message',
                             'title' => get_string('message', 'message'),
-                            'url' => new moodle_url('/message/index.php', array('id' => $user->id)),
+                            'url' => new moodle_url('/message/index.php', ['id' => $user->id]),
                             'image' => 'message',
                             'linkattributes' => helper::messageuser_link_params($user->id),
-                            'page' => $this->page
-                        )
-                    );
+                            'page' => $this->page,
+                        ],
+                    ];
 
                     if ($USER->id != $user->id) {
                         $iscontact = api::is_contact($USER->id, $user->id);
                         $contacttitle = $iscontact ? 'removefromyourcontacts' : 'addtoyourcontacts';
                         $contacturlaction = $iscontact ? 'removecontact' : 'addcontact';
                         $contactimage = $iscontact ? 'removecontact' : 'addcontact';
-                        $userbuttons['togglecontact'] = array(
+                        $userbuttons['togglecontact'] = [
                             'buttontype' => 'togglecontact',
                             'title' => get_string($contacttitle, 'message'),
-                            'url' => new moodle_url('/message/index.php', array(
+                            'url' => new moodle_url('/message/index.php', [
                                     'user1' => $USER->id,
                                     'user2' => $user->id,
                                     $contacturlaction => $user->id,
-                                    'sesskey' => sesskey())
-                            ),
+                                    'sesskey' => sesskey()]),
                             'image' => $contactimage,
                             'linkattributes' => helper::togglecontact_link_params($user, $iscontact),
-                            'page' => $this->page
-                        );
+                            'page' => $this->page,
+                        ];
                     }
 
                     $this->page->requires->string_for_js('changesmadereallygoaway', 'moodle');
@@ -401,13 +420,13 @@ class core_renderer extends \theme_clboost\output\core_renderer {
      */
     protected function additional_user_menus_nonavbar(&$opts, $course) {
 
-        list($urltext, $url) = utils::get_catalog_url();
+        [$urltext, $url] = utils::get_catalog_url();
         $opts->navitems[] = (object) [
             'itemtype' => 'link',
             'url' => $url,
             'title' => $urltext,
             'titleidentifier' => 'resourcelibrary',
-            'pix' => 'i/course'
+            'pix' => 'i/course',
         ];
 
         // Add $opts->navitems[] here.

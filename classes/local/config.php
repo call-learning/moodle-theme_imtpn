@@ -44,11 +44,11 @@ class config extends \theme_clboost\local\config {
     public static function get_layouts() {
         $layout = parent::get_layouts();
         // My public page.
-        $layout['mypublic'] = array(
+        $layout['mypublic'] = [
             'file' => 'myprofile.php',
-            'regions' => array('side-pre'),
+            'regions' => ['side-pre'],
             'defaultregion' => 'side-pre',
-        );
+        ];
         return $layout;
     }
 

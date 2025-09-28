@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Indexsys override for My Moodle page
+ *
+ * @package   theme_imtpn
+ * @copyright 2021 - CALL Learning - Laurent David <laurent@call-learning.fr>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+// phpcs:ignore moodle.Files.MoodleInternal.MoodleInternalGlobalState
 // If localplugin dashby role is installed, then include $CFG->dirroot.'/local/dash_by_role/customscripts/my/'
 // in the $CFG->customscripts array.
 $dashbyroleplugin = core_plugin_manager::instance()->get_plugin_info('local_dash_by_role');

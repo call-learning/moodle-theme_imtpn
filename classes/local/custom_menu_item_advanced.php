@@ -36,7 +36,6 @@ use renderer_base;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class custom_menu_item_advanced extends custom_menu_item {
-
     use custom_menu_advanced_trait;
 
     /**
@@ -60,8 +59,14 @@ class custom_menu_item_advanced extends custom_menu_item {
      *        belongs to, only if the child has a parent. [Optional]
      * @param null $iconclasses
      */
-    public function __construct($text, moodle_url $url = null, $title = null, $sort = null, custom_menu_item $parent = null,
-        $iconclasses = null) {
+    public function __construct(
+        $text,
+        moodle_url $url = null,
+        $title = null,
+        $sort = null,
+        custom_menu_item $parent = null,
+        $iconclasses = null
+    ) {
         global $PAGE;
         parent::__construct($text, $url, $title, $sort, $parent);
         $this->iconclasses = $iconclasses;

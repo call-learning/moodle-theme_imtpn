@@ -66,9 +66,11 @@ class utils {
     public static function get_profile_page_image_url($themename) {
         $fs = get_file_storage();
         $syscontextid = context_system::instance()->id;
-        $allfiles = $fs->get_area_files($syscontextid,
+        $allfiles = $fs->get_area_files(
+            $syscontextid,
             'theme_' . $themename,
-            self::PROFILE_IMAGE_FILE_AREA);
+            self::PROFILE_IMAGE_FILE_AREA
+        );
 
         $filesurl = [];
         foreach ($allfiles as $file) {

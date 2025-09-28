@@ -88,7 +88,7 @@ class groups extends table_sql implements dynamic_table {
             'groupname' => get_string('groups:groupname', 'theme_imtpn'),
             'members' => get_string('groups:members', 'theme_imtpn'),
             'postcount' => get_string('groups:postcount', 'theme_imtpn'),
-            'grouplink' => ''
+            'grouplink' => '',
         ];
 
         $this->define_columns(array_keys($cols));
@@ -126,7 +126,7 @@ class groups extends table_sql implements dynamic_table {
         if ($filterset->has_filter('name')) {
             $groupname = $filterset->get_filter('name')->current();
             if (!empty($groupname)) {
-                list($where, $params) = static::filter_by_groupname($groupname);
+                [$where, $params] = static::filter_by_groupname($groupname);
                 $this->sql->where .= $where;
                 $this->sql->params = array_merge($this->sql->params, $params);
             }
@@ -181,8 +181,10 @@ class groups extends table_sql implements dynamic_table {
      */
     public function col_groupimage($row) {
         $group = groups_get_group($row->groupid, '*', MUST_EXIST);
-        return html_writer::img(group_info::get_group_picture_url($group, $this->courseid, true),
-            $row->groupname, array('class' => 'd-none d-lg-table-cell')
+        return html_writer::img(
+            group_info::get_group_picture_url($group, $this->courseid, true),
+            $row->groupname,
+            ['class' => 'd-none d-lg-table-cell']
         );
     }
 

@@ -27,11 +27,11 @@ $string['addnewgroup'] = 'Ajouter un nouveau groupe';
 $string['allgroups'] = 'Tous les groupes';
 $string['andmore'] = 'et plus...';
 $string['cannotjoin'] = 'Vous n\'avez pas pu joindre le groupe {$a}, êtes vous inscrit dans le cours ?';
+$string['cannotleavegroup'] = 'Cannot leave group {$a}';
 $string['catalogue'] = 'Catalogue';
+$string['choosereadme'] = 'Un thème basé sur Boost (Bootstrap 4.5) créé spécialement pour l\'IMT';
 $string['configtitle'] = 'Theme IMT Pédagothèque Numérique';
 $string['createcourse'] = 'Créer un cours';
-$string['cannotleavegroup'] = 'Cannot leave group {$a}';
-$string['choosereadme'] = 'Un thème basé sur Boost (Bootstrap 4.5) créé spécialement pour l\'IMT';
 $string['customscripts'] = 'Custom Script activés ?';
 $string['customscripts_desc'] = 'Devons nous activer les scripts "custom" ?';
 $string['defaultfpslogan'] = 'Bienvenue sur la<br>Pédagothèque Numérique de l\'IMT';
@@ -39,22 +39,27 @@ $string['editgroup'] = 'Editer le groupe';
 $string['emailvstheme'] = 'Email domain vs Theme';
 $string['emailvstheme_desc'] = 'Correspondance entre l\'extension du domaine de l\'utilisateur et le thème, entré comme un objet
 JSON ( {\'mydomain.com\' : \'theme_imt_lille\'} )';
-$string['footercontent_desc'] = 'Bas de page, contenu';
-$string['footercontent'] = 'Bas de page, contenu';
 $string['footer'] = 'Bas de page';
 $string['footer_message'] = 'Accédez à la Plateforme Numérique de l’IMT n’importe où grâce à l’application Moodle
     <a href="#">
           <img src="/theme/imtpn/pix/logos/logo-moodle.png" alt="moodle">
     </a>';
+$string['footercontent'] = 'Bas de page, contenu';
+$string['footercontent_desc'] = 'Bas de page, contenu';
 $string['groupjoined'] = 'Félicitations ! Vous avez rejoint le groupe {$a}.';
+$string['groupleft'] = 'Vous avez quitté le groupe {$a}';
 $string['groupmessagescount'] = '{$a} messages';
 $string['groupname'] = 'Nom du groupe';
 $string['groups:groupname'] = 'Name';
-$string['groupleft'] = 'Vous avez quitté le groupe {$a}';
 $string['groups:members'] = 'Membres';
 $string['groups:postcount'] = '# Posts';
 $string['groupwrongjoinkey'] = 'La clé d\'inscription n\'est pas valide';
+$string['hidenodesprimarynavigationsetting'] = 'Cache les noeuds de la navigation primaire';
+$string['hidenodesprimarynavigationsetting_desc'] = 'Avec ce paramètres vous pouvez cacher des noeuds multiples provenant
+de la navigation primaire.';
+$string['imtpn:editcataloguethemes'] = 'Peut éditer la page de liste de Themes (Catalogue)';
 $string['joingroup'] = 'Rejoindre le groupe';
+$string['leavegroup'] = 'Quitter le groupe';
 $string['legal_mention'] = 'Les illustrations de ce site sont intégralement ou en partie issues
  des banques Freepik et Unsplash, proposant des contenus libres et gratuits.';
 $string['logidp_desc'] = 'Voici la liste des écoles auxquelles vous pouvez vous connecter.';
@@ -62,35 +67,30 @@ $string['loginext_desc'] = 'Sélectionnez votre école pour vous connecter avec 
 Si vous n’avez pas de compte, vous pouvez en <a href="/login/signup.php">créer un ici.</a>';
 $string['loginext_title'] = 'Vous êtes externe ?';
 $string['loginidp_title'] = 'Vous êtes membres d’une école de l’IMT ?';
-$string['leavegroup'] = 'Quitter le groupe';
-$string['notingroup'] = 'Pas dans le groupe {$a}';
-$string['othersettings'] = 'Autres paramètres';
-$string['pluginname'] = 'Theme IMT Pédagothèque Numérique';
-$string['populargroups'] = 'Groupes populaires';
-$string['profilebgimage_desc'] = 'Image de fond pour page de profil';
-$string['profilebgimage'] = 'Image de fond pour page de profil';
-$string['profilecomponentsexclusion_desc'] = 'Enlever des composant de la page de profil pour la rendre moins complexe? Une liste
-séparée par une virgule de modules (mod, report...)';
-$string['profilecomponentsexclusion'] = 'Profile component exclusion';
-$string['profilemodulesexclusion_desc'] = 'Remove modules from the profile page to streamline it ? A comma separated values of
-names, such as mod_forum.';
-$string['profilemodulesexclusion'] = 'Exclusion de modules de la page de profil';
-$string['profilepage'] = 'Page de profil';
-$string['region-content'] = 'Contenu';
-$string['region-side-pre'] = 'Droite';
-$string['simplifiedprofilepage_desc'] = 'Doit-on enlever les éléments non nécessaires de la page de profil ?';
-$string['simplifiedprofilepage'] = 'Page de profil simplifiée';
-$string['themescat:title'] = 'Catalogue thématique';
-$string['imtpn:editcataloguethemes'] = 'Peut éditer la page de liste de Themes (Catalogue)';
-$string['userinfos'] = 'Infos';
-$string['viewallgroups'] = 'Parcourir les groupes existants';
-$string['viewcatalog'] = 'Voir le catalogue';
-$string['primarynavigationheading'] = 'Navigation primaire';
-$string['hidenodesprimarynavigationsetting'] = 'Cache les noeuds de la navigation primaire';
-$string['hidenodesprimarynavigationsetting_desc'] = 'Avec ce paramètres vous pouvez cacher des noeuds multiples provenant
-de la navigation primaire.';
-$string['logosandimages'] = 'Logos and images settings';
 $string['logo'] = 'Logo';
 $string['logo_desc'] = 'Logo to display in the header. If none is provided, the default image will be displayed instead.';
 $string['logo_white'] = 'Logo White';
 $string['logo_white_desc'] = 'Logo to display in the header on a dark background. If none is provided, the default image will be displayed instead.';
+$string['logosandimages'] = 'Logos and images settings';
+$string['notingroup'] = 'Pas dans le groupe {$a}';
+$string['othersettings'] = 'Autres paramètres';
+$string['pluginname'] = 'Theme IMT Pédagothèque Numérique';
+$string['populargroups'] = 'Groupes populaires';
+$string['primarynavigationheading'] = 'Navigation primaire';
+$string['profilebgimage'] = 'Image de fond pour page de profil';
+$string['profilebgimage_desc'] = 'Image de fond pour page de profil';
+$string['profilecomponentsexclusion'] = 'Profile component exclusion';
+$string['profilecomponentsexclusion_desc'] = 'Enlever des composant de la page de profil pour la rendre moins complexe? Une liste
+séparée par une virgule de modules (mod, report...)';
+$string['profilemodulesexclusion'] = 'Exclusion de modules de la page de profil';
+$string['profilemodulesexclusion_desc'] = 'Remove modules from the profile page to streamline it ? A comma separated values of
+names, such as mod_forum.';
+$string['profilepage'] = 'Page de profil';
+$string['region-content'] = 'Contenu';
+$string['region-side-pre'] = 'Droite';
+$string['simplifiedprofilepage'] = 'Page de profil simplifiée';
+$string['simplifiedprofilepage_desc'] = 'Doit-on enlever les éléments non nécessaires de la page de profil ?';
+$string['themescat:title'] = 'Catalogue thématique';
+$string['userinfos'] = 'Infos';
+$string['viewallgroups'] = 'Parcourir les groupes existants';
+$string['viewcatalog'] = 'Voir le catalogue';

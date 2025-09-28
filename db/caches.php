@@ -29,5 +29,5 @@ defined('MOODLE_INTERNAL') || die();
 $definitions = [
     'idpinformation' => [
         'mode' => cache_store::MODE_APPLICATION,
-    ]
+    ],
 ];

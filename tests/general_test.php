@@ -34,13 +34,13 @@ use theme_imtpn\table\groups;
  * @copyright   2021 CALL Learning <laurent@call-learning.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class general_test extends \advanced_testcase {
+final class general_test extends \advanced_testcase {
     /**
      * Group name search
      *
      * @covers \theme_imtpn\table\groups::filter_by_groupname
      */
-    public function test_get_group_member_list() {
+    public function test_get_group_member_list(): void {
         global $DB;
         $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
@@ -49,13 +49,13 @@ class general_test extends \advanced_testcase {
             $this->getDataGenerator()->create_group(['courseid' => $course->id, 'name' => 'Statistiques pour l\'ingénieur']);
         $group[1] =
             $this->getDataGenerator()->create_group(['courseid' => $course->id, 'name' => 'éthique de la science et ingénieur']);
-        list($where, $params) = groups::filter_by_groupname('ingénieur');
+        [$where, $params] = groups::filter_by_groupname('ingénieur');
         $ingenieur = $DB->get_records_sql("SELECT * FROM {groups} g WHERE 1=1 $where", $params);
         $this->assertCount(2, $ingenieur);
-        list($where, $params) = groups::filter_by_groupname('ingenieur');
+        [$where, $params] = groups::filter_by_groupname('ingenieur');
         $ingenieur = $DB->get_records_sql("SELECT * FROM {groups} g WHERE 1=1 $where", $params);
         $this->assertCount(2, $ingenieur);
-        list($where, $params) = groups::filter_by_groupname('ethique');
+        [$where, $params] = groups::filter_by_groupname('ethique');
         $ethique = $DB->get_records_sql("SELECT * FROM {groups} g WHERE 1=1 $where", $params);
         $this->assertCount(1, $ethique);
     }

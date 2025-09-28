@@ -37,7 +37,7 @@ use theme_imtpn\local\utils;
  * @return bool
  * @throws coding_exception
  */
-function theme_imtpn_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
+function theme_imtpn_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
     // Patch for groups so any user can see the icon + description.
     $isvalid = ($filearea == 'groupicon' || $filearea == 'groupdescription') && $context->contextlevel == CONTEXT_COURSE;
     $isvalid = $isvalid || $filearea === 'logos';
@@ -48,7 +48,7 @@ function theme_imtpn_pluginfile($course, $cm, $context, $filearea, $args, $force
             global $DB;
             require_course_login($course, true, null, false);
             $groupid = (int) array_shift($args);
-            $group = $DB->get_record('groups', array('id' => $groupid, 'courseid' => $course->id), '*', MUST_EXIST);
+            $group = $DB->get_record('groups', ['id' => $groupid, 'courseid' => $course->id], '*', MUST_EXIST);
         }
         if ($filearea === 'groupdescription') {
             require_login($course);
@@ -61,7 +61,6 @@ function theme_imtpn_pluginfile($course, $cm, $context, $filearea, $args, $force
             }
             \core\session\manager::write_close(); // Unlock session during file serving.
             send_stored_file($file, 60 * 60, 0, $forcedownload, $options);
-
         } else if ($filearea === 'groupicon') {
             $filename = array_pop($args);
             if ($filename !== 'f1' && $filename !== 'f2') {
@@ -82,14 +81,20 @@ function theme_imtpn_pluginfile($course, $cm, $context, $filearea, $args, $force
                 $options['cacheability'] = 'public';
             }
             return $theme->setting_file_serve($filearea, $args, $forcedownload, $options);
-        }
-        else
-        {
+        } else {
             send_file_not_found();
         }
     }
-    return theme_clboost\local\utils::generic_pluginfile('imtpn', $course, $cm, $context, $filearea, $args, $forcedownload,
-        $options);
+    return theme_clboost\local\utils::generic_pluginfile(
+        'imtpn',
+        $course,
+        $cm,
+        $context,
+        $filearea,
+        $args,
+        $forcedownload,
+        $options
+    );
 }
 
 /**

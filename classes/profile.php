@@ -52,7 +52,6 @@ use theme_imtpn\output\courses_thumbnails;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class profile {
-
     /**
      * Inject CSS into the page
      *
@@ -90,7 +89,6 @@ class profile {
             } else {
                 $profileimagedef .= $bgdef;
             }
-
         }
         $profileimagedef .= '
             }
@@ -179,8 +177,12 @@ class profile {
         $courseorsystemcontext = !empty($course) ? context_course::instance($course->id) : $systemcontext;
         $courseid = !empty($course) ? $course->id : SITEID;
 
-        $contactcategory = new category('contact', get_string('userinfos', 'theme_imtpn'), '',
-            ' profile-contact');
+        $contactcategory = new category(
+            'contact',
+            get_string('userinfos', 'theme_imtpn'),
+            '',
+            ' profile-contact'
+        );
         // No after property specified intentionally. It is a hack to make administration block appear towards the end
         // Refer MDL-49928.
         $coursedetailscategory = new category('coursedetails', get_string('coursedetails'));
@@ -202,9 +204,14 @@ class profile {
         if (!empty($course)) {
             if (self::check_display('miscellaneous')) {
                 if (user_can_view_profile($user, null, $usercontext)) {
-                    $url = new moodle_url('/user/profile.php', array('id' => $user->id));
-                    $node = new node('miscellaneous', 'fullprofile',
-                        get_string('fullprofile'), null, $url);
+                    $url = new moodle_url('/user/profile.php', ['id' => $user->id]);
+                    $node = new node(
+                        'miscellaneous',
+                        'fullprofile',
+                        get_string('fullprofile'),
+                        null,
+                        $url
+                    );
                     $tree->add_node($node);
                 }
             }
@@ -212,25 +219,31 @@ class profile {
 
         // Preference page.
         if (!$iscurrentuser && $PAGE->settingsnav->can_view_user_preferences($user->id)) {
-            $url = new moodle_url('/user/preferences.php', array('userid' => $user->id));
+            $url = new moodle_url('/user/preferences.php', ['userid' => $user->id]);
             $title = get_string('preferences', 'moodle');
             $node = new node('administration', 'preferences', $title, null, $url);
             $tree->add_node($node);
         }
 
         // Login as ...
-        if (!$user->deleted && !$iscurrentuser &&
-            !manager::is_loggedinas() && has_capability('moodle/user:loginas',
-                $courseorsystemcontext) && !is_siteadmin($user->id)) {
-            $url = new moodle_url('/course/loginas.php',
-                array('id' => $courseid, 'user' => $user->id, 'sesskey' => sesskey()));
+        if (
+            !$user->deleted && !$iscurrentuser &&
+            !manager::is_loggedinas() && has_capability(
+                'moodle/user:loginas',
+                $courseorsystemcontext
+            ) && !is_siteadmin($user->id)
+        ) {
+            $url = new moodle_url(
+                '/course/loginas.php',
+                ['id' => $courseid, 'user' => $user->id, 'sesskey' => sesskey()]
+            );
             $node = new  node('administration', 'loginas', get_string('loginas'), null, $url);
             $tree->add_node($node);
         }
 
         // Contact details.
         if (has_capability('moodle/user:viewhiddendetails', $courseorusercontext)) {
-            $hiddenfields = array();
+            $hiddenfields = [];
         } else {
             $hiddenfields = array_flip(explode(',', $CFG->hiddenuserfields));
         }
@@ -238,7 +251,7 @@ class profile {
         if ($canviewuseridentity) {
             $identityfields = array_flip(explode(',', $CFG->showuseridentity));
         } else {
-            $identityfields = array();
+            $identityfields = [];
         }
 
         if (is_mnet_remote_user($user)) {
@@ -247,20 +260,28 @@ class profile {
                   FROM {mnet_host} h, {mnet_application} a
                  WHERE h.id = ? && h.applicationid = a.id";
 
-            $remotehost = $DB->get_record_sql($sql, array($user->mnethostid));
+            $remotehost = $DB->get_record_sql($sql, [$user->mnethostid]);
             $remoteuser = new stdclass();
             $remoteuser->remotetype = $remotehost->display_name;
             $hostinfo = new stdclass();
             $hostinfo->remotename = $remotehost->name;
             $hostinfo->remoteurl = $remotehost->wwwroot;
 
-            $node = new node('contact', 'mnet', get_string('remoteuser', 'mnet', $remoteuser),
-                null, null,
-                get_string('remoteuserinfo', 'mnet', $hostinfo), null, 'remoteuserinfo');
+            $node = new node(
+                'contact',
+                'mnet',
+                get_string('remoteuser', 'mnet', $remoteuser),
+                null,
+                null,
+                get_string('remoteuserinfo', 'mnet', $hostinfo),
+                null,
+                'remoteuserinfo'
+            );
             $tree->add_node($node);
         }
 
-        if ($iscurrentuser
+        if (
+            $iscurrentuser
             || (!isset($hiddenfields['email']) && (
                     $user->maildisplay == core_user::MAILDISPLAY_EVERYONE
                     || ($user->maildisplay == core_user::MAILDISPLAY_COURSE_MEMBERS_ONLY && enrol_sharing_course($user, $USER))
@@ -268,21 +289,40 @@ class profile {
                 ))
             || (isset($identityfields['email']) && $canviewuseridentity)
         ) {
-            $node = new node('contact', 'email', '', null, null,
-                obfuscate_mailto($user->email, ''), new pix_icon('t/email', get_string('email')));
+            $node = new node(
+                'contact',
+                'email',
+                '',
+                null,
+                null,
+                obfuscate_mailto($user->email, ''),
+                new pix_icon('t/email', get_string('email'))
+            );
             $tree->add_node($node);
         }
 
         if (!isset($hiddenfields['moodlenetprofile']) && $user->moodlenetprofile) {
-            $node = new node('contact', 'moodlenetprofile', get_string('moodlenetprofile', 'user'),
+            $node = new node(
+                'contact',
+                'moodlenetprofile',
+                get_string('moodlenetprofile', 'user'),
                 null,
-                null, $user->moodlenetprofile);
+                null,
+                $user->moodlenetprofile
+            );
             $tree->add_node($node);
         }
 
         if (!isset($hiddenfields['country']) && $user->country) {
-            $node = new node('contact', 'country', '', null, null,
-                get_string($user->country, 'countries'), new pix_icon('t/sendmessage', get_string('country')));
+            $node = new node(
+                'contact',
+                'country',
+                '',
+                null,
+                null,
+                get_string($user->country, 'countries'),
+                new pix_icon('t/sendmessage', get_string('country'))
+            );
             $tree->add_node($node);
         }
 
@@ -307,27 +347,51 @@ class profile {
         }
 
         if (isset($identityfields['institution']) && $user->institution) {
-            $node = new node('contact', 'institution', get_string('institution'), null, null,
-                $user->institution);
+            $node = new node(
+                'contact',
+                'institution',
+                get_string('institution'),
+                null,
+                null,
+                $user->institution
+            );
             $tree->add_node($node);
         }
 
         if (isset($identityfields['department']) && $user->department) {
-            $node = new node('contact', 'department', get_string('department'), null, null,
-                $user->department);
+            $node = new node(
+                'contact',
+                'department',
+                get_string('department'),
+                null,
+                null,
+                $user->department
+            );
             $tree->add_node($node);
         }
 
         if (isset($identityfields['idnumber']) && $user->idnumber) {
-            $node = new node('contact', 'idnumber', get_string('idnumber'), null, null,
-                $user->idnumber);
+            $node = new node(
+                'contact',
+                'idnumber',
+                get_string('idnumber'),
+                null,
+                null,
+                $user->idnumber
+            );
             $tree->add_node($node);
         }
 
         // Printing tagged interests. We want this only for full profile.
         if (empty($course) && ($interests = core_tag_tag::get_item_tags('core', 'user', $user->id))) {
-            $node = new node('contact', 'interests', get_string('interests'), null, null,
-                $OUTPUT->tag_list($interests, ''));
+            $node = new node(
+                'contact',
+                'interests',
+                get_string('interests'),
+                null,
+                null,
+                $OUTPUT->tag_list($interests, '')
+            );
             $tree->add_node($node);
         }
 
@@ -363,29 +427,45 @@ class profile {
                 if ($showmorelink) {
                     $url = null;
                     if (isset($course)) {
-                        $url = new moodle_url('/user/view.php',
-                            array('id' => $user->id, 'course' => $course->id, 'showallcourses' => 1));
+                        $url = new moodle_url(
+                            '/user/view.php',
+                            ['id' => $user->id, 'course' => $course->id, 'showallcourses' => 1]
+                        );
                     } else {
-                        $url = new moodle_url('/user/profile.php', array('id' => $user->id, 'showallcourses' => 1));
+                        $url = new moodle_url('/user/profile.php', ['id' => $user->id, 'showallcourses' => 1]);
                     }
-                    $courselisting .= html_writer::tag('li', html_writer::link($url, get_string('viewmore'),
-                        array('title' => get_string('viewmore'))), array('class' => 'viewmore'));
+                    $courselisting .= html_writer::tag('li', html_writer::link(
+                        $url,
+                        get_string('viewmore'),
+                        ['title' => get_string('viewmore')]
+                    ), ['class' => 'viewmore']);
                 }
                 if (!empty($mycourses)) {
                     // Add this node only if there are courses to display.
-                    $node = new node('coursedetails', 'courseprofiles',
-                        get_string('courseprofiles'), null, null, rtrim($courselisting, ', '));
+                    $node = new node(
+                        'coursedetails',
+                        'courseprofiles',
+                        get_string('courseprofiles'),
+                        null,
+                        null,
+                        rtrim($courselisting, ', ')
+                    );
                     $tree->add_node($node);
                 }
             }
         }
 
         if (!empty($course)) {
-
             // Show roles in this course.
             if ($rolestring = get_user_roles_in_course($user->id, $course->id)) {
-                $node = new node('coursedetails', 'roles', get_string('roles'), null, null,
-                    $rolestring);
+                $node = new node(
+                    'coursedetails',
+                    'roles',
+                    get_string('roles'),
+                    null,
+                    null,
+                    $rolestring
+                );
                 $tree->add_node($node);
             }
 
@@ -411,8 +491,14 @@ class profile {
                         }
                     }
                     if ($groupstr !== '') {
-                        $node = new node('coursedetails', 'groups',
-                            get_string('group'), null, null, rtrim($groupstr, ', '));
+                        $node = new node(
+                            'coursedetails',
+                            'groups',
+                            get_string('group'),
+                            null,
+                            null,
+                            rtrim($groupstr, ', ')
+                        );
                         $tree->add_node($node);
                     }
                 }
@@ -420,8 +506,14 @@ class profile {
 
             if (!isset($hiddenfields['suspended'])) {
                 if ($user->suspended) {
-                    $node = new node('coursedetails', 'suspended',
-                        null, null, null, get_string('suspended', 'auth'));
+                    $node = new node(
+                        'coursedetails',
+                        'suspended',
+                        null,
+                        null,
+                        null,
+                        get_string('suspended', 'auth')
+                    );
                     $tree->add_node($node);
                 }
             }
@@ -431,8 +523,14 @@ class profile {
         foreach ($categories as $categoryid => $fields) {
             foreach ($fields as $formfield) {
                 if ($formfield->is_visible() && !$formfield->is_empty()) {
-                    $node = new node('contact', 'custom_field_' . $formfield->field->shortname,
-                        format_string($formfield->field->name), null, null, $formfield->display_data());
+                    $node = new node(
+                        'contact',
+                        'custom_field_' . $formfield->field->shortname,
+                        format_string($formfield->field->name),
+                        null,
+                        null,
+                        $formfield->display_data()
+                    );
                     $tree->add_node($node);
                 }
             }
@@ -446,9 +544,14 @@ class profile {
                 $datestring = get_string("never");
             }
             if (static::check_display('loginactivity')) {
-                $node = new node('loginactivity', 'firstaccess', get_string('firstsiteaccess'),
-                    null, null,
-                    $datestring);
+                $node = new node(
+                    'loginactivity',
+                    'firstaccess',
+                    get_string('firstsiteaccess'),
+                    null,
+                    null,
+                    $datestring
+                );
                 $tree->add_node($node);
             }
         }
@@ -464,8 +567,12 @@ class profile {
                 }
             } else {
                 $string = get_string('lastcourseaccess');
-                if ($lastaccess = $DB->get_record('user_lastaccess',
-                    array('userid' => $user->id, 'courseid' => $course->id))) {
+                if (
+                    $lastaccess = $DB->get_record(
+                        'user_lastaccess',
+                        ['userid' => $user->id, 'courseid' => $course->id]
+                    )
+                ) {
                     $datestring =
                         userdate($lastaccess->timeaccess) . "&nbsp; (" . format_time(time() - $lastaccess->timeaccess) . ")";
                 } else {
@@ -474,8 +581,14 @@ class profile {
             }
 
             if (static::check_display('loginactivity')) {
-                $node = new node('loginactivity', 'lastaccess', $string, null, null,
-                    $datestring);
+                $node = new node(
+                    'loginactivity',
+                    'lastaccess',
+                    $string,
+                    null,
+                    null,
+                    $datestring
+                );
                 $tree->add_node($node);
             }
         }
@@ -483,14 +596,20 @@ class profile {
         // Last ip.
         if (has_capability('moodle/user:viewlastip', $usercontext) && !isset($hiddenfields['lastip'])) {
             if ($user->lastip) {
-                $iplookupurl = new moodle_url('/iplookup/index.php', array('ip' => $user->lastip, 'user' => $user->id));
+                $iplookupurl = new moodle_url('/iplookup/index.php', ['ip' => $user->lastip, 'user' => $user->id]);
                 $ipstring = html_writer::link($iplookupurl, $user->lastip);
             } else {
                 $ipstring = get_string("none");
             }
             if (static::check_display('loginactivity')) {
-                $node = new node('loginactivity', 'lastip', get_string('lastip'), null, null,
-                    $ipstring);
+                $node = new node(
+                    'loginactivity',
+                    'lastip',
+                    get_string('lastip'),
+                    null,
+                    null,
+                    $ipstring
+                );
                 $tree->add_node($node);
             }
         }
@@ -511,13 +630,17 @@ class profile {
         }
         if (is_null($excludedcomponents)) {
             $excludedcomponentscfg = get_config('theme_imtpn', 'profilecomponentsexclusion');
-            $excludedcomponents = array_map('trim',
-                explode(',', $excludedcomponentscfg ? $excludedcomponentscfg : ''));
+            $excludedcomponents = array_map(
+                'trim',
+                explode(',', $excludedcomponentscfg ? $excludedcomponentscfg : '')
+            );
         }
         if (is_null($excludedmodules)) {
             $excludedmodulescfg = get_config('theme_imtpn', 'profilemodulessexclusion');
-            $excludedmodules = array_map('trim',
-                explode(',', $excludedmodulescfg ? $excludedmodulescfg : ''));
+            $excludedmodules = array_map(
+                'trim',
+                explode(',', $excludedmodulescfg ? $excludedmodulescfg : '')
+            );
         }
         if ($simplified) {
             if (empty($module)) {

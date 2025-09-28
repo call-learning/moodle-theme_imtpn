@@ -46,7 +46,6 @@ use moodle_url;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class group_info implements renderable, templatable {
-
     /** @var stdClass $group An object with the group information. */
     protected $group;
 
@@ -91,7 +90,7 @@ class group_info implements renderable, templatable {
             $currentgroupid = $this->group->id;
             $alldiscussions = mod_forum_get_discussion_summaries($this->forum, $USER, $currentgroupid, 0);
 
-            $alldiscussions = array_filter($alldiscussions, function($disc) use ($currentgroupid) {
+            $alldiscussions = array_filter($alldiscussions, function ($disc) use ($currentgroupid) {
                 return $disc->get_discussion()->get_group_id() == $currentgroupid;
             });
             $data->discussioncount = count($alldiscussions);
@@ -141,7 +140,15 @@ class group_info implements renderable, templatable {
         }
 
         $grouppictureurl = moodle_url::make_pluginfile_url(
-            $context->id, 'theme_imtpn', 'groupicon', $group->id, '/', $file, false, $includetoken);
+            $context->id,
+            'theme_imtpn',
+            'groupicon',
+            $group->id,
+            '/',
+            $file,
+            false,
+            $includetoken
+        );
         $grouppictureurl->param('rev', $group->picture);
         return $grouppictureurl;
     }
@@ -157,19 +164,20 @@ class group_info implements renderable, templatable {
      */
     public static function get_group_description($group) {
         $context = context_course::instance($group->courseid);
-        $description = file_rewrite_pluginfile_urls($group->description,
+        $description = file_rewrite_pluginfile_urls(
+            $group->description,
             'pluginfile.php',
             $context->id,
             'theme_imtpn',
             'groupdescription',
-            $group->id);
+            $group->id
+        );
 
         $descriptionformat = $group->descriptionformat ?? FORMAT_MOODLE;
         $options = [
             'overflowdiv' => true,
-            'context' => $context
+            'context' => $context,
         ];
         return format_text($description, $descriptionformat, $options);
     }
-
 }

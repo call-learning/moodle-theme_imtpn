@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Theme plugin version definition.
  *
@@ -30,4 +31,3 @@ if ($PAGE->pagetype === 'syllabus-view') {
     unset($templatecontext['courseindex']);
 }
 echo $OUTPUT->render_from_template('theme_clboost/drawers', $templatecontext);
-

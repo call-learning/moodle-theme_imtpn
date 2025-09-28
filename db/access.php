@@ -26,29 +26,29 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
-    'theme/imtpn:editcataloguethemes' => array(
+$capabilities = [
+    'theme/imtpn:editcataloguethemes' => [
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
+        'archetypes' => [
             'manager' => CAP_ALLOW,
-        )
-    ),
-    'theme/imtpn:canselfjoingroup' => array(
+        ],
+    ],
+    'theme/imtpn:canselfjoingroup' => [
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
+        'archetypes' => [
             'user' => CAP_ALLOW,
-        )
-    ),
-    'theme/imtpn:mpaviewallgroups' => array(
+        ],
+    ],
+    'theme/imtpn:mpaviewallgroups' => [
         'riskbitmask' => RISK_SPAM | RISK_XSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
+        'archetypes' => [
             'user' => CAP_ALLOW,
-        )
-    ),
-);
+        ],
+    ],
+];

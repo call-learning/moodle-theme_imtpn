@@ -39,7 +39,6 @@ use theme_imtpn\setup;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class settings extends \theme_clboost\local\settings {
-
     /**
      * Default content for Footer
      */
@@ -85,63 +84,83 @@ class settings extends \theme_clboost\local\settings {
      */
     protected static function additional_settings(admin_settingpage &$settings, $currentthemename = 'clboost') {
         // Advanced settings.
-        $page = new admin_settingpage('footer',
-            static::get_string('footer', 'theme_imtpn'));
+        $page = new admin_settingpage(
+            'footer',
+            static::get_string('footer', 'theme_imtpn')
+        );
 
-        $setting = new admin_setting_confightmleditor('theme_imtpn/footercontent',
+        $setting = new admin_setting_confightmleditor(
+            'theme_imtpn/footercontent',
             static::get_string('footercontent', 'theme_imtpn'),
             static::get_string('footercontent_desc', 'theme_imtpn'),
             self::DEFAULT_FOOTER_CONTENT,
-            PARAM_RAW);
+            PARAM_RAW
+        );
         $page->add($setting);
 
         $settings->add($page);
 
         // Profile page.
-        $page = new admin_settingpage('profilepage',
-            static::get_string('profilepage', 'theme_imtpn'));
+        $page = new admin_settingpage(
+            'profilepage',
+            static::get_string('profilepage', 'theme_imtpn')
+        );
 
-        $setting = new admin_setting_configcheckbox('theme_imtpn/simplifiedprofilepage',
+        $setting = new admin_setting_configcheckbox(
+            'theme_imtpn/simplifiedprofilepage',
             static::get_string('simplifiedprofilepage', 'theme_imtpn'),
             static::get_string('simplifiedprofilepage_desc', 'theme_imtpn'),
-            true);
+            true
+        );
         $page->add($setting);
 
-        $setting = new admin_setting_configtext('theme_imtpn/profilecomponentsexclusion',
+        $setting = new admin_setting_configtext(
+            'theme_imtpn/profilecomponentsexclusion',
             static::get_string('profilecomponentsexclusion', 'theme_imtpn'),
             static::get_string('profilecomponentsexclusion_desc', 'theme_imtpn'),
-            'report,tool,gradereport,loginactivity,badges,miscellaneous,notes');
+            'report,tool,gradereport,loginactivity,badges,miscellaneous,notes'
+        );
         $page->add($setting);
 
-        $setting = new admin_setting_configtext('theme_imtpn/profilemodulessexclusion',
+        $setting = new admin_setting_configtext(
+            'theme_imtpn/profilemodulessexclusion',
             static::get_string('profilemodulesexclusion', 'theme_imtpn'),
             static::get_string('profilemodulesexclusion_desc', 'theme_imtpn'),
-            'tool_mobile,mod_forum');
+            'tool_mobile,mod_forum'
+        );
         $page->add($setting);
 
         $settings->add($page);
 
         // Advanced settings.
-        $page = new admin_settingpage('othersettings',
-            static::get_string('othersettings', 'theme_imtpn'));
+        $page = new admin_settingpage(
+            'othersettings',
+            static::get_string('othersettings', 'theme_imtpn')
+        );
 
-        $setting = new admin_setting_configstoredfile('theme_imtpn/profilebgimage',
+        $setting = new admin_setting_configstoredfile(
+            'theme_imtpn/profilebgimage',
             static::get_string('profilebgimage', 'theme_imtpn'),
             static::get_string('profilebgimage_desc', 'theme_imtpn'),
-            utils::PROFILE_IMAGE_FILE_AREA);
+            utils::PROFILE_IMAGE_FILE_AREA
+        );
         $setting->set_updatedcallback('theme_reset_all_caches');
         $page->add($setting);
         if ($currentthemename === 'imtpn') {
-            $setting = new admin_setting_configcheckbox('theme_imtpn/customscripts',
+            $setting = new admin_setting_configcheckbox(
+                'theme_imtpn/customscripts',
                 static::get_string('customscripts', 'theme_imtpn'),
                 static::get_string('customscripts_desc', 'theme_imtpn'),
-                false);
+                false
+            );
             $setting->set_updatedcallback('setup_customscripts');
             $page->add($setting);
-            $setting = new \admin_setting_configtextarea('theme_imtpn/emailvstheme',
+            $setting = new \admin_setting_configtextarea(
+                'theme_imtpn/emailvstheme',
                 static::get_string('emailvstheme', 'theme_imtpn'),
                 static::get_string('emailvstheme_desc', 'theme_imtpn'),
-                json_encode(setup::DEFAULT_THEME_MATCH, JSON_PRETTY_PRINT));
+                json_encode(setup::DEFAULT_THEME_MATCH, JSON_PRETTY_PRINT)
+            );
             $page->add($setting);
         }
 
@@ -156,14 +175,14 @@ class settings extends \theme_clboost\local\settings {
             'home' => get_string('home'),
             'myhome' => get_string('myhome'),
             'courses' => get_string('mycourses'),
-            'siteadmin' => get_string('administrationsite')
+            'siteadmin' => get_string('administrationsite'),
         ];
 
         // Setting: Hide nodes in primary navigation.
         $name = 'theme_imtpn/hidenodesprimarynavigation';
         $title = get_string('hidenodesprimarynavigationsetting', 'theme_imtpn', null, true);
         $description = get_string('hidenodesprimarynavigationsetting_desc', 'theme_imtpn', null, true);
-        $setting = new \admin_setting_configmulticheckbox($name, $title, $description, array(), $hidenodesoptions);
+        $setting = new \admin_setting_configmulticheckbox($name, $title, $description, [], $hidenodesoptions);
         $setting->set_updatedcallback('theme_reset_all_caches');
         $page->add($setting);
 
@@ -171,8 +190,10 @@ class settings extends \theme_clboost\local\settings {
 
         $themefullname = 'theme_' . $currentthemename;
         // Logos and images.
-        $page = new admin_settingpage('logosandimages',
-            get_string('logosandimages', 'theme_imtpn'));
+        $page = new admin_settingpage(
+            'logosandimages',
+            get_string('logosandimages', 'theme_imtpn')
+        );
 
         // Logo
         $configname = 'logo';

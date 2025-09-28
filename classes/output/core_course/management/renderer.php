@@ -44,7 +44,6 @@ require_once($CFG->dirroot . '/local/resourcelibrary/lib.php');
  * @package theme_imtpn
  */
 class renderer extends \core_course_management_renderer {
-
     /**
      * Initialises the JS required to enhance the management interface.
      *
@@ -58,11 +57,11 @@ class renderer extends \core_course_management_renderer {
     /**
      * Renderers the actions for individual category list items.
      *
-     * @param core_course_category $category
-     * @param array $actions
+     * @param \core_course_category $category
+     * @param array|null $actions
      * @return string
      */
-    public function category_listitem_actions(\core_course_category $category, array $actions = null) {
+    public function category_listitem_actions(\core_course_category $category, ?array $actions = null) {
         global $DB;
         if ($actions === null) {
             $actions = \core_course\management\helper::get_category_listitem_actions($category);
@@ -93,7 +92,7 @@ class renderer extends \core_course_management_renderer {
                 'data-action' => 'showincatalogue',
                 'data-itemtype' => LOCAL_RESOURCELIBRARY_ITEMTYPE_CATEGORY,
                 'data-itemid' => $category->id,
-                'class' => $ishidden ? 'action-showincatalogue' : 'd-none action-showincatalogue'
+                'class' => $ishidden ? 'action-showincatalogue' : 'd-none action-showincatalogue',
             ]
         ));
 
@@ -102,12 +101,12 @@ class renderer extends \core_course_management_renderer {
             new pix_icon('i/star', new lang_string('hidefromcatalogue', 'local_resourcelibrary')),
             get_string('hidefromcatalogue', 'local_resourcelibrary'),
             true,
-                [
+            [
                     'data-id' => $lrrecordid,
                     'data-action' => 'hidefromcatalogue',
                     'data-itemtype' => LOCAL_RESOURCELIBRARY_ITEMTYPE_CATEGORY,
                     'data-itemid' => $category->id,
-                    'class' => $ishidden ? 'd-none action-hidefromcatalogue' : 'action-hidefromcatalogue'
+                    'class' => $ishidden ? 'd-none action-hidefromcatalogue' : 'action-hidefromcatalogue',
                 ]
         ));
 
@@ -117,8 +116,8 @@ class renderer extends \core_course_management_renderer {
                 $action['url'],
                 $action['icon'],
                 $action['string'],
-                in_array($key, array('show', 'hide', 'moveup', 'movedown')),
-                array('data-action' => $key, 'data-itemid' => $category->id, 'class' => 'action-'.$key)
+                in_array($key, ['show', 'hide', 'moveup', 'movedown']),
+                ['data-action' => $key, 'data-itemid' => $category->id, 'class' => 'action-' . $key]
             ));
         }
 
@@ -157,7 +156,7 @@ class renderer extends \core_course_management_renderer {
         if (empty($actions)) {
             return '';
         }
-        $actionshtml = array();
+        $actionshtml = [];
         $showincatalogueaction = [
             'url' => new moodle_url('/'),
             'icon' => new pix_icon('i/star-o', new lang_string('showincatalogue', 'local_resourcelibrary')),
@@ -166,8 +165,8 @@ class renderer extends \core_course_management_renderer {
                 'data-action' => 'showincatalogue',
                 'data-itemtype' => LOCAL_RESOURCELIBRARY_ITEMTYPE_COURSE,
                 'data-itemid' => $course->id,
-                'class' => $ishidden ? 'action-showincatalogue' : 'd-none action-showincatalogue'
-            ]
+                'class' => $ishidden ? 'action-showincatalogue' : 'd-none action-showincatalogue',
+            ],
         ];
         $hidefromcatalogueaction = [
             'url' => new moodle_url('/'),
@@ -177,8 +176,8 @@ class renderer extends \core_course_management_renderer {
                 'data-action' => 'hidefromcatalogue',
                 'data-itemtype' => LOCAL_RESOURCELIBRARY_ITEMTYPE_COURSE,
                 'data-itemid' => $course->id,
-                'class' => $ishidden ? 'd-none action-hidefromcatalogue' : 'action-hidefromcatalogue'
-            ]
+                'class' => $ishidden ? 'd-none action-hidefromcatalogue' : 'action-hidefromcatalogue',
+            ],
         ];
         // Inject the show/hide actions at the start of the array.
         array_unshift($actions, $showincatalogueaction, $hidefromcatalogueaction);
