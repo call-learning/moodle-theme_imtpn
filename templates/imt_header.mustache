@@ -15,13 +15,19 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    Front page full header.
+     Front page full header.
 
-    Example context (json):
-    {
-        "fppageheader": "Front page header",
-        "loginurl": "http://www.moodle.org"
-    }
+     Example context (json):
+     {
+         "fppageheader": "Front page header",
+         "loginurl": "http://www.moodle.org"
+     }
+     @template theme_imtpn/imt_header
+
+     Class for the front page header.
+
+     @param string $fppageheader The front page header text
+     @param string $loginurl The login URL
 }}
 <header class="header">
 
@@ -47,7 +53,7 @@
     {{/fppageheader}}
 </header>
 {{#js}}
-    require(['theme_imtpn/main'], function (Main) {
+    require(['theme_imtpn/main'], function(Main) {
     Main.init();
-    });
+});
 {{/js}}

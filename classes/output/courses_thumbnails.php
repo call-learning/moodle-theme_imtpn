@@ -14,119 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Theme IMTPN Courses thumbnails
- *
- * @package    theme_imtpn
- * @copyright 2020 - CALL Learning - Laurent David <laurent@call-learning>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace theme_imtpn\output;
-defined('MOODLE_INTERNAL') || die();
 
 use coding_exception;
 use context_course;
 use context_helper;
-use core\external\exporter;
-use core_course\external\course_summary_exporter;
-use core_course_category;
 use dml_exception;
-use moodle_exception;
 use moodle_url;
 use renderable;
 use renderer_base;
 use templatable;
 
 /**
- * Class mini_course_summary_exporter
+ * Class courses_thumbnails
  *
  * @package    theme_imtpn
  * @copyright 2020 - CALL Learning - Laurent David <laurent@call-learning>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class mini_course_summary_exporter extends course_summary_exporter {
-    /**
-     * Constructor - saves the persistent object, and the related objects.
-     *
-     * @param mixed $data - Either an stdClass or an array of values.
-     * @param array $related - An optional list of pre-loaded objects related to this object.
-     * @throws coding_exception
-     */
-    public function __construct($data, $related = []) {
-        exporter::__construct($data, $related);
-    }
-
-    /**
-     * Only a subset of the usual.
-     *
-     * @return array|array[]
-     */
-    public static function define_other_properties() {
-        return [
-            'fullnamedisplay' => [
-                'type' => PARAM_TEXT,
-            ],
-            'viewurl' => [
-                'type' => PARAM_URL,
-            ],
-            'courseimage' => [
-                'type' => PARAM_RAW,
-            ],
-            'showshortname' => [
-                'type' => PARAM_BOOL,
-            ],
-            'coursecategory' => [
-                'type' => PARAM_TEXT,
-            ],
-        ];
-    }
-
-    /**
-     * Define related data
-     *
-     * @return string[]
-     */
-    protected static function define_related() {
-        // We cache the context so it does not need to be retrieved from the course.
-        return ['context' => '\\context'];
-    }
-
-    /**
-     * Get additional values related to the course
-     *
-     * @param renderer_base $output
-     * @return array
-     * @throws moodle_exception
-     */
-    protected function get_other_values(renderer_base $output) {
-        global $CFG;
-        $courseimage = self::get_course_image($this->data);
-        if (!$courseimage) {
-            $courseimage = $output->get_generated_image_for_id($this->data->id);
-        }
-        $coursecategory = core_course_category::get($this->data->category, MUST_EXIST, true);
-        $urlparam = ['id' => $this->data->id];
-        $courseurl = new moodle_url('/course/view.php', $urlparam);
-        if (class_exists('\\local_syllabus\\locallib\utils')) {
-            $courseurl = utils::get_syllabus_page_url($urlparam);
-        }
-        return [
-            'fullnamedisplay' => get_course_display_name_for_list($this->data),
-            'viewurl' => $courseurl->out(false),
-            'courseimage' => $courseimage,
-            'showshortname' => $CFG->courselistshortnames ? true : false,
-            'coursecategory' => $coursecategory->name,
-        ];
-    }
-}
-
-/**
- * Class containing data for featured_courses block.
- *
- * @package    theme_imtpn
- * @copyright 2020 - CALL Learning - Laurent David <laurent@call-learning>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPv3 or later
  */
 class courses_thumbnails implements renderable, templatable {
     /**
@@ -135,8 +39,8 @@ class courses_thumbnails implements renderable, templatable {
     public $courses = [];
 
     /**
-     * featured_courses constructor.
-     * Retrieve matchin courses
+     * courses_thumbnails constructor.
+     * Retrieve matching courses
      *
      * @param int $coursesid
      * @throws coding_exception
@@ -156,10 +60,11 @@ class courses_thumbnails implements renderable, templatable {
      * @throws coding_exception
      */
     public function export_for_template(renderer_base $renderer) {
+        global $CFG;
         $formattedcourses = array_map(function ($course) use ($renderer) {
             context_helper::preload_from_record($course);
             $context = context_course::instance($course->id);
-            $exporter = new mini_course_summary_exporter($course, ['context' => $context]);
+            $exporter = new \theme_imtpn\output\mini_course_summary_exporter($course, ['context' => $context]);
             $exported = (array) $exporter->export($renderer);
             return $exported;
         }, $this->courses);

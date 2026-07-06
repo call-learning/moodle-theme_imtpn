@@ -108,6 +108,7 @@ class core_renderer extends \theme_clboost\output\core_renderer {
     /**
      * Get the logo content from config
      *
+     * @param string $logofilename The logo filename identifier
      * @return moodle_url
      */
     private function get_logo_from_config(string $logofilename): moodle_url {

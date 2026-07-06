@@ -195,7 +195,7 @@ class settings extends \theme_clboost\local\settings {
             get_string('logosandimages', 'theme_imtpn')
         );
 
-        // Logo
+        // Logo.
         $configname = 'logo';
         $name = "$themefullname/$configname";
         $title = get_string('logo', 'theme_imtpn');
@@ -204,7 +204,7 @@ class settings extends \theme_clboost\local\settings {
         $setting->set_updatedcallback('theme_reset_all_caches');
         $page->add($setting);
 
-        // Logo white
+        // Logo white.
         $configname = 'logo_white';
         $name = "$themefullname/$configname";
         $title = get_string('logo_white', 'theme_imtpn');

@@ -78,8 +78,6 @@ require([
   CalendarSelectors,
   CalendarEvents
 ) {
-  var root = $('#month-upcoming-mini-{{uniqid}}');
-
   $('body').on(CalendarEvents.filterChanged, function(e, data) {
       M.util.js_pending("month-upcoming-mini-{{uniqid}}-filterChanged");
 

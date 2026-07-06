@@ -221,7 +221,7 @@ if (isloggedin() && !isguestuser($user) && !is_mnet_remote_user($user)) {
                         'returnto' => 'profile'));
                 }
             }
-            $sbutton = new single_button($url, get_string('editmyprofile'), 'post', true);
+            $sbutton = new single_button($url, get_string('editmyprofile'), 'post', single_button::BUTTON_PRIMARY);
             $button = $OUTPUT->render($sbutton);
             $PAGE->set_button($PAGE->button . $button);
         }
