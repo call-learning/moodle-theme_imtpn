@@ -1,6 +1,6 @@
 # Credit for this script
 # https://github.com/moodlehq/moodle-plugin-ci/blob/master/gha.dist.yml
-name: Moodle plugin CI for Moodle 4.1+
+name: Moodle plugin CI for Moodle 4.5+
 on: [pull_request, push]
 
 jobs:
@@ -65,7 +65,7 @@ jobs:
           moodle-plugin-ci add-plugin --clone https://github.com/call-learning/moodle-local_resourcelibrary.git
           moodle-plugin-ci add-plugin --clone https://github.com/call-learning/moodle-local_syllabus.git
           moodle-plugin-ci add-plugin --clone https://github.com/call-learning/moodle-block_featured_courses.git
-          moodle-plugin-ci add-plugin --clone https://github.com/call-learning/moodle-block_mcms.git
+          moodle-plugin-ci add-plugin --clone https://github.com/call-learning/moodle-block_mcms.git --branch MOODLE_405_STABLE
           moodle-plugin-ci add-plugin --clone https://github.com/call-learning/moodle-customfield_multiselect.git
           moodle-plugin-ci add-plugin --clone https://github.com/call-learning/moodle-block_rss_thumbnails.git
           moodle-plugin-ci add-plugin --clone https://github.com/call-learning/moodle-block_enhanced_myoverview.git --branch MOODLE_401_STABLE
