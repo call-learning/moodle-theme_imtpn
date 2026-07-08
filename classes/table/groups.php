@@ -214,4 +214,13 @@ class groups extends table_sql implements dynamic_table {
         }
         return $html . $additionalmessage;
     }
+
+    /**
+     * Just check the user is logged in
+     *
+     * @return bool
+     */
+    public function has_capability(): bool {
+        return isloggedin();
+    }
 }
