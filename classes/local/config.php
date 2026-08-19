@@ -62,10 +62,12 @@ class config extends \theme_clboost\local\config {
         global $CFG;
         $theme = parent::setup_config($theme, $themeparentname);
         $theme->removedprimarynavitems = explode(',', get_config('theme_imtpn', 'hidenodesprimarynavigation'));
-        $CFG->custommenuitems = '';
         if (!empty($CFG->enableresourcelibrary)) {
             $url = new moodle_url('/local/resourcelibrary/index.php');
-            $CFG->custommenuitems .= get_string('catalogue', 'theme_imtpn') . '|' . $url->out() . "\n";
+            $resourcelibraryurl = get_string('catalogue', 'theme_imtpn') . '|' . $url->out();
+            if (!strstr($CFG->custommenuitems, get_string('catalogue', 'theme_imtpn'))) {
+                $CFG->custommenuitems .= $resourcelibraryurl . "\n";
+            }
         }
     }
 }
